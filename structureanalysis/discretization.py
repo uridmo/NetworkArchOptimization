@@ -138,9 +138,9 @@ def get_beams_information(nodes_location, beams_nodes, discType='Elementwise',
                     angle-=np.pi
         
         #Calculate the number of elements on the beam.
-        if discType is 'Elementwise':
+        if discType == 'Elementwise':
             number_of_elements = discElements
-        elif discType is 'Lengthwise':
+        elif discType == 'Lengthwise':
             number_of_elements = int(np.ceil(length/discLength))
         
         #Calculate the length of each element.

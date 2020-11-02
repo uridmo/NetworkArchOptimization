@@ -3,9 +3,6 @@ from structureanalysis import structure_analysis
 
 
 def main():
-    a: int = 10
-    print(a)
-
     s: float = 267.8
     r: float = 53.5
     q_tie: float = 178.1

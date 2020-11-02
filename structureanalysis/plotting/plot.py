@@ -3,7 +3,7 @@ import numpy as np
 from matplotlib.patches import Polygon
 from .plotHinges import plotHinges
 from .plotStructure import plotStructure
-from .plotSupports import plotSupports
+from .plotSupports import plot_supports
 from .plotSettings import plotLegend, plotTitle, initializePlot, adjustPlot
 import os
 
@@ -190,7 +190,7 @@ def plot(model, displacements, internal_forces, loadgroup, quantity, title, show
             
     plotLegend(ax)    
     plotHinges(model, ax)
-    plotSupports(model, ax)
+    plot_supports(model, ax)
     adjustPlot(ax)
 
     if savePlot:

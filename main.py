@@ -1,8 +1,12 @@
 import numpy as np
 from structureanalysis import structure_analysis
 from structureanalysis.plotting import plot_internal_forces
+from scipy.sparse import SparseEfficiencyWarning
+from contextlib import suppress
+
 
 def main():
+
     s: float = 267.8
     r: float = 53.5
     q_tie: float = 178.1
@@ -15,6 +19,11 @@ def main():
     hangers = define_hangers(s, n, arrangement, parameter)
     hangers_forces = get_hanger_forces(s, n, hangers, q_tie, 100, 10000)
     print(hangers_forces)
+    vertical_reactions = [reaction[1]*np.sin(reaction[4])+reaction[2]*np.cos(reaction[4]) for reaction in hangers_forces[0]]
+    horizontal_reactions = [reaction[1]*np.cos(reaction[4])+reaction[2]*np.sin(reaction[4]) for reaction in hangers_forces[0]]
+    print(q_tie * s)
+    print(sum(vertical_reactions))
+    print(sum(horizontal_reactions))
     return
 
 
@@ -32,17 +41,17 @@ def get_hanger_forces(s, n, hangers, q, ea, ei):
     load_group = {'Distributed': load_distributed}
     loads = [load_group]
 
-    restricted_degrees = [[i+1, 0, 1, 0] for i in range(n + 1)]
-    restricted_degrees = [[0, 1, 1, 0]] + restricted_degrees
+    restricted_degrees = [[i + 1, 0, 1, 0, -0.5] for i in range(n + 1)]
+    restricted_degrees = [[0, 0, 1, 0, 0]] + restricted_degrees
     print(restricted_degrees)
     boundary_conditions = {'Restricted Degrees': restricted_degrees}
 
     model = {'Nodes': nodes, 'Beams': beams, 'Loads': loads,
              'Boundary Conditions': boundary_conditions}
+    with suppress(SparseEfficiencyWarning):
+        displacements, internal_forces, restricted_degrees_reaction = structure_analysis(model, discElements=10)
 
-    displacements, internal_forces, restricted_degrees_reaction = structure_analysis(model, discElements=10)
     plot_internal_forces(model, displacements, internal_forces)
-
     return restricted_degrees_reaction
 
 

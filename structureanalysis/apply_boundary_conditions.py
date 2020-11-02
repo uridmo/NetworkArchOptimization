@@ -10,8 +10,8 @@ force matrix into unrestricted and restricted components.
 
 import numpy as np
 import scipy.sparse as sps
+from contextlib import suppress
 
-  
 def apply_boundary_conditions(boundary_conditions, stiffness_matrix, force_matrix):
     """Splits the stiffness and the force matrices according to the boundary conditions.
     
@@ -27,30 +27,31 @@ def apply_boundary_conditions(boundary_conditions, stiffness_matrix, force_matri
                                         restricted and the unrestricted nodal
                                         directions
     """
-    restricted_degrees  = boundary_conditions['Restricted Degrees']
-    size                = stiffness_matrix.shape[0]
+    restricted_degrees = boundary_conditions['Restricted Degrees']
+    size = stiffness_matrix.shape[0]
 
     # Determine the nodal directions which are restricted.    
-    indices_todelete = get_indices_todelete(restricted_degrees)
-    
-    #Get the matrices that can delete certain rows or columns
+    indices, angles = get_indices_todelete(restricted_degrees)
+
+    # Get the matrices that can delete certain rows or columns
     (delete_rows, delete_columns,
-     keep_rows, keep_columns) = modifier_matrices(size, indices_todelete)
-    
-    #Delete the determined nodes with the help of the modifier matrices.
-    force_matrix_modified     = delete_rows @ force_matrix
-    force_matrix_supports     = keep_rows   @ force_matrix
+     keep_rows, keep_columns) = modifier_matrices(size, indices, angles)
+
+    # Delete the determined nodes with the help of the modifier matrices.
+    force_matrix_modified = delete_rows @ force_matrix
+    force_matrix_supports = keep_rows @ force_matrix
     stiffness_matrix_modified = delete_rows @ stiffness_matrix @ delete_columns
-    stiffness_matrix_supports = keep_rows   @ stiffness_matrix @ delete_columns
-    
-    stiffness_and_force_matrices=[stiffness_matrix_modified,
-                                  stiffness_matrix_supports,
-                                  force_matrix_modified,
-                                  force_matrix_supports]
-    
+    stiffness_matrix_supports = keep_rows @ stiffness_matrix @ delete_columns
+
+    stiffness_and_force_matrices = [stiffness_matrix_modified,
+                                    stiffness_matrix_supports,
+                                    force_matrix_modified,
+                                    force_matrix_supports]
+
     return stiffness_and_force_matrices
- 
-def modifier_matrices(original_size, indices):
+
+
+def modifier_matrices(original_size, indices, angles):
     """Creates matrices that can keep or delete certain indices from a square matrix.
     
     It creates the four matrices to delete or extract the specified indices
@@ -72,37 +73,51 @@ def modifier_matrices(original_size, indices):
                           from a matrix with original_size columns
     """
     amount_todelete = indices.shape[0]
-    new_size        = original_size-amount_todelete
-    
-    #List of the elements which are to be kept or killed
+    new_size = original_size - amount_todelete
+
+    # List of the elements which are to be kept or killed
     elements_original = np.arange(original_size)
-    elements_keep     = np.delete(elements_original, indices,None)
-    elements_kill     = indices
-    
-    #List of ones for each element to kill or keep
+    elements_keep = np.delete(elements_original, indices, None)
+    elements_kill = indices
+
+    # List of ones for each element to kill or keep
     ones_kill = np.ones(new_size)
     ones_keep = np.ones(amount_todelete)
-    
-    #Normal Count for the elements to kill or keep
+
+    # Normal Count for the elements to kill or keep
     count_kill = np.arange(new_size)
     count_keep = np.arange(amount_todelete)
-    
-    #Create the sparse matrices to delete or keep the specified rows or cols.
-    delete_rows    = sps.csr_matrix((ones_kill,(count_kill,elements_keep)),
-                                    (new_size,original_size))
-    
-    delete_columns = sps.csr_matrix((ones_kill,(elements_keep,count_kill)),
-                                    (original_size,new_size))
-    
-    keep_rows      = sps.csr_matrix((ones_keep,(count_keep,elements_kill)),
-                                    (amount_todelete,original_size))
-    
-    keep_columns   = sps.csr_matrix((ones_keep,(elements_kill,count_keep)),
-                                    (original_size,amount_todelete))
+
+    # Create the sparse matrices to delete or keep the specified rows or cols.
+    delete_rows = sps.csr_matrix((ones_kill, (count_kill, elements_keep)),
+                                 (new_size, original_size))
+
+    delete_columns = sps.csr_matrix((ones_kill, (elements_keep, count_kill)),
+                                    (original_size, new_size))
+
+    keep_rows = sps.csr_matrix((ones_keep, (count_keep, elements_kill)),
+                               (amount_todelete, original_size))
+
+    keep_columns = sps.csr_matrix((ones_keep, (elements_kill, count_keep)),
+                                  (original_size, amount_todelete))
+
+    for i, index in enumerate(indices):
+        angle = angles[i]
+        if angle != 0:
+            with suppress(sps.SparseEfficiencyWarning):
+                delete_rows[index - 1 - i, index - 1] = np.cos(angle)
+                delete_rows[index - 1 - i, index] = np.sin(angle)
+                keep_rows[i, index - 1] = np.sin(angle)
+                keep_rows[i, index] = np.cos(angle)
+
+                delete_columns[index - 1, index - 1 - i] = np.cos(angle)
+                delete_columns[index, index - 1 - i] = np.sin(angle)
+                keep_columns[index - 1, i] = np.sin(angle)
+                keep_columns[index, i] = np.cos(angle)
 
     return delete_rows, delete_columns, keep_rows, keep_columns
 
- 
+
 def get_indices_todelete(restricted_degrees):
     """Gives a numpy vector of the nodal degrees of freedom which are to be deleted.
     
@@ -110,20 +125,27 @@ def get_indices_todelete(restricted_degrees):
         restricted_degrees -- the restricted degrees of the system 
     
     Return values:
-        indices_todelete -- a numpy vector containing all the nodal degrees of
+        indices_rdofs -- a numpy vector containing all the nodal degrees of
                             freedom which are to be deleted
     """
-    indices_todelete=np.empty((1,0),dtype=int)
-    
-    #Append the list for each restricted nodal degree of freedom
+    indices_rdofs = np.empty((1, 0), dtype=int)
+    angles_rdofs = np.empty((1, 0), dtype=float)
+
+    # Append the list for each restricted nodal degree of freedom
     for restricted_degree in restricted_degrees:
-        if restricted_degree[1]==1:
-            indices_todelete=np.append(indices_todelete,restricted_degree[0]*3+0)
-            
-        if restricted_degree[2]==1:
-            indices_todelete=np.append(indices_todelete,restricted_degree[0]*3+1)
-            
-        if restricted_degree[3]==1:
-            indices_todelete=np.append(indices_todelete,restricted_degree[0]*3+2)
-    
-    return indices_todelete
+        if restricted_degree[1] == 1:
+            indices_rdofs = np.append(indices_rdofs, restricted_degree[0] * 3 + 0)
+            angles_rdofs = np.append(angles_rdofs, 0)
+
+        if restricted_degree[2] == 1:
+            indices_rdofs = np.append(indices_rdofs, restricted_degree[0] * 3 + 1)
+            if restricted_degree[1] != 1:
+                angles_rdofs = np.append(angles_rdofs, restricted_degree[4])
+            else:
+                angles_rdofs = np.append(angles_rdofs, 0)
+
+        if restricted_degree[3] == 1:
+            indices_rdofs = np.append(indices_rdofs, restricted_degree[0] * 3 + 2)
+            angles_rdofs = np.append(angles_rdofs, 0)
+
+    return indices_rdofs, angles_rdofs

@@ -67,12 +67,11 @@ def plot_supports(model, ax, factor=0.03):
 
             else:
                 if bc[i][1] == 1:
-                    a = -90
+                    a = -np.pi/2
                 else:
-                    a = -30
+                    a = bc[i][4]
 
-                theta = np.radians(a)
-                c, s = np.cos(theta), np.sin(theta)
+                c, s = np.cos(a), np.sin(a)
                 r = np.array([[c, s], [-s, c]])
 
                 poly = pos + poly_array @ r

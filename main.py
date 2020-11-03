@@ -3,24 +3,27 @@ from structureanalysis import structure_analysis
 from structureanalysis.plotting import plot_internal_forces
 from scipy.sparse import SparseEfficiencyWarning
 from contextlib import suppress
+from hanger_arrangements import parallel_arrangement
+from structure_definition import hanger_forces_structure
 
 
 def main():
-
     s: float = 267.8
     r: float = 53.5
     q_tie: float = 178.1
     q_arch: float = 32.1
     n = 13
-    arrangement = "parallel"
-    parameter = [63.7]
+    alpha = 63.7
     arch_shape = "parabolic"
 
-    hangers = define_hangers(s, n, arrangement, parameter)
+    hangers = parallel_arrangement(s, n, alpha)
+
     hangers_forces = get_hanger_forces(s, n, hangers, q_tie, 100, 10000)
     print(hangers_forces)
-    vertical_reactions = [reaction[1]*np.sin(reaction[4])+reaction[2]*np.cos(reaction[4]) for reaction in hangers_forces[0]]
-    horizontal_reactions = [reaction[1]*np.cos(reaction[4])+reaction[2]*np.sin(reaction[4]) for reaction in hangers_forces[0]]
+    vertical_reactions = [reaction[1] * np.sin(reaction[4]) + reaction[2] * np.cos(reaction[4]) for reaction in
+                          hangers_forces[0]]
+    horizontal_reactions = [reaction[1] * np.cos(reaction[4]) + reaction[2] * np.sin(reaction[4]) for reaction in
+                            hangers_forces[0]]
     print(q_tie * s)
     print(sum(vertical_reactions))
     print(sum(horizontal_reactions))

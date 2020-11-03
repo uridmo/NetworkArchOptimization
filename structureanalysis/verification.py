@@ -266,13 +266,19 @@ def verify_input(model):
                 restricted_degrees[i][0] = -1
                 multiple_restrictions.append(i)
                 break
-    if multiple_restrictions != []:
+    if multiple_restrictions:
         counter = 0
         for i in range(len(multiple_restrictions)):
             restricted_degrees.pop(multiple_restrictions[i] - counter)
             counter += 1
         warnings.warn('The following restricted degrees were merged, because their nodes'
                       'are the same: ' + str(multiple_restricted_nodes), Warning)
+    # Raise a warning if a rotated bearing is not entered correctly
+    for resticted_degree in restricted_degrees:
+        if resticted_degree[4]:
+            if resticted_degree[1] or resticted_degree[3]:
+                warnings.warn('Rotated bearings are only allowed for restricted y-direction.')
+
 
     # Check whether one node has more than one initial displacement in the same loadgroup.
     for loadgroup in loads:

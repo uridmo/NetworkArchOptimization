@@ -46,6 +46,8 @@ def solve(stiffness_and_force_matrices, loads, boundary_conditions):
     stiffness_matrix_supports = stiffness_and_force_matrices[1]
     force_matrix_modified = stiffness_and_force_matrices[2]
     force_matrix_supports = stiffness_and_force_matrices[3]
+    r = stiffness_and_force_matrices[4]
+    rt = stiffness_and_force_matrices[5]
 
     # Solve the system.
     # spsolve provides fast results but the accuracy can become a problem in large models
@@ -68,6 +70,7 @@ def solve(stiffness_and_force_matrices, loads, boundary_conditions):
     # Include the restricted degrees and the initial displacements.
     displacements = insert_initial_displacements(displacements_modified, loads,
                                                  restricted_degrees)
+    displacements = rt @ displacements
 
     # Create the support reactions list.
     support_reactions = get_support_reactions(support_reactions_matrix,

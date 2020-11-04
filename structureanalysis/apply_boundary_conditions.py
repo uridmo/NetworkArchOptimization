@@ -12,6 +12,7 @@ import numpy as np
 import scipy.sparse as sps
 from contextlib import suppress
 
+
 def apply_boundary_conditions(boundary_conditions, stiffness_matrix, force_matrix):
     """Splits the stiffness and the force matrices according to the boundary conditions.
     
@@ -37,18 +38,36 @@ def apply_boundary_conditions(boundary_conditions, stiffness_matrix, force_matri
     (delete_rows, delete_columns,
      keep_rows, keep_columns) = modifier_matrices(size, indices, angles)
 
+    r, rt = rotation_matrices(size, indices, angles)
     # Delete the determined nodes with the help of the modifier matrices.
-    force_matrix_modified = delete_rows @ force_matrix
-    force_matrix_supports = keep_rows @ force_matrix
-    stiffness_matrix_modified = delete_rows @ stiffness_matrix @ delete_columns
-    stiffness_matrix_supports = keep_rows @ stiffness_matrix @ delete_columns
+    force_matrix_modified = delete_rows @ r @ force_matrix
+    force_matrix_supports = keep_rows @ r @ force_matrix
+    stiffness_matrix_modified = delete_rows @ r @ stiffness_matrix @ rt @ delete_columns
+    stiffness_matrix_supports = keep_rows @ r @ stiffness_matrix @ rt @ delete_columns
 
     stiffness_and_force_matrices = [stiffness_matrix_modified,
                                     stiffness_matrix_supports,
                                     force_matrix_modified,
-                                    force_matrix_supports]
-
+                                    force_matrix_supports,
+                                    r, rt]
     return stiffness_and_force_matrices
+
+
+def rotation_matrices(original_size, indices, angles):
+    components = np.ones(original_size)
+    count1 = np.arange(original_size)
+    count2 = np.arange(original_size)
+    for i, index in enumerate(indices):
+        angle = angles[i]
+        if angle != 0:
+            c, s = np.cos(angle), np.sin(angle)
+            components = np.concatenate([components, np.array([c-1, -s, s, c-1])])
+            count1 = np.concatenate([count1, np.array([index-1, index-1, index, index])])
+            count2 = np.concatenate([count2, np.array([index-1, index, index-1, index])])
+
+    r1 = sps.csr_matrix((components, (count1, count2)), (original_size, original_size))
+    rt = sps.csr_matrix((components, (count2, count1)), (original_size, original_size))
+    return r1, rt
 
 
 def modifier_matrices(original_size, indices, angles):
@@ -101,19 +120,19 @@ def modifier_matrices(original_size, indices, angles):
     keep_columns = sps.csr_matrix((ones_keep, (elements_kill, count_keep)),
                                   (original_size, amount_todelete))
 
-    for i, index in enumerate(indices):
-        angle = angles[i]
-        if angle != 0:
-            with suppress(sps.SparseEfficiencyWarning):
-                delete_rows[index - 1 - i, index - 1] = np.cos(angle)
-                delete_rows[index - 1 - i, index] = np.sin(angle)
-                keep_rows[i, index - 1] = np.sin(angle)
-                keep_rows[i, index] = np.cos(angle)
-
-                delete_columns[index - 1, index - 1 - i] = np.cos(angle)
-                delete_columns[index, index - 1 - i] = np.sin(angle)
-                keep_columns[index - 1, i] = np.sin(angle)
-                keep_columns[index, i] = np.cos(angle)
+    # for i, index in enumerate(indices):
+    #     angle = angles[i]
+    #     if angle != 0:
+    #         with suppress(sps.SparseEfficiencyWarning):
+    #             delete_rows[index - 1 - i, index - 1] = np.cos(angle)
+    #             delete_rows[index - 1 - i, index] = np.sin(angle)
+    #             keep_rows[i, index - 1] = np.sin(angle)
+    #             keep_rows[i, index] = np.cos(angle)
+    #
+    #             delete_columns[index - 1, index - 1 - i] = np.cos(angle)
+    #             delete_columns[index, index - 1 - i] = np.sin(angle)
+    #             keep_columns[index - 1, i] = np.sin(angle)
+    #             keep_columns[index, i] = np.cos(angle)
 
     return delete_rows, delete_columns, keep_rows, keep_columns
 

@@ -9,7 +9,7 @@ from .plotSettings import plotLegend, plotTitle, initializePlot, adjustPlot
 import os
 
 
-def plotForces(model, loadgroup, title, savePlot=False):
+def plot_loads(model, load_group, title, save_plot=False):
     """
     Takes the structure and load dictionary.
     
@@ -25,27 +25,27 @@ def plotForces(model, loadgroup, title, savePlot=False):
     # ------------------------------------
 
     try:
-        nodalLoads = model['Loads'][loadgroup]['Nodal']
+        nodalLoads = model['Loads'][load_group]['Nodal']
     except:
         nodalLoads = []
 
     try:
-        pointLoads = model['Loads'][loadgroup]['Point']
+        pointLoads = model['Loads'][load_group]['Point']
     except:
         pointLoads = []
 
     try:
-        lineLoads = model['Loads'][loadgroup]['Distributed']
+        lineLoads = model['Loads'][load_group]['Distributed']
     except:
         lineLoads = []
 
     try:
-        functionLoads = model['Loads'][loadgroup]['Functions']
+        functionLoads = model['Loads'][load_group]['Functions']
     except:
         functionLoads = []
 
     try:
-        displacements = model['Loads'][loadgroup]['Initial Displacements']
+        displacements = model['Loads'][load_group]['Initial Displacements']
     except:
         displacements = []
 
@@ -319,9 +319,9 @@ def plotForces(model, loadgroup, title, savePlot=False):
     adjustPlot(ax)
     plt.show()
 
-    if savePlot:
+    if save_plot:
 
         if not os.path.isdir('Plots ' + title):
             os.makedirs('Plots ' + title)
 
-        plt.savefig('Plots ' + title + '/Loadgroup ' + str(loadgroup) + '_Forces.pdf', dpi=300, bbox_inches='tight')
+        plt.savefig('Plots ' + title + '/Loadgroup ' + str(load_group) + '_Forces.pdf', dpi=300, bbox_inches='tight')

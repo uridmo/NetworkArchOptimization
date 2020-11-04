@@ -19,10 +19,10 @@ def plotHinges(model, ax):
         
         if hinges[i][1] == 1:
             x,y = nodes[startNode][0], nodes[startNode][1]  
-            ax.plot(x,y, marker='o', markersize=8, alpha=1, color='black')
-            ax.plot(x,y, marker='o', markersize=5, alpha=1, color='white')                
+            ax.plot(x, y, marker='o', markersize=8, alpha=1, color='black')
+            ax.plot(x, y, marker='o', markersize=5, alpha=1, color='white')
 
         if hinges[i][2] == 1:
             x,y = nodes[endNode][0], nodes[endNode][1]                  
-            ax.plot(x,y, marker='o', markersize=8, alpha=1, color='black')
-            ax.plot(x,y, marker='o', markersize=5, alpha=1, color='white')                
+            ax.plot(x, y, marker='o', markersize=8, alpha=1, color='black')
+            ax.plot(x, y, marker='o', markersize=5, alpha=1, color='white')

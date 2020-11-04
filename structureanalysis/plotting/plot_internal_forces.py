@@ -8,7 +8,7 @@ from .plotSettings import plotLegend, plotTitle, initializePlot, adjustPlot
 import os
 
 
-def plot(model, displacements, internal_forces, loadgroup, quantity, title, showExtrema=False, savePlot=False, scaleMax=0.25):
+def plot_internal_forces(model, displacements, internal_forces, loadgroup, quantity, title, show_extrema=False, save_plot=False, scale_max=0.25):
     """
     Takes the structure and the reactions and plots the structure with the 
     required quantity of forces or deformations.
@@ -116,13 +116,13 @@ def plot(model, displacements, internal_forces, loadgroup, quantity, title, show
         if quantity == 'Deformed Shape':
             if i==0:
                 plotStructure(model,ax) # Plot structure only at first loop
-                ax.plot(0,0, color=displacementColor, dashes=(2,3), label='qualitative displacements')
+                ax.plot(0, 0, color=displacementColor, dashes=(2, 3), label='qualitative displacements')
                 plotTitle(fig, f'Deformations (scaled by factor {scaleDisplacements:.1f})')
                 
             ValuesHorizontal = np.array(reactions['uh'][i])*scaleDisplacements
             ValuesVertical   = np.array(reactions['uv'][i])*scaleDisplacements
 
-            ax.plot(x+ValuesHorizontal,y+ValuesVertical, color=displacementColor, dashes=(2,3))
+            ax.plot(x + ValuesHorizontal, y + ValuesVertical, color=displacementColor, dashes=(2, 3))
             
 
         # Plot single quantities
@@ -133,7 +133,7 @@ def plot(model, displacements, internal_forces, loadgroup, quantity, title, show
                 plotTitle(fig, quantity)
 
                 # Add the identifier for pos/neg values to the legend
-                ax.plot(0,0, color=maxColor, label=quantity)
+                ax.plot(0, 0, color=maxColor, label=quantity)
             values = np.array(reaction[i])
 
             # Construct unit vector perpendicular to the corresponding element accoring to 
@@ -160,7 +160,7 @@ def plot(model, displacements, internal_forces, loadgroup, quantity, title, show
             ymax = y+normalVec[1]*scaleForces*values
 
             # Plot the upper and lower bound
-            ax.plot(xmax, ymax, color=maxColor, alpha=0.4) 
+            ax.plot(xmax, ymax, color=maxColor, alpha=0.4)
 #            ax.plot(xmin, ymin, color=minColor, alpha=0.4)
             
             # fill between max and min
@@ -176,17 +176,17 @@ def plot(model, displacements, internal_forces, loadgroup, quantity, title, show
             ax.add_patch(polygon)
                         
             # Show the extrema in plot and legend
-            if showExtrema:
+            if show_extrema:
                 maxIndex, minIndex = np.argmax(values), np.argmin(values)
                 maxX, maxY = xmax[maxIndex], ymax[maxIndex]
                 minX, minY = xmax[minIndex], ymax[minIndex]
                 
                 # Show maxima and minima with element 'title' in legend
-                ax.plot(0,0, linestyle='None', label=r'$\bf{Element}$'+' '+r'$\bf{%i:}$'%i)
-                ax.plot(maxX, maxY, color=maxColor,  marker='.', markersize=10, linestyle='None', 
-                      label=f'Max {quantity}={values[maxIndex]*unitScale:.1f} {currentUnit} at ({x[maxIndex]:.2f}, {y[maxIndex]:.2f}) m')
-                ax.plot(minX, minY, color=minColor, marker='.', markersize=10, linestyle='None', 
-                      label=f'Min {quantity}={values[minIndex]*unitScale:.1f} {currentUnit} at ({x[minIndex]:.2f}, {y[minIndex]:.2f}) m')
+                ax.plot(0, 0, linestyle='None', label=r'$\bf{Element}$' + ' ' + r'$\bf{%i:}$' % i)
+                ax.plot(maxX, maxY, color=maxColor, marker='.', markersize=10, linestyle='None',
+                                        label=f'Max {quantity}={values[maxIndex]*unitScale:.1f} {currentUnit} at ({x[maxIndex]:.2f}, {y[maxIndex]:.2f}) m')
+                ax.plot(minX, minY, color=minColor, marker='.', markersize=10, linestyle='None',
+                                        label=f'Min {quantity}={values[minIndex]*unitScale:.1f} {currentUnit} at ({x[minIndex]:.2f}, {y[minIndex]:.2f}) m')
             
     plotLegend(ax)    
     plotHinges(model, ax)
@@ -194,7 +194,7 @@ def plot(model, displacements, internal_forces, loadgroup, quantity, title, show
     adjustPlot(ax)
     plt.show()
 
-    if savePlot:
+    if save_plot:
         
         if not os.path.isdir('Plots '+title):
             os.makedirs('Plots '+title)

@@ -1,6 +1,7 @@
 import numpy as np
 from structureanalysis import structure_analysis
-from structureanalysis.plotting import plot_internal_forces
+from structureanalysis.plotting.plot_loads import plot_loads
+from structureanalysis.plotting.plot_internal_forces import plot_internal_forces
 from hanger_arrangements import parallel_arrangement
 from hanger_arrangements import radial_arrangement
 from structural_analysis import hanger_forces_structure
@@ -8,20 +9,20 @@ from structural_analysis import get_hanger_forces
 
 
 def main():
-    s = 267.8
-    r = 53.5
+    span = 267.8
+    rise = 53.5
     q_tie = 178.1
     q_arch = 32.1
     n = 14
     alpha = np.radians(63.7)
     beta = np.radians(35)
 
-    hangers_0 = parallel_arrangement(s, n, alpha)
-    hangers_1 = radial_arrangement(r, s, n, beta)
-    model = hanger_forces_structure(hangers_1, s, q_tie, 1000000, 1)
+    hangers_0 = parallel_arrangement(span, n, alpha)
+    hangers_1 = radial_arrangement(rise, span, n, beta)
+    model = hanger_forces_structure(hangers_1, span, q_tie, 1000000, 1)
     displacements, internal_forces, rd_reaction = structure_analysis(model, discElements=10)
-    plot_internal_forces(model, displacements, internal_forces)
-
+    plot_loads(model, 0, 'Hello')
+    plot_internal_forces(model, displacements, internal_forces, 0, 'Moment', 'Hello 2')
     reactions, vertical_reactions, horizontal_reactions = get_hanger_forces(rd_reaction)
 
     print(reactions)
@@ -30,7 +31,7 @@ def main():
     print(min(vertical_reactions))
     print(sum(horizontal_reactions))
     print(sum(vertical_reactions))
-    print(q_tie * s)
+    print(q_tie * span)
     return
 
 

@@ -28,6 +28,6 @@ def showOrientation(model, ax):
         y2=[ym+0.15*normalVec[1]-0.075*Vec[1], ym+0.15*normalVec[1]+0.075*Vec[1]]
         y3=[ym+0.15*normalVec[1]+0.15*Vec[1],  ym+0.15*normalVec[1]+0.3*Vec[1]]
         
-        ax.plot(x1,y1, color='black', linewidth=1)#, dashes=[3, 1.5]
-        ax.plot(x2,y2, color='black', linewidth=1)
-        ax.plot(x3,y3, color='black', linewidth=1)
+        ax.plot(x1, y1, color='black', linewidth=1)#, dashes=[3, 1.5]
+        ax.plot(x2, y2, color='black', linewidth=1)
+        ax.plot(x3, y3, color='black', linewidth=1)

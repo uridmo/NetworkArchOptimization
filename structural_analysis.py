@@ -1,8 +1,4 @@
 import numpy as np
-from structureanalysis import structure_analysis
-from structureanalysis.plotting import plot_internal_forces
-from scipy.sparse import SparseEfficiencyWarning
-from contextlib import suppress
 
 
 def hanger_forces_structure(hangers, s, q, ea, ei):
@@ -41,17 +37,12 @@ def hanger_forces_structure(hangers, s, q, ea, ei):
     return model
 
 
-def get_hanger_forces(model):
-    with suppress(SparseEfficiencyWarning):
-        displacements, internal_forces, restricted_degrees_reaction = structure_analysis(model, discElements=10)
+def get_hanger_forces(restricted_degrees_reaction):
     hangers_forces = restricted_degrees_reaction[0]
-    print(hangers_forces)
-    plot_internal_forces(model, displacements, internal_forces)
-
     reactions = [r[2] for r in hangers_forces]
     vertical_reactions = [r[1] * np.sin(r[4]) + r[2] * np.cos(r[4]) for r in hangers_forces]
     horizontal_reactions = [r[1] * np.cos(r[4]) + r[2] * np.sin(r[4]) for r in hangers_forces]
-    return reactions
+    return reactions, vertical_reactions, horizontal_reactions
 
 
 def network_arch_bridge():

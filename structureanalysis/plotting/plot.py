@@ -192,6 +192,7 @@ def plot(model, displacements, internal_forces, loadgroup, quantity, title, show
     plotHinges(model, ax)
     plot_supports(model, ax)
     adjustPlot(ax)
+    plt.show()
 
     if savePlot:
         

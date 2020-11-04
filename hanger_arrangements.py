@@ -1,6 +1,7 @@
 import numpy as np
 from numpy import linspace
 from warnings import warn
+from copy import deepcopy
 
 
 def parallel_arrangement(s, n, alpha):
@@ -9,7 +10,7 @@ def parallel_arrangement(s, n, alpha):
     angles = [alpha for i in range(n)]
     hanger_set = {"Position": positions, "Angles": angles}
     hangers = mirror_hanger_set(hanger_set, s)
-    return hangers
+    return hanger_set
 
 
 def constant_change_arrangement(s, n, alpha_0, alpha_mid):
@@ -19,7 +20,7 @@ def constant_change_arrangement(s, n, alpha_0, alpha_mid):
     angles = [alpha_mid - da * (2 * x[i] - s) / s for i in range(n)]
     hanger_set = {"Position": positions, "Angles": angles}
     hangers = mirror_hanger_set(hanger_set, s)
-    return hangers
+    return hanger_set
 
 
 def radial_arrangement(r, s, n, beta):
@@ -51,12 +52,11 @@ def radial_arrangement(r, s, n, beta):
             warn("The " + str(i) + ". hanger of the set was deleted as it lies outside the tie")
 
     hanger_set = {"Position": pos_tie_x, "Angles": angles_1}
-    hangers = mirror_hanger_set(hanger_set, s)
-    return hangers
+    return hanger_set
 
 
 def mirror_hanger_set(hanger_set, s):
-    hangers = hanger_set
+    hangers = deepcopy(hanger_set)
     hangers['Position'] += list(map(lambda x: s-x, hanger_set['Position']))
     hangers['Angles'] += list(map(lambda x: np.pi-x, hanger_set['Angles']))
     array_sort = [(hangers['Position'][i], hangers['Angles'][i]) for i in range(len(hangers['Position']))]

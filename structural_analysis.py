@@ -2,8 +2,8 @@ import numpy as np
 
 
 def hanger_forces_structure(hangers, s, q, ea, ei):
-    n = len(hangers["Position"])
-    positions = [round(i, 6) for i in hangers['Position']]
+    n = len(hangers)
+    positions = [h[0] for h in hangers]
 
     nodes_counter = 1
     nodes_location = [[0, 0]]
@@ -15,7 +15,7 @@ def hanger_forces_structure(hangers, s, q, ea, ei):
         else:
             nodes_counter += 1
             nodes_location += [[x, 0]]
-            restricted_degrees += [[nodes_counter-1, 0, 1, 0, -np.pi/2+hangers['Angles'][i]]]
+            restricted_degrees += [[nodes_counter-1, 0, 1, 0, -np.pi/2+hangers[i][1]]]
     nodes_counter += 1
     nodes_location += [[s, 0]]
     restricted_degrees += [[nodes_counter-1, 0, 1, 0, 0]]

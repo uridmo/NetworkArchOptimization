@@ -9,6 +9,7 @@ from structural_analysis import hanger_forces_structure
 from structural_analysis import get_hanger_forces
 
 from arch_construction import continuous_arch
+from arch_construction import get_arch_nodes
 
 
 def main():
@@ -43,6 +44,11 @@ def main():
     x, y = continuous_arch(span, rise, q_tie, 50, hanger_set_0)
     print(x)
     print(y)
+
+    hangers, x_arch, y_arch = get_arch_nodes(x, y, hangers_0)
+    print(hangers)
+    print(x_arch)
+    print(y_arch)
     return
 
 

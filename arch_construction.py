@@ -73,13 +73,15 @@ def circular_arch():
 
 
 def continuous_arch(s, r, q, n, hangers):
-    a_x = hangers['Position']
-    angles = hangers['Angles']
+    a_x = [h[0] for h in hangers]
+    angles = [h[1] for h in hangers]
     normal_force = q * s ** 2 / 8 / r
-    x = np.linspace(s / 2, s, n+1)
+    x = np.linspace(s / 2, s, n + 1)
 
     def fun_angle(p): return np.interp(p, a_x, angles)
+
     def fun_height(p, angle, h): return p + h / np.tan(angle)
+
     def fun_height_2(p, h): return fun_height(p, fun_angle(p), h)
 
     # Find start positions
@@ -89,9 +91,11 @@ def continuous_arch(s, r, q, n, hangers):
     normal_force = fsolve(lambda n_x: arch_opt(n_x, x, r, s, l0, q, fun_angle, fun_height_2), normal_force)
     [dy, y, nx, ny, l1, l2] = arch(normal_force, x, r, s, l0, q, fun_angle, fun_height_2)
 
-    x = np.linspace(0, s, 2*n).tolist()
+    x = np.linspace(0, s, 2 * n).tolist()
     y = y.tolist()
-    y = y[-1:1:-1]+y
+    y = y[-1:1:-1] + y
+    x = [round(i, 3) for i in x]
+    y = [round(i, 3) for i in y]
     return x, y
 
 
@@ -100,7 +104,39 @@ def discrete_arch():
     return arc
 
 
+def get_arch_nodes(x_arch, y_arch, hangers):
+    for j in range(len(hangers)):
+        x_tie = hangers[j][0]
+        angle = hangers[j][1]
+        for i in range(len(x_arch) - 1):
+            x_arch_1 = x_arch[i]
+            x_arch_2 = x_arch[i + 1]
+            y_arch_1 = y_arch[i]
+            y_arch_2 = y_arch[i + 1]
+            dx = x_arch_2 - x_arch_1
+            dy = y_arch_2 - y_arch_1
+            if angle == np.pi / 2:
+                if x_arch_1 < x_tie < x_arch_2:
+                    x_arch.insert(i + 1, x_tie)
+                    y_arch.insert(i + 1, y_arch_1 + dy * (x_tie - x_arch_1) / dx)
+                    hangers[j].append(i + 1)
+                    break
+            else:
+                tan_a = np.tan(angle)
+                a = -(dy * tan_a * x_tie - dy * tan_a * x_arch_1 + dx * tan_a * y_arch_1) / (dy - dx * tan_a)
+                b = -(y_arch_1 - tan_a * x_arch_1 + tan_a * x_tie) / (dy - dx * tan_a)
+                if 0 <= b < 1 and a > 0:
+                    x_arch.insert(i + 1, x_arch_1 + b * dx)
+                    y_arch.insert(i + 1, y_arch_1 + b * dy)
+                    hangers[j].append(i + 1)
+                    break
 
+    for j in range(len(hangers)-1):
+        for i in range(j+1, len(hangers)):
+            if hangers[j][2] >= hangers[i][2]:
+                hangers[j][2] += 1
+
+    return hangers, x_arch, y_arch
 
 
 if __name__ == '__main__':

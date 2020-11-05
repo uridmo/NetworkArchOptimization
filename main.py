@@ -40,7 +40,8 @@ def main():
     print(sum(vertical_reactions))
     print(q_tie * span)
 
-    y = continuous_arch(span, rise, q_tie, 10, hanger_set_0)
+    x, y = continuous_arch(span, rise, q_tie, 50, hanger_set_0)
+    print(x)
     print(y)
     return
 

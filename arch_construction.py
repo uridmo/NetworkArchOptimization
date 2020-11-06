@@ -91,9 +91,9 @@ def continuous_arch(s, r, q, n, hangers):
     normal_force = fsolve(lambda n_x: arch_opt(n_x, x, r, s, l0, q, fun_angle, fun_height_2), normal_force)
     [dy, y, nx, ny, l1, l2] = arch(normal_force, x, r, s, l0, q, fun_angle, fun_height_2)
 
-    x = np.linspace(0, s, 2 * n).tolist()
+    x = np.linspace(0, s, 2 * n + 1).tolist()
     y = y.tolist()
-    y = y[-1:1:-1] + y
+    y = y[-1:0:-1] + y
     x = [round(i, 3) for i in x]
     y = [round(i, 3) for i in y]
     return x, y

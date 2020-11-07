@@ -8,9 +8,9 @@ def displacement(d, q, s, nx, ny, x, y, dx, l1, l2, fun_angle, fun_height_2):
     dl2 = fsolve(lambda dl: fun_height_2(l2 - dl, y - dy) - (s - x - dx), 0)[0]
 
     a1 = fun_angle(l1 + dl1 / 2)
-    b1 = fun_angle(-(l1 + dl1 / 2))
+    b1 = fun_angle(s-(l1 + dl1 / 2))
     a2 = fun_angle(l2 - dl2 / 2)
-    b2 = fun_angle(-(l2 - dl2 / 2))
+    b2 = fun_angle(s-(l2 - dl2 / 2))
 
     f1 = q * dl1 / (np.sin(a1) + np.cos(a1) * np.tan(b1))
     f2 = q * dl2 / (np.sin(a2) + np.cos(a2) * np.tan(b2))
@@ -46,7 +46,7 @@ def arch(N, X, r, s, l0, q, fun_angle, fun_height_2):
                                                        fun_angle, fun_height_2)
 
         d = fsolve(displacement_d, d, factor=0.1)
-        [a, nx, ny, dl1, dl2] = displacement(d, q, s, nx_arr[i], ny_arr[i], X[i], dx[i], y[i], l1[i], l2[i], fun_angle,
+        [a, nx, ny, dl1, dl2] = displacement(d, q, s, nx_arr[i], ny_arr[i], X[i], y[i], dx[i], l1[i], l2[i], fun_angle,
                                              fun_height_2)
         y[i + 1] = y[i] - d
         l1[i + 1] = l1[i] + dl1
@@ -108,6 +108,7 @@ def get_arch_nodes(x_arch, y_arch, hangers):
     for j in range(len(hangers)):
         x_tie = hangers[j][0]
         angle = hangers[j][1]
+        a = 1
         for i in range(len(x_arch) - 1):
             x_arch_1 = x_arch[i]
             x_arch_2 = x_arch[i + 1]
@@ -134,7 +135,7 @@ def get_arch_nodes(x_arch, y_arch, hangers):
     for j in range(len(hangers)-1):
         for i in range(j+1, len(hangers)):
             if hangers[j][2] >= hangers[i][2]:
-                hangers[j][2] += 1
+                hangers[i][2] += 1
 
     return hangers, x_arch, y_arch
 

@@ -21,19 +21,17 @@ def main():
     q_arch = 32.1
     n = 15
     alpha = np.radians(45)
-    beta = np.radians(35)
+    beta = np.radians(30)
 
-    hanger_set_0 = parallel_arrangement(span, n, alpha)
-    hangers_0 = mirror_hanger_set(hanger_set_0, span)
+    hanger_set = parallel_arrangement(span, n, alpha)
+    hanger_set = radial_arrangement(rise, span, n, beta)
+    hangers = mirror_hanger_set(hanger_set, span)
 
-    hanger_set_1 = radial_arrangement(rise, span, n, beta)
-    hangers_1 = mirror_hanger_set(hanger_set_1, span)
-
-    model = hanger_forces_structure(hangers_1, span, q_tie, 1000000, 1)
-    displacements, internal_forces, rd_reaction = structure_analysis(model, discElements=10)
-    plot_loads(model, 0, 'Hello')
-    plot_internal_forces(model, displacements, internal_forces, 0, 'Moment', 'Hello 2')
-    hanger_forces = get_hanger_forces(rd_reaction)
+    model_tie = hanger_forces_structure(hangers, span, q_tie, 1000000, 1)
+    d_tie, if_tie, rd_tie = structure_analysis(model_tie, discElements=10)
+    plot_loads(model_tie, 0, 'Hello')
+    plot_internal_forces(model_tie, d_tie, if_tie, 0, 'Moment', 'Hello 2')
+    hanger_forces = get_hanger_forces(rd_tie)
 
     print(hanger_forces[0])
     print(hanger_forces[1])
@@ -43,22 +41,22 @@ def main():
     print(sum(hanger_forces[1]))
     print(q_tie * span)
 
-    x, y = continuous_arch(span, rise, q_tie, 50, hanger_set_0)
+    x, y = continuous_arch(span, rise, q_tie, 30, hanger_set)
     print(x)
     print(y)
 
-    hangers, x_arch, y_arch = get_arch_nodes(x, y, hangers_0)
+    hangers, x_arch, y_arch = get_arch_nodes(x, y, hangers)
     print(hangers)
     print(x_arch)
     print(y_arch)
 
-    model_2 = arch_structure(hangers, hanger_forces, x_arch, y_arch, 10000, 1000000)
-    verify_input(model_2)
-    plot_loads(model_2, 0, 'Hello')
+    model_arch = arch_structure(hangers, hanger_forces, x_arch, y_arch, 10000, 1000000)
+    verify_input(model_arch)
+    plot_loads(model_arch, 0, 'Hello')
 
-    displacements_2, internal_forces_2, rd_reaction_2 = structure_analysis(model_2, discElements=10)
-    plot_internal_forces(model_2, displacements_2, internal_forces_2, 0, 'Moment', 'Hello 2')
-    plot_internal_forces(model_2, displacements_2, internal_forces_2, 0, 'Normal Force', 'Hello 2')
+    d_arch, if_arch, rd_arch = structure_analysis(model_arch, discElements=10)
+    plot_internal_forces(model_arch, d_arch, if_arch, 0, 'Moment', 'Hello 2')
+    plot_internal_forces(model_arch, d_arch, if_arch, 0, 'Normal Force', 'Hello 2')
     return
 
 

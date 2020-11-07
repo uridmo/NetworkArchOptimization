@@ -1,3 +1,5 @@
+from typing import List, Any, Union
+
 import numpy as np
 from scipy.optimize import fsolve
 
@@ -8,9 +10,9 @@ def displacement(d, q, s, nx, ny, x, y, dx, l1, l2, fun_angle, fun_height_2):
     dl2 = fsolve(lambda dl: fun_height_2(l2 - dl, y - dy) - (s - x - dx), 0)[0]
 
     a1 = fun_angle(l1 + dl1 / 2)
-    b1 = fun_angle(s-(l1 + dl1 / 2))
+    b1 = fun_angle(s - (l1 + dl1 / 2))
     a2 = fun_angle(l2 - dl2 / 2)
-    b2 = fun_angle(s-(l2 - dl2 / 2))
+    b2 = fun_angle(s - (l2 - dl2 / 2))
 
     f1 = q * dl1 / (np.sin(a1) + np.cos(a1) * np.tan(b1))
     f2 = q * dl2 / (np.sin(a2) + np.cos(a2) * np.tan(b2))
@@ -64,13 +66,15 @@ def arch_opt(n, x, r, s, l0, q, fun_angle, fun_height_2):
 
 def parabolic_arch(s, r, n):
     x_arch = np.linspace(0, s, 2 * n + 1).tolist()
-    y_arch = [r*(1-((2*x-s)/s)**2) for x in x_arch]
+    y_arch = [r * (1 - ((2 * x - s) / s) ** 2) for x in x_arch]
     return x_arch, y_arch
 
 
-def circular_arch():
-    arc = 0
-    return arc
+def circular_arch(s, r, n):
+    radius = (r ** 2 + (s / 2) ** 2) / (2 * r)
+    x_arch = np.linspace(0, s, 2 * n + 1).tolist()
+    y_arch = [r - radius * (1 - (1 - ((x - s/2)/radius) ** 2) ** 0.5) for x in x_arch]
+    return x_arch, y_arch
 
 
 def continuous_arch(s, r, q, n, hangers):
@@ -80,7 +84,9 @@ def continuous_arch(s, r, q, n, hangers):
     x_arch = np.linspace(s / 2, s, n + 1)
 
     def fun_angle(p): return np.interp(p, a_x, angles)
+
     def fun_height(p, angle, h): return p + h / np.tan(angle)
+
     def fun_height_2(p, h): return fun_height(p, fun_angle(p), h)
 
     # Find hangers that reach the top of the arch
@@ -130,8 +136,8 @@ def get_arch_nodes(x_arch, y_arch, hangers):
                     hangers[j].append(i + 1)
                     break
 
-    for j in range(len(hangers)-1):
-        for i in range(j+1, len(hangers)):
+    for j in range(len(hangers) - 1):
+        for i in range(j + 1, len(hangers)):
             if hangers[j][2] >= hangers[i][2]:
                 hangers[i][2] += 1
 

@@ -3,15 +3,18 @@ from structureanalysis import structure_analysis
 from structureanalysis import verify_input
 from structureanalysis.plotting.plot_loads import plot_loads
 from structureanalysis.plotting.plot_internal_forces import plot_internal_forces
+
 from hanger_arrangements import parallel_arrangement
 from hanger_arrangements import radial_arrangement
 from hanger_arrangements import mirror_hanger_set
+
 from structural_analysis import hanger_forces_structure
 from structural_analysis import get_hanger_forces
 from structural_analysis import arch_structure
 
 from arch_construction import continuous_arch
 from arch_construction import parabolic_arch
+from arch_construction import circular_arch
 from arch_construction import get_arch_nodes
 
 
@@ -40,12 +43,14 @@ def main():
     print(min(hanger_forces[1]))
     print(q_tie * span)
 
-    x, y = continuous_arch(span, rise, q_tie, 30, hanger_set)
-    x, y = parabolic_arch(span, rise, 30)
-    print(x)
-    print(y)
+    # x_arch, y_arch = continuous_arch(span, rise, q_tie, 30, hanger_set)
+    x_arch, y_arch = parabolic_arch(span, rise, 30)
+    # x_arch, y_arch = circular_arch(span, rise, 30)
 
-    hangers, x_arch, y_arch = get_arch_nodes(x, y, hangers)
+    print(x_arch)
+    print(y_arch)
+
+    hangers, x_arch, y_arch = get_arch_nodes(x_arch, y_arch, hangers)
     print(hangers)
     print(x_arch)
     print(y_arch)

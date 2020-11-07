@@ -98,8 +98,6 @@ def continuous_arch(s, r, q, n, hangers):
     x_arch = np.linspace(0, s, 2 * n + 1).tolist()
     y_arch = y_arch.tolist()
     y_arch = y_arch[-1:0:-1] + y_arch
-    x_arch = [round(i, 3) for i in x_arch]
-    y_arch = [round(i, 3) for i in y_arch]
     return x_arch, y_arch
 
 
@@ -136,12 +134,25 @@ def get_arch_nodes(x_arch, y_arch, hangers):
                     hangers[j].append(i + 1)
                     break
 
+    # Adapt the nodes for the inserted points
     for j in range(len(hangers) - 1):
         for i in range(j + 1, len(hangers)):
             if hangers[j][2] >= hangers[i][2]:
                 hangers[i][2] += 1
 
-    return hangers, x_arch, y_arch
+    # Round the components of the nodes
+    x_arch = [round(x, 3) for x in x_arch]
+    y_arch = [round(y, 3) for y in y_arch]
+
+    # Pop identical nodes
+    for i in range(len(x_arch)-1):
+        if x_arch[i] == x_arch[i+1]:
+            x_arch.pop(i+1)
+            y_arch.pop(i+1)
+            for hanger in hangers:
+                if hanger[2] >= i+1:
+                    hanger[2] -= 1
+    return x_arch, y_arch, hangers
 
 
 if __name__ == '__main__':

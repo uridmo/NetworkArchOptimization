@@ -50,7 +50,7 @@ def main():
     print(x_arch)
     print(y_arch)
 
-    hangers, x_arch, y_arch = get_arch_nodes(x_arch, y_arch, hangers)
+    x_arch, y_arch, hangers = get_arch_nodes(x_arch, y_arch, hangers)
     print(hangers)
     print(x_arch)
     print(y_arch)

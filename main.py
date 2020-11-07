@@ -11,6 +11,7 @@ from structural_analysis import get_hanger_forces
 from structural_analysis import arch_structure
 
 from arch_construction import continuous_arch
+from arch_construction import parabolic_arch
 from arch_construction import get_arch_nodes
 
 
@@ -27,7 +28,7 @@ def main():
     hanger_set = radial_arrangement(rise, span, n, beta)
     hangers = mirror_hanger_set(hanger_set, span)
 
-    model_tie = hanger_forces_structure(hangers, span, q_tie, 1000000, 1)
+    model_tie = hanger_forces_structure(hangers, span, q_tie, 10**4, 10**4)
     d_tie, if_tie, rd_tie = structure_analysis(model_tie, discElements=10)
     plot_loads(model_tie, 0, 'Hello')
     plot_internal_forces(model_tie, d_tie, if_tie, 0, 'Moment', 'Hello 2')
@@ -37,11 +38,10 @@ def main():
     print(hanger_forces[1])
     print(hanger_forces[2])
     print(min(hanger_forces[1]))
-    print(sum(hanger_forces[2]))
-    print(sum(hanger_forces[1]))
     print(q_tie * span)
 
     x, y = continuous_arch(span, rise, q_tie, 30, hanger_set)
+    x, y = parabolic_arch(span, rise, 30)
     print(x)
     print(y)
 

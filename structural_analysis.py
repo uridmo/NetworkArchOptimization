@@ -7,7 +7,7 @@ def hanger_forces_structure(hangers, s, q, ea, ei):
 
     nodes_counter = 1
     nodes_location = [[0, 0]]
-    restricted_degrees = [[0, 1, 1, 0, 0]]
+    restricted_degrees = [[0, 0, 1, 0, 0]]
     for i in range(n):
         x = positions[i]
         if i > 0 and x == positions[i - 1]:

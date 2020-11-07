@@ -62,9 +62,10 @@ def arch_opt(n, x, r, s, l0, q, fun_angle, fun_height_2):
     return dy
 
 
-def parabolic_arch():
-    arc = 0
-    return arc
+def parabolic_arch(s, r, n):
+    x_arch = np.linspace(0, s, 2 * n + 1).tolist()
+    y_arch = [r*(1-((2*x-s)/s)**2) for x in x_arch]
+    return x_arch, y_arch
 
 
 def circular_arch():
@@ -76,27 +77,24 @@ def continuous_arch(s, r, q, n, hangers):
     a_x = [h[0] for h in hangers]
     angles = [h[1] for h in hangers]
     normal_force = q * s ** 2 / 8 / r
-    x = np.linspace(s / 2, s, n + 1)
+    x_arch = np.linspace(s / 2, s, n + 1)
 
     def fun_angle(p): return np.interp(p, a_x, angles)
-
     def fun_height(p, angle, h): return p + h / np.tan(angle)
-
     def fun_height_2(p, h): return fun_height(p, fun_angle(p), h)
 
-    # Find start positions
+    # Find hangers that reach the top of the arch
     l0 = fsolve(lambda l: (fun_height_2(l, r) - s / 2), 0)
-    a = fun_height_2(l0, r) - s / 2
 
-    normal_force = fsolve(lambda n_x: arch_opt(n_x, x, r, s, l0, q, fun_angle, fun_height_2), normal_force)
-    [dy, y, nx, ny, l1, l2] = arch(normal_force, x, r, s, l0, q, fun_angle, fun_height_2)
+    normal_force = fsolve(lambda n_x: arch_opt(n_x, x_arch, r, s, l0, q, fun_angle, fun_height_2), normal_force)
+    [dy, y_arch, nx, ny, l1, l2] = arch(normal_force, x_arch, r, s, l0, q, fun_angle, fun_height_2)
 
-    x = np.linspace(0, s, 2 * n + 1).tolist()
-    y = y.tolist()
-    y = y[-1:0:-1] + y
-    x = [round(i, 3) for i in x]
-    y = [round(i, 3) for i in y]
-    return x, y
+    x_arch = np.linspace(0, s, 2 * n + 1).tolist()
+    y_arch = y_arch.tolist()
+    y_arch = y_arch[-1:0:-1] + y_arch
+    x_arch = [round(i, 3) for i in x_arch]
+    y_arch = [round(i, 3) for i in y_arch]
+    return x_arch, y_arch
 
 
 def discrete_arch():

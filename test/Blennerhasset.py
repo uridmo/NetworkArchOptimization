@@ -4,6 +4,8 @@ from copy import deepcopy
 from arch.parabolic_arch import ParabolicArch
 
 from hangers.parallel_hangers import ParallelHangerSet
+from hangers.constant_change_hangers import ConstantChangeHangerSet
+from hangers.radial_hangers import RadialHangerSet
 from hangers.hangers import mirror_hanger_set
 from hangers.hangers import Hangers
 
@@ -24,7 +26,7 @@ beta = np.radians(30)
 # Initialize nodes
 nodes = Nodes()
 
-hanger_set = ParallelHangerSet(nodes, span, alpha, n_hangers)
+hanger_set = RadialHangerSet(nodes, span, rise, beta, n_hangers)
 hangers = mirror_hanger_set(nodes, hanger_set, span)
 
 tie = Tie(nodes, span, hangers)

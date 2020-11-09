@@ -63,5 +63,5 @@ def mirror_hanger_set(hanger_set, s):
 
 
 def round_hangers(hangers):
-    hangers = [[round(h[0], 3), round(h[1], 3)] for h in hangers]
+    hangers = [[round(h[0], 3), round(h[1], 4)] for h in hangers]
     return hangers

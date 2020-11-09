@@ -18,6 +18,7 @@ from arch_construction import parabolic_arch
 from arch_construction import circular_arch
 from arch_construction import get_arch_nodes
 
+from arch import arch
 
 def main():
     span = 267.8
@@ -27,6 +28,8 @@ def main():
     n = 15
     alpha = np.radians(45)
     beta = np.radians(30)
+
+
 
     hanger_set = parallel_arrangement(span, n, alpha)
     hanger_set = radial_arrangement(rise, span, n, beta)

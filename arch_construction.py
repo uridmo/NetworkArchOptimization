@@ -101,11 +101,6 @@ def continuous_arch(s, r, q, n, hangers):
     return x_arch, y_arch
 
 
-def discrete_arch():
-    arc = 0
-    return arc
-
-
 def get_arch_nodes(x_arch, y_arch, hangers):
     for j in range(len(hangers)):
         x_tie = hangers[j][0]

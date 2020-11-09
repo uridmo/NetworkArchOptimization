@@ -3,11 +3,12 @@ import numpy as np
 
 
 class ParabolicArch(Arch):
-    def __init__(self, rise, span, n):
-        super().__init__(rise, span)
+    def __init__(self, span, rise, n=30):
+        super().__init__(span, rise)
 
         radius = (rise ** 2 + (span / 2) ** 2) / (2 * rise)
         x_arch = list(np.linspace(0, span, 2 * n + 1))
         y_arch = [rise - radius * (1 - (1 - ((x - span / 2) / radius) ** 2) ** 0.5) for x in x_arch]
 
         self.coordinates = list(zip(x_arch, y_arch))
+        return

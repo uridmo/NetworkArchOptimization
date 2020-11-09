@@ -2,9 +2,9 @@ import numpy as np
 
 
 class Arch:
-    def __init__(self, rise, span):
-        self.rise = rise
+    def __init__(self, span, rise):
         self.span = span
+        self.rise = rise
         self.coordinates = None
         self.axial_stiffness = None
         self.bending_stiffness = None

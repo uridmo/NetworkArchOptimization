@@ -2,7 +2,6 @@ import numpy as np
 from copy import deepcopy
 
 
-
 def tie_structure(hangers, s, q, ea, ei):
     n = len(hangers)
     positions = [h[0] for h in hangers]

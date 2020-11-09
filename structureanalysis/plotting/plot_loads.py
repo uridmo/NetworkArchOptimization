@@ -5,7 +5,7 @@ from .plotHinges import plotHinges
 from .plotStructure import plotStructure
 from .plotSupports import plot_supports
 from .showOrientation import showOrientation
-from .plotSettings import plotLegend, plotTitle, initializePlot, adjustPlot
+from .plotSettings import plotLegend, plotTitle, initialize_plot, adjustPlot
 import os
 
 
@@ -81,7 +81,7 @@ def plot_loads(model, load_group, title, save_plot=False):
     # ------------------------------------
 
     # Set up the plot
-    fig, ax = initializePlot()
+    fig, ax = initialize_plot()
     plotTitle(fig, 'Structure and Loads')
     plotStructure(model, ax)
     showOrientation(model, ax)
@@ -104,7 +104,7 @@ def plot_loads(model, load_group, title, save_plot=False):
             targetX = nodes[nodalLoads[i][0]][0]
             targetY = nodes[nodalLoads[i][0]][1]
             arrow = FancyArrow(targetX - Fx, targetY - Fy, Fx, Fy, length_includes_head=True,
-                               head_width=0.2, linewidth=2, color=forceColor, zorder=10)
+                               head_width=4, linewidth=2, color=forceColor, zorder=10)
             ax.add_patch(arrow)
         if Mz != 0:
             targetX = nodes[nodalLoads[i][0]][0]

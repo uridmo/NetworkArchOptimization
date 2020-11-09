@@ -4,7 +4,7 @@ from matplotlib.patches import Polygon
 from .plotHinges import plotHinges
 from .plotStructure import plotStructure
 from .plotSupports import plot_supports
-from .plotSettings import plotLegend, plotTitle, initializePlot, adjustPlot
+from .plotSettings import plotLegend, plotTitle, initialize_plot, adjustPlot
 import os
 
 
@@ -99,7 +99,7 @@ def plot_internal_forces(model, displacements, internal_forces, load_group, quan
         return
 
     # Begin the plot
-    fig, ax = initializePlot()
+    fig, ax = initialize_plot()
 
     # Cycle through elements
     for i in range(len(elements)):
@@ -183,7 +183,7 @@ def plot_internal_forces(model, displacements, internal_forces, load_group, quan
                 ax.plot(minX, minY, color=minColor, marker='.', markersize=10, linestyle='None',
                         label=f'Min {quantity}={values[minIndex] * unitScale:.1f} {currentUnit} at ({x[minIndex]:.2f}, {y[minIndex]:.2f}) m')
 
-    plotLegend(ax)
+    # plotLegend(ax)
     plotHinges(model, ax)
     plot_supports(model, ax)
     adjustPlot(ax)

@@ -39,8 +39,8 @@ class Tie:
 
     def calculate_permanent_impacts(self, nodes, q, mz, plots=False):
         n = len(self.nodes)
-        nodes_location = [node.coordinates() for node in nodes]
-        structural_nodes = {'Location': nodes_location}
+
+        structural_nodes = nodes.structural_nodes()
 
         beams_nodes = [[self.nodes[i].index, self.nodes[i + 1].index] for i in range(n - 1)]
         beams_stiffness = (n - 1) * [[self.axial_stiffness, self.bending_stiffness]]

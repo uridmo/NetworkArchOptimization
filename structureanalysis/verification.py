@@ -99,7 +99,7 @@ def verify_input(model):
     # Check whether all beamsnodes actually exist.
     min_beamnode = min([min(beamnodes[0], beamnodes[1]) for beamnodes in beams_nodes])
     max_beamnode = max([max(beamnodes[0], beamnodes[1]) for beamnodes in beams_nodes])
-    if bool(min_beamnode) or max_beamnode > len(nodes) - 1:
+    if max_beamnode > len(nodes) - 1:  # or bool(min_beamnode):
         raise Exception('Some beams reference nodes which are not defined.')
 
     # Check whether the the lenths of the input are coherent.
@@ -115,48 +115,51 @@ def verify_input(model):
 
     # Check whether there are unused nodes and delete or modify any other input
     # which is related to it.
-    #    unused_nodes=[]
+    unused_nodes = []
     for i in range(len(nodes)):
         is_used = any([nodes[0] == i or nodes[1] == i for nodes in beams_nodes])
         if not is_used:
-            raise Exception('There are unused nodes.')
-    #            unused_nodes.append(i)
-    #    if unused_nodes!=[]:
-    #        counter=-1
-    #        warnings.warn('The following nodes were deleted because they were unsused: '
-    #                      +str(unused_nodes), Warning)
-    #        for unused_node in unused_nodes:
-    #            counter+=1
-    #            nodes.pop(unused_node-counter)
-    #            for beamnodes in beams_nodes:
-    #                if beamnodes[0]>unused_node-counter:
-    #                    beamnodes[0]-=1
-    #                if beamnodes[1]>unused_node-counter:
-    #                    beamnodes[1]-=1
-    #            for loadgroup in loads:
-    #                if 'Nodal' in loadgroup and loadgroup['Nodal']:
-    #                    for nodal_load in loadgroup['Nodal']:
-    #                        if nodal_load[0]==unused_node-counter:
-    #                            del(nodal_load)
-    #                            warnings.warn('A nodal load was deleted because it '
-    #                                          +'was located on an unused node.', Warning)
-    #                        if nodal_load[0]>unused_node-counter:
-    #                            nodal_load[0]-=1
-    #                if 'Initial Displacements' in loadgroup and loadgroup['Initial Displacements']:
-    #                    for initial_displacement in loadgroup['Initial Displacements']:
-    #                        if initial_displacement[0]==unused_node-counter:
-    #                            del(initial_displacement)
-    #                            warnings.warn('An initial displacement was deleted because '
-    #                                          +'it was located on an unused node.', Warning)
-    #                        if initial_displacement[0]>unused_node-counter:
-    #                            initial_displacement[0]-=1
-    #            for restricted_degree in restricted_degrees:
-    #                if restricted_degree[0]>unused_node-counter:
-    #                    restricted_degree[0]-=1
-    #                if restricted_degree[0]==unused_node-counter:
-    #                    del(restricted_degree)
-    #                    warnings.warn('A restricted degree was deleted because it was '
-    #                                  +'located on an unused node.', Warning)
+            # raise Exception('There are unused nodes.')
+            unused_nodes.append(i)
+
+
+    if unused_nodes:
+        unused_nodes.sort()
+        counter = -1
+        warnings.warn('The following nodes were deleted because they were unsused: '
+                      + str(unused_nodes), Warning)
+        for unused_node in unused_nodes:
+            counter += 1
+            nodes.pop(unused_node - counter)
+            for beamnodes in beams_nodes:
+                if beamnodes[0] > unused_node - counter:
+                    beamnodes[0] -= 1
+                if beamnodes[1] > unused_node - counter:
+                    beamnodes[1] -= 1
+            for loadgroup in loads:
+                if 'Nodal' in loadgroup and loadgroup['Nodal']:
+                    for nodal_load in loadgroup['Nodal']:
+                        if nodal_load[0] == unused_node - counter:
+                            del nodal_load
+                            warnings.warn('A nodal load was deleted because it '
+                                          + 'was located on an unused node.', Warning)
+                        if nodal_load[0] > unused_node - counter:
+                            nodal_load[0] -= 1
+                if 'Initial Displacements' in loadgroup and loadgroup['Initial Displacements']:
+                    for initial_displacement in loadgroup['Initial Displacements']:
+                        if initial_displacement[0] == unused_node - counter:
+                            del initial_displacement
+                            warnings.warn('An initial displacement was deleted because '
+                                          + 'it was located on an unused node.', Warning)
+                        if initial_displacement[0] > unused_node - counter:
+                            initial_displacement[0] -= 1
+            for restricted_degree in restricted_degrees:
+                if restricted_degree[0] == unused_node - counter:
+                    del restricted_degree
+                    warnings.warn('A restricted degree was deleted because it was '
+                                  + 'located on an unused node.', Warning)
+                elif restricted_degree[0] > unused_node - counter:
+                    restricted_degree[0] -= 1
 
     # Modify the loads.
     beaminformation = get_beams_length_angle(nodes, beams_nodes)
@@ -278,7 +281,6 @@ def verify_input(model):
     #     if resticted_degree[4]:
     #         if resticted_degree[1] or resticted_degree[3]:
     #             warnings.warn('Rotated bearings are only allowed for restricted y-direction.')
-
 
     # Check whether one node has more than one initial displacement in the same loadgroup.
     for loadgroup in loads:

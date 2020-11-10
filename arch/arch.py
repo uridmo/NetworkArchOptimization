@@ -1,5 +1,8 @@
 import numpy as np
 
+from structureanalysis import structure_analysis
+from structureanalysis.plotting import plot_internal_forces, plot_loads
+
 
 class Arch:
     def __init__(self, span, rise):
@@ -9,6 +12,7 @@ class Arch:
         self.axial_stiffness = None
         self.bending_stiffness = None
         self.shear_stiffness = None
+        self.permanent_impacts = None
 
     def assign_stiffness(self, ea, ei, ga=0):
         self.axial_stiffness = ea
@@ -54,4 +58,37 @@ class Arch:
                         node = self.insert_node(nodes, x, y)
                         hanger.arch_node = node
                         break
+        return
+
+    def calculate_permanent_impacts(self, nodes, hangers, q, mz, plots=False):
+        n = len(self.nodes)
+        structural_nodes = nodes.structural_nodes()
+
+        beams_nodes = [[self.nodes[i].index, self.nodes[i + 1].index] for i in range(n - 1)]
+        beams_stiffness = (n - 1) * [[self.axial_stiffness, self.bending_stiffness]]
+        beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
+
+        load_distributed = [[i, 0, 0, 0, -q, 0, 0, -q, 0] for i in range(n - 1)]
+        load_nodal = [[self.nodes[0].index, 0, 0, mz], [self.nodes[-1].index, 0, 0, -mz]]
+        for hanger in hangers:
+            node = hanger.arch_node.index
+            vertical_force = -hanger.prestressing_force * np.sin(hanger.inclination)
+            horizontal_force = -hanger.prestressing_force * np.cos(hanger.inclination)
+            load_nodal.append([node, horizontal_force, vertical_force, 0])
+        load_group = {'Distributed': load_distributed, 'Nodal': load_nodal}
+        loads = [load_group]
+
+        restricted_degrees = [[self.nodes[0].index, 1, 1, 0, 0], [self.nodes[-1].index, 0, 1, 0, 0]]
+        boundary_conditions = {'Restricted Degrees': restricted_degrees}
+
+        model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
+                 'Boundary Conditions': boundary_conditions}
+
+        d_arch, if_arch, rd_arch = structure_analysis(model, discType='Lengthwise', discLength=1)
+        self.permanent_impacts = if_arch
+
+        if plots:
+            plot_loads(model, 0, 'Hello')
+            plot_internal_forces(model, d_arch, if_arch, 0, 'Moment', 'Hello 2')
+
         return

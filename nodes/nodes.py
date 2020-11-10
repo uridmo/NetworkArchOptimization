@@ -31,6 +31,11 @@ class Nodes:
             self.nodes[i].index = i
         return
 
+    def structural_nodes(self):
+        nodes_location = [[node.x, node.y] for node in self.nodes]
+        structural_nodes = {'Location': nodes_location}
+        return structural_nodes
+
     def __iter__(self):
         self.i = 0
         return self

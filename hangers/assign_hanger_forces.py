@@ -6,7 +6,7 @@ from structureanalysis.plotting.plot_loads import plot_loads
 from structureanalysis.plotting.plot_internal_forces import plot_internal_forces
 
 
-def assign_hanger_forces_zero_displacement(tie, nodes, q, ea, ei):
+def assign_hanger_forces_zero_displacement(tie, nodes, q, ea, ei, dof_rz=False):
     n = len(tie.nodes)
     nodes_location = [node.coordinates() for node in nodes]
     structural_nodes = {'Location': nodes_location}
@@ -19,7 +19,8 @@ def assign_hanger_forces_zero_displacement(tie, nodes, q, ea, ei):
     load_group = {'Distributed': load_distributed}
     loads = [load_group]
 
-    restricted_degrees = [[tie.start_node.index, 1, 1, 1, 0], [tie.end_node.index, 1, 1, 1, 0]]
+    restricted_degrees = [[tie.start_node.index, 1, 1, int(dof_rz), 0]]
+    restricted_degrees += [[tie.end_node.index, 1, 1, int(dof_rz), 0]]
     for node in tie.nodes[1:-1]:
         restricted_degrees += [[node.index, 0, 1, 0, 0]]
     boundary_conditions = {'Restricted Degrees': restricted_degrees}

@@ -84,7 +84,6 @@ def continuous_arch(s, r, q, n, hangers):
     x_arch = np.linspace(s / 2, s, n + 1)
 
     def fun_angle(p): return np.interp(p, a_x, angles)
-
     def fun_height(p, angle, h): return p + h / np.tan(angle)
 
     def fun_height_2(p, h): return fun_height(p, fun_angle(p), h)

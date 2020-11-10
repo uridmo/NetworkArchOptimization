@@ -1,19 +1,14 @@
 import numpy as np
-from copy import deepcopy
 
 from arch.parabolic_arch import ParabolicArch
-
-from hangers.parallel_hangers import ParallelHangerSet
-from hangers.constant_change_hangers import ConstantChangeHangerSet
+from arch.continuous_arch import ContinuousArch
 from hangers.radial_hangers import RadialHangerSet
 from hangers.hangers import mirror_hanger_set
-from hangers.hangers import Hangers
 
 from nodes.nodes import Nodes
 
 from tie.tie import Tie
-from tie.assign_hanger_forces import assign_hanger_forces_zero_displacement
-
+from hangers.assign_hanger_forces import assign_hanger_forces_zero_displacement
 
 span = 267.8
 rise = 53.5
@@ -32,14 +27,16 @@ hangers = mirror_hanger_set(nodes, hanger_set, span)
 tie = Tie(nodes, span, hangers)
 
 mz_0 = assign_hanger_forces_zero_displacement(tie, nodes, q_tie, 1000, 100)
-tie.assign_stiffness(10**6, 10**7)
+tie.assign_stiffness(10 ** 6, 10 ** 7)
 
 tie.calculate_permanent_impacts(nodes, q_tie, mz_0, plots=True)
 # nodes.order_nodes()
 
 
-
-# arch = ParabolicArch(span, rise)
+arch = ContinuousArch(nodes, span, rise, q_tie, hanger_set)
+a = 1
+arch.arch_connection_nodes(nodes, hangers)
+b = 1
 #
 # print(hanger_set.hangers)
 # hangers = mirror_hanger_set(hanger_set, span)

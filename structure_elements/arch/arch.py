@@ -1,7 +1,7 @@
 import numpy as np
 
-from structureanalysis import structure_analysis
-from structureanalysis.plotting import plot_internal_forces, plot_loads
+from structure_analysis import structure_analysis
+from structure_analysis.plotting import plot_internal_forces, plot_loads
 
 
 class Arch:

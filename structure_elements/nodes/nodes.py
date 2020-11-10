@@ -1,4 +1,4 @@
-from nodes.node import Node
+from structure_elements.nodes.node import Node
 
 
 class Nodes:

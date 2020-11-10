@@ -1,7 +1,7 @@
 import numpy as np
 from scipy.optimize import fsolve
 
-from arch.arch import Arch
+from structure_elements.arch.arch import Arch
 
 
 def displacement(d, q, s, nx, ny, x, y, dx, l1, l2, fun_angle, fun_height_2):

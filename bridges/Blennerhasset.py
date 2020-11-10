@@ -1,17 +1,15 @@
 import numpy as np
 
-from arch.parabolic_arch import ParabolicArch
-from arch.continuous_arch import ContinuousArch
+from structure_elements.arch.parabolic_arch import ParabolicArch
 
-from hangers.parallel_hangers import ParallelHangerSet
-from hangers.radial_hangers import RadialHangerSet
-from hangers.hangers import mirror_hanger_set
+from structure_elements.hangers.parallel_hangers import ParallelHangerSet
+from structure_elements.hangers.hangers import mirror_hanger_set
 
-from nodes.nodes import Nodes
+from structure_elements.nodes.nodes import Nodes
 
-from tie.tie import Tie
-from networkarch.networkarch import NetworkArch
-from hangers.assign_hanger_forces import assign_hanger_forces_zero_displacement
+from structure_elements.tie import Tie
+from structure_elements.networkarch import NetworkArch
+from structure_elements.hangers.assign_hanger_forces import assign_hanger_forces_zero_displacement
 
 # Geometry
 span = 267.8

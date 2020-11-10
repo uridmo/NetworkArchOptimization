@@ -1,9 +1,9 @@
 import numpy as np
 
-from structureanalysis import structure_analysis
-from structureanalysis import verify_input
-from structureanalysis.plotting.plot_loads import plot_loads
-from structureanalysis.plotting.plot_internal_forces import plot_internal_forces
+from structure_analysis import structure_analysis
+from structure_analysis import verify_input
+from structure_analysis.plotting.plot_loads import plot_loads
+from structure_analysis.plotting.plot_internal_forces import plot_internal_forces
 
 
 def assign_hanger_forces_zero_displacement(tie, nodes, dof_rz=False):

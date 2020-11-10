@@ -1,4 +1,4 @@
-from structureanalysis.plotting import plot_loads
+from structure_analysis.plotting import plot_loads
 
 
 class NetworkArch:

@@ -2,9 +2,10 @@ from structure_elements.nodes.node import Node
 
 
 class Nodes:
-    def __init__(self):
+    def __init__(self, accuracy=0.01):
         self.nodes = []
         self.amount = 0
+        self.accuracy = accuracy
 
     def __repr__(self):
         return repr(self.nodes)
@@ -24,7 +25,7 @@ class Nodes:
     def add_node(self, x, y):
         if self.amount != 0:
             distance, i = self.closest_point(x, y)
-            if distance < 0.001:
+            if distance < self.accuracy:
                 return self.nodes[i]
         node = Node(self.amount, x, y)
         self.nodes.append(node)

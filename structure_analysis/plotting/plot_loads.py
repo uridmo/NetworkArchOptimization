@@ -64,7 +64,9 @@ def plot_loads(model, load_group, title, save_plot=False):
     scaleDisplacements = 20
     max_nodal = max([max(abs(nodalload[1]), abs(nodalload[2])) for nodalload in nodalLoads] + [0])
     max_point = max([max(abs(pointload[2]), abs(pointload[3])) for pointload in pointLoads] + [0])
-    scaleForces = length / 6 / max(max_nodal, max_point, 0.0001)
+    max_force = max(max_point, max_nodal, 0.0001)
+    max_length = length / 6
+    min_length = length / 24
 
     max_distributed = max([max(abs(lineload[3]), abs(lineload[6]),
                                abs(lineload[4]), abs(lineload[7]),
@@ -96,15 +98,15 @@ def plot_loads(model, load_group, title, save_plot=False):
 
     # Cycle through nodal Forces
     for i in range(len(nodalLoads)):
-        Fx = nodalLoads[i][1] * scaleForces
-        Fy = nodalLoads[i][2] * scaleForces
+        Fx = np.sign(nodalLoads[i][1]) * max(abs(nodalLoads[i][1]) / max_force * max_length, min_length)
+        Fy = np.sign(nodalLoads[i][2]) * max(abs(nodalLoads[i][2]) / max_force * max_length, min_length)
         Mz = nodalLoads[i][3]
 
         if (abs(Fx) + abs(Fy)) > 0:
             targetX = nodes[nodalLoads[i][0]][0]
             targetY = nodes[nodalLoads[i][0]][1]
             arrow = FancyArrow(targetX - Fx, targetY - Fy, Fx, Fy, length_includes_head=True,
-                               head_width=4, linewidth=2, color=forceColor, zorder=10)
+                               head_width=3, linewidth=2, color=forceColor, zorder=10)
             ax.add_patch(arrow)
         if Mz != 0:
             targetX = nodes[nodalLoads[i][0]][0]
@@ -115,12 +117,12 @@ def plot_loads(model, load_group, title, save_plot=False):
                 arc = Arc([targetX, targetY], 1, 1, 0, 240, 110, linewidth=2, color=MomentColor, zorder=5)
                 ax.add_patch(arc)
                 arrow = FancyArrow(targetX - 0.35255, targetY + 0.35405, -0.01, -0.005, length_includes_head=True,
-                                   head_width=0.2, linewidth=0.5, color=MomentColor, zorder=5)
+                                   head_width=3, linewidth=0.5, color=MomentColor, zorder=5)
             else:
                 arc = Arc([targetX, targetY], 1, 1, 0, 70, 300, linewidth=2, color=MomentColor, zorder=5)
                 ax.add_patch(arc)
                 arrow = FancyArrow(targetX + 0.35255, targetY + 0.35405, +0.01, -0.005, length_includes_head=True,
-                                   head_width=0.2, linewidth=0.5, color=MomentColor, zorder=5)
+                                   head_width=3, linewidth=0.5, color=MomentColor, zorder=5)
             ax.add_patch(arrow)
 
     # Cycle through elements
@@ -142,7 +144,7 @@ def plot_loads(model, load_group, title, save_plot=False):
                     targetX = nodes[elements[i][0]][0] + elementVector[0] * loc
                     targetY = nodes[elements[i][0]][1] + elementVector[1] * loc
 
-                    arrow = FancyArrow(targetX - Fx, targetY - Fy, Fx, Fy, length_includes_head=True, head_width=0.3,
+                    arrow = FancyArrow(targetX - Fx, targetY - Fy, Fx, Fy, length_includes_head=True, head_width=4,
                                        linewidth=2, color=forceColor, zorder=10)
                     ax.add_patch(arrow)
                 if Mz != 0:
@@ -198,7 +200,7 @@ def plot_loads(model, load_group, title, save_plot=False):
                         if abs(arrowlengthx) > length / 100 or abs(arrowlengthy) > length / 100:
                             arrow = FancyArrow(x - arrowlengthx, y - arrowlengthy, arrowlengthx, arrowlengthy,
                                                length_includes_head=True,
-                                               head_width=0.13, linewidth=1, color=forceColor, zorder=5)
+                                               head_width=4, linewidth=1, color=forceColor, zorder=5)
                             ax.add_patch(arrow)
 
                 if mzStart != 0 or mzEnd != 0:

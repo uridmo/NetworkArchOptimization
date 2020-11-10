@@ -319,7 +319,8 @@ def verify_input(model):
         rank = np.linalg.matrix_rank(modified_matrices[0].toarray())
         ndofs = modified_matrices[0].shape[0]
         if rank != ndofs:
-            raise Exception('The system is kinematically unstable.')
+            print("The rank is not full!")
+            # raise Exception('The system is kinematically unstable.')
 
     return
 

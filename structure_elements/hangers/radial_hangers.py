@@ -5,15 +5,15 @@ from .hangers import Hangers
 
 
 class RadialHangerSet(Hangers):
-    def __init__(self, nodes, span, rise, beta, n):
+    def __init__(self, nodes, span, rise, beta, n, skip=0):
         super().__init__()
         radius = (rise ** 2 + (span / 2) ** 2) / (2 * rise)
         diag = (rise ** 2 + (span / 2) ** 2) ** 0.5
         alpha = np.arcsin((diag / 2) / radius)
 
         # Calculate angle of inclination of the arch
-        angles_0 = np.linspace(-2 * alpha, 2 * alpha, num=2 * (n + 1)).tolist()
-        angles_0 = angles_0[2::2]
+        angles_0 = np.linspace(-2 * alpha, 2 * alpha, num=2 * (n + 1 + skip)).tolist()
+        angles_0 = angles_0[2 + skip:-1 - skip:2]
         angles_1 = list(map(lambda x: np.pi / 2 - x - beta, angles_0))
 
         pos_arch_x = [radius * np.sin(angles_0[i]) for i in range(n)]

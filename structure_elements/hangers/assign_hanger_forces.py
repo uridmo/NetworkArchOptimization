@@ -6,7 +6,7 @@ from structure_analysis.plotting.plot_loads import plot_loads
 from structure_analysis.plotting.plot_internal_forces import plot_internal_forces
 
 
-def assign_hanger_forces_zero_displacement(tie, nodes, dof_rz=False):
+def zero_displacement(tie, nodes, dof_rz=False):
     n = len(tie.nodes)
     nodes_location = [node.coordinates() for node in nodes]
     structural_nodes = {'Location': nodes_location}

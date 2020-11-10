@@ -20,7 +20,7 @@ class NetworkArch:
         beams_stiffness = tie_stiffness + arch_stiffness + hanger_stiffness
         return beams_nodes, beams_stiffness
 
-    def network_arch_structure(self, nodes, plot=False):
+    def create_model(self, nodes, plot=False):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
 

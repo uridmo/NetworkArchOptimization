@@ -86,5 +86,5 @@ class Tie:
         # Create the plots if needed
         if plots:
             plot_loads(model, 0, 'Tie permanent impacts')
-            plot_internal_forces(model, d_tie, if_tie, 0, 'Moment', 'Tie permanent impacts')
+            plot_internal_forces(model, d_tie, if_tie, 0, 'Normal Force', 'Tie permanent impacts')
         return

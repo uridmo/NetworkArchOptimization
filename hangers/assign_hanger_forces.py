@@ -6,16 +6,15 @@ from structureanalysis.plotting.plot_loads import plot_loads
 from structureanalysis.plotting.plot_internal_forces import plot_internal_forces
 
 
-def assign_hanger_forces_zero_displacement(tie, nodes, q, ea, ei, dof_rz=False):
+def assign_hanger_forces_zero_displacement(tie, nodes, dof_rz=False):
     n = len(tie.nodes)
     nodes_location = [node.coordinates() for node in nodes]
     structural_nodes = {'Location': nodes_location}
 
-    beams_nodes = [[tie.nodes[i].index, tie.nodes[i+1].index] for i in range(len(tie.nodes)-1)]
-    beams_stiffness = (n-1)*[[ea, ei]]
+    beams_nodes, beams_stiffness = tie.get_beams()
     beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
 
-    load_distributed = [[i, 0, 0, 0, -q, 0, 0, -q, 0] for i in range(n - 1)]
+    load_distributed = tie.self_weight_loads()
     load_group = {'Distributed': load_distributed}
     loads = [load_group]
 
@@ -43,9 +42,9 @@ def assign_hanger_forces_zero_displacement(tie, nodes, q, ea, ei, dof_rz=False):
 def node_forces2hanger_forces_equal(node_forces, tie):
     for i in range(len(node_forces)):
         sinus_sum = 0
-        for hanger in tie.middle_nodes_hangers[i]:
+        for hanger in tie.hanger_group[i]:
             sinus_sum += np.sin(hanger.inclination)
         hanger_force = node_forces[i] / sinus_sum
-        for hanger in tie.middle_nodes_hangers[i]:
+        for hanger in tie.hanger_group[i]:
             hanger.prestressing_force = hanger_force
     return

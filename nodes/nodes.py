@@ -7,8 +7,19 @@ class Nodes:
         self.amount = 0
 
     def __repr__(self):
-        string = repr(self.nodes)
-        return string
+        return repr(self.nodes)
+
+    def __iter__(self):
+        self.i = 0
+        return self
+
+    def __next__(self):
+        if self.i < self.amount:
+            result = self.nodes[self.i]
+            self.i += 1
+            return result
+        else:
+            raise StopIteration
 
     def add_node(self, x, y):
         if self.amount != 0:
@@ -35,16 +46,3 @@ class Nodes:
         nodes_location = [[node.x, node.y] for node in self.nodes]
         structural_nodes = {'Location': nodes_location}
         return structural_nodes
-
-    def __iter__(self):
-        self.i = 0
-        return self
-
-    def __next__(self):
-        if self.i < self.amount:
-            result = self.nodes[self.i]
-            self.i += 1
-            return result
-        else:
-            raise StopIteration
-

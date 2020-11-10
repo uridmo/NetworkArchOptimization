@@ -65,12 +65,12 @@ def arch_opt(n, x, r, s, l0, q, fun_angle, fun_height_2):
 
 
 class ContinuousArch(Arch):
-    def __init__(self, nodes, span, rise, q, hanger_set, n=30):
-        super().__init__(span, rise)
+    def __init__(self, nodes, hanger_set, span, rise, g, ea, ei, ga=0, n=30):
+        super().__init__(span, rise, g, ea, ei, ga=ga)
 
         a_x = [hanger.tie_node.x for hanger in hanger_set.hangers]
         angles = [hanger.inclination for hanger in hanger_set.hangers]
-        f_n = q * span ** 2 / 8 / rise
+        f_n = g * span ** 2 / 8 / rise
         x_arch = np.linspace(span / 2, span, n + 1)
 
         def fun_angle(x): return np.interp(x, a_x, angles)
@@ -80,8 +80,8 @@ class ContinuousArch(Arch):
         # Find hangers that reach the top of the arch
         l0 = fsolve(lambda l: (fun_height_2(l, rise) - span / 2), 0)
 
-        f_n = fsolve(lambda n_x: arch_opt(n_x, x_arch, rise, span, l0, q, fun_angle, fun_height_2), f_n)
-        [dy, y_arch, nx, ny, l1, l2] = arch(f_n, x_arch, rise, span, l0, q, fun_angle, fun_height_2)
+        f_n = fsolve(lambda n_x: arch_opt(n_x, x_arch, rise, span, l0, g, fun_angle, fun_height_2), f_n)
+        [dy, y_arch, nx, ny, l1, l2] = arch(f_n, x_arch, rise, span, l0, g, fun_angle, fun_height_2)
 
         # Mirror the obtained shape
         x_arch = np.linspace(0, span, 2 * n + 1).tolist()

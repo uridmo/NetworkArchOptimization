@@ -16,7 +16,8 @@ def mirror_hanger_set(nodes, hanger_set, span):
 class Hangers:
     def __init__(self):
         self.hangers = []
-        # self.axial_stiffness = None
+        self.axial_stiffness = None
+        self.bending_stiffness = None
         return
 
     def __repr__(self):
@@ -48,3 +49,16 @@ class Hangers:
             hanger.axial_stiffness = ea
             hanger.bending_stiffness = ei
         return
+
+    def get_beams(self, indices):
+        n = len(self)
+        beams_nodes = [[self.hangers[i].tie_node.index, self.hangers[i].arch_node.index] for i in range(n)]
+        beams_stiffness = n * [[self.axial_stiffness, self.bending_stiffness]]
+        beams_releases = [[i, 1, 1] for i in indices]
+        return beams_nodes, beams_stiffness, beams_releases
+
+    # def self_weight_loads(self, indices):
+    #     n = len(self)
+    #     q = self.weight
+    #     load_distributed = [[i, 0, 0, 0, -q, 0, 0, -q, 0] for i in indices]
+    #     return load_distributed

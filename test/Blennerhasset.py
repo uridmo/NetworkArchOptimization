@@ -10,6 +10,7 @@ from hangers.hangers import mirror_hanger_set
 from nodes.nodes import Nodes
 
 from tie.tie import Tie
+from networkarch.networkarch import NetworkArch
 from hangers.assign_hanger_forces import assign_hanger_forces_zero_displacement
 
 # Geometry
@@ -53,9 +54,7 @@ arch = ParabolicArch(nodes, span, rise, g_arch, ea_arch, ei_arch)
 arch.arch_connection_nodes(nodes, hangers)
 
 arch.calculate_permanent_impacts(nodes, hangers, g_arch, mz_0, plots=True)
-#
-# print(hanger_set.hangers)
-# hangers = mirror_hanger_set(hanger_set, span)
-#
-# print(hangers.hangers)
-# print(arch.coordinates)
+
+
+network_arch = NetworkArch(arch, tie, hangers)
+network_arch.network_arch_structure(nodes, plot=True)

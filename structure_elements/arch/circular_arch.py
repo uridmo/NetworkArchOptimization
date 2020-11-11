@@ -1,4 +1,4 @@
-from .arch import Arch
+from structure_elements.arch.arch import Arch
 import numpy as np
 
 

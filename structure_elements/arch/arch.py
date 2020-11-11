@@ -1,7 +1,12 @@
 import numpy as np
+from matplotlib.patches import Polygon
+import matplotlib.pyplot as plt
 
 from structure_analysis import structure_analysis
 from structure_analysis.plotting import plot_internal_forces, plot_loads
+from structure_analysis.plotting.plotSettings import initialize_plot, adjustPlot, plotTitle
+from structure_analysis.plotting.plotStructure import plotStructure
+from structure_analysis.plotting.plotSupports import plot_supports
 
 
 class Arch:
@@ -14,6 +19,7 @@ class Arch:
         self.bending_stiffness = ei
         self.shear_stiffness = ga
         self.permanent_impacts = None
+        return
 
     def __len__(self):
         return len(self.nodes)-1
@@ -113,3 +119,106 @@ class Arch:
             plot_loads(model, 0, 'Arch permanent impacts')
             plot_internal_forces(model, d_arch, if_arch, 0, 'Moment', 'Arch permanent impacts')
         return
+
+    def plot_internal_force(self, nodes, quantity, model=None, scale_max=0):
+        # , title, show_extrema=False,
+        #                  , scale_max=0.25):
+
+        color = 'orange'  # Color used if forces are shown
+        max_color = 'red'  # Color used for max values
+        min_color = 'blue'  # Color used for min values
+
+        nodes_location = nodes.structural_nodes()['Location']
+        elements, a = self.get_beams()
+
+        x_min = min([node.x for node in nodes])
+        x_max = max([node.x for node in nodes])
+        z_min = min([node.y for node in nodes])
+        z_max = max([node.y for node in nodes])
+        diag_length = (((x_max - x_min) ** 2 + (z_max - z_min) ** 2) ** 0.5)
+
+        reactions = self.permanent_impacts[0][quantity]
+        reaction_max = max([max(max(sublist), -min(sublist)) for sublist in reactions])
+
+        # Define scaling
+        if max(reaction_max) > 1e-6:
+            scale = diag_length / 12 / max(reaction_max, scale_max)
+        else:
+            scale = 0
+
+        # Define unit
+        if quantity in ['Normal Force', 'Shear Force']:
+            unit = 'kN'
+        elif quantity == 'Moment':
+            unit = 'kNm'
+
+        # Begin the plot
+        fig, ax = initialize_plot()
+
+        if model:
+            plotStructure(model, ax)
+
+        plotTitle(fig, quantity)
+
+        # Add the identifier for pos/neg values to the legend
+        ax.plot(0, 0, color=max_color, label=quantity)
+
+        x_react = np.array([])
+        y_react = np.array([])
+
+        # Cycle through elements
+        for i, reaction in enumerate(reactions):
+            start, end = elements[i][0], elements[i][1]
+            x = np.linspace(nodes_location[start][0], nodes_location[end][0], num=len(reaction))
+            y = np.linspace(nodes_location[start][1], nodes_location[end][1], num=len(reaction))
+
+            # Plot the combined x- and y-displacements if required
+            values = np.array(reaction)
+
+            # Construct unit vector perpendicular to the corresponding element accoring to
+            # sign convention
+            dx = (nodes_location[end][0] - nodes_location[start][0])
+            dy = (nodes_location[end][1] - nodes_location[start][1])
+            dl = (dx**2 + dy**2)**0.5
+
+            normal_vec = [dy/dl, -dx/dl]
+
+            # absolute coordinates for displaying the values
+            x_impact = x + normal_vec[0] * scale * values
+            y_impact = y + normal_vec[1] * scale * values
+
+            if i == 0:
+                x_arch = x
+                y_arch = y
+                x_react = x_impact
+                y_react = y_impact
+            else:
+                x_arch = np.concatenate((x_arch, x))
+                y_arch = np.concatenate((y_arch, y))
+                x_react = np.concatenate((x_react, x_impact))
+                y_react = np.concatenate((y_react, y_impact))
+
+        # Plot the impacts
+        ax.plot(x_react, y_react, color=max_color, alpha=0.4)
+
+        # Fill it with a polygon
+        x_fill = np.concatenate((x_react, x_arch[::-1]))
+        y_fill = np.concatenate((y_react, y_arch[::-1]))
+        xy_poly = np.stack((x_fill, y_fill))
+        polygon = Polygon(np.transpose(xy_poly), edgecolor=None, fill=True, facecolor=color, alpha=0.5)
+        ax.add_patch(polygon)
+
+        # plotLegend(ax)
+        # plotHinges(model, ax)
+        # plot_supports(model, ax)
+        adjustPlot(ax)
+        plt.show()
+
+        # if save_plot:
+        #     if not os.path.isdir('Plots ' + title):
+        #         os.makedirs('Plots ' + title)
+        #
+        #     plt.savefig('Plots ' + title + '/Loadgroup ' + str(load_group) + '_' + quantity + '.png', dpi=300,
+        #                 bbox_inches='tight')
+        return
+

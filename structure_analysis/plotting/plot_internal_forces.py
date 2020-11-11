@@ -135,8 +135,9 @@ def plot_internal_forces(model, displacements, internal_forces, load_group, quan
             # sign convention
             dx = (nodes[end][0] - nodes[start][0])
             dy = (nodes[end][1] - nodes[start][1])
+            dl = (dx**2 + dy**2)**0.5
 
-            normalVec = [dy, -dx]
+            normalVec = [dy/dl, -dx/dl]
             #            if lengthX[i] > lengthY[i]:
             #                if nodes[start][0] <= nodes[end][0]:
             #                    normalVec = [-(nodes[end][1]-nodes[start][1]), (nodes[end][0]-nodes[start][0])]
@@ -148,7 +149,7 @@ def plot_internal_forces(model, displacements, internal_forces, load_group, quan
             #                else:
             #                    normalVec = [(nodes[start][1]-nodes[end][1]), -(nodes[start][0]-nodes[end][0])]
 
-            normalVec = normalVec / np.linalg.norm(normalVec)
+            # normalVec = normalVec / np.linalg.norm(normalVec)
 
             # absolute coordinates for displaying the values
             xmax = x + normalVec[0] * scaleForces * values

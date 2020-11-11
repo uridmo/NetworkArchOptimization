@@ -34,23 +34,34 @@ beta = np.radians(35)
 
 # Initialize nodes and create hanger set
 nodes = Nodes()
+
+# Define the hanger set
 hanger_set = ParallelHangerSet(nodes, span, alpha, n_hangers)
 # hanger_set = RadialHangerSet(nodes, span, rise, beta, n_hangers, skip=1)
 
+# Mirror the hanger set and assign stiffness
 hangers = mirror_hanger_set(nodes, hanger_set, span)
 hangers.assign_stiffness(ea_hangers, ei_hangers)
 
-tie = Tie(nodes, span, hangers, ea_tie, ei_tie, g_tie)
+# Create the tie
+tie = Tie(nodes, span, hangers, g_tie, ea_tie, ei_tie)
 
-mz_0 = zero_displacement(tie, nodes)
+# Assign the constraint moment and the hanger forces
+constraint_moment = zero_displacement(tie, nodes)
 
+# Create the arch and get the connection to the hangers
 arch = CircularArch(nodes, span, rise, g_arch, ea_arch, ei_arch)
 arch.arch_connection_nodes(nodes, hangers)
-n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10**9)
-print(n_0)
 
-tie.calculate_permanent_impacts(nodes, n_0, mz_0, plots=True)
-arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=True)
+# Determine the constraint tie tension force
+constraint_force = define_by_peak_moment(arch, nodes, hangers, constraint_moment, peak_moment=-10 ** 6)
 
+# Calculate the states under permanent stresses
+tie.calculate_permanent_impacts(nodes, constraint_force, constraint_moment, plots=False)
+arch.calculate_permanent_impacts(nodes, hangers, constraint_force, constraint_moment, plots=False)
+
+arch.plot_internal_force(nodes, 'Moment')
+
+# Define the entire network arch structure
 network_arch = NetworkArch(arch, tie, hangers)
-network_arch.create_model(nodes, plot=True)
+network_arch.create_model(nodes, plot=False)

@@ -1,12 +1,5 @@
 import numpy as np
-from matplotlib.patches import Polygon
-import matplotlib.pyplot as plt
 
-from structure_analysis import structure_analysis
-from structure_analysis.plotting import plot_internal_forces, plot_loads
-from structure_analysis.plotting.plotSettings import initialize_plot, adjustPlot, plotTitle
-from structure_analysis.plotting.plotStructure import plotStructure
-from structure_analysis.plotting.plotSupports import plot_supports
 from structure_elements.line_element import LineElement
 
 

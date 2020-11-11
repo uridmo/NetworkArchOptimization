@@ -6,7 +6,7 @@ from structure_analysis.plotting.plot_loads import plot_loads
 from structure_analysis.plotting.plot_internal_forces import plot_internal_forces
 
 
-def zero_displacement(tie, nodes, dof_rz=False):
+def zero_displacement(tie, nodes, dof_rz=False, plots=False, save_plot=False):
     n = len(tie.nodes)
     nodes_location = [node.coordinates() for node in nodes]
     structural_nodes = {'Location': nodes_location}
@@ -33,9 +33,18 @@ def zero_displacement(tie, nodes, dof_rz=False):
     plot_loads(model, 0, 'Hello')
     plot_internal_forces(model, d_tie, if_tie, 0, 'Moment', 'Hello 2')
 
-    mz_0 = if_tie[0]['Moment'][0][0]
+    if dof_rz:
+        mz_0 = if_tie[0]['Moment'][0][0]
+    else:
+        mz_0 = 0
+
+    # Assign the support reaction forces to the hangers
     node_forces = [rd[2] for rd in rd_tie[0][2:]]
     node_forces2hanger_forces_equal(node_forces, tie)
+
+    if plots or save_plot:
+        plot_loads(model, 0, 'Hanger force Determination', save_plot=save_plot)
+        plot_internal_forces(model, d_tie, if_tie, 0, 'Moment', 'Hanger force Determination', save_plot=save_plot)
     return mz_0
 
 

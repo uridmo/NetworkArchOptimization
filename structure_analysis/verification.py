@@ -126,8 +126,8 @@ def verify_input(model):
     if unused_nodes:
         unused_nodes.sort()
         counter = -1
-        warnings.warn('The following nodes were deleted because they were unsused: '
-                      + str(unused_nodes), Warning)
+        # warnings.warn('The following nodes were deleted because they were unsused: '
+        #               + str(unused_nodes), Warning)
         for unused_node in unused_nodes:
             counter += 1
             nodes.pop(unused_node - counter)

@@ -44,7 +44,8 @@ hangers = mirror_hanger_set(nodes, hanger_set, span)
 hangers.assign_stiffness(ea_hangers, ei_hangers)
 
 # Create the tie
-tie = Tie(nodes, span, hangers, g_tie, ea_tie, ei_tie)
+tie = Tie(nodes, span, g_tie, ea_tie, ei_tie)
+tie.assign_hangers(hangers)
 
 # Assign the constraint moment and the hanger forces
 constraint_moment = zero_displacement(tie, nodes)
@@ -57,11 +58,11 @@ arch.arch_connection_nodes(nodes, hangers)
 constraint_force = define_by_peak_moment(arch, nodes, hangers, constraint_moment, peak_moment=-10 ** 6)
 
 # Calculate the states under permanent stresses
-tie.calculate_permanent_impacts(nodes, constraint_force, constraint_moment, plots=False)
 arch.calculate_permanent_impacts(nodes, hangers, constraint_force, constraint_moment, plots=False)
+tie.calculate_permanent_impacts(nodes, hangers, constraint_force, constraint_moment, plots=False)
 
-arch.plot_internal_force(nodes, 'Moment')
+# arch.plot_internal_force(nodes, 'Moment')
 
 # Define the entire network arch structure
 network_arch = NetworkArch(arch, tie, hangers)
-network_arch.create_model(nodes, plot=False)
+network_arch.create_model(nodes, plot=True)

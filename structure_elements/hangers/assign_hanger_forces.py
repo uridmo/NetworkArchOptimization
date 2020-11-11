@@ -40,11 +40,15 @@ def zero_displacement(tie, nodes, dof_rz=False):
 
 
 def node_forces2hanger_forces_equal(node_forces, tie):
+    j = 0
     for i in range(len(node_forces)):
+        while not tie.hangers[j]:
+            j += 1
         sinus_sum = 0
-        for hanger in tie.hanger_group[i]:
+        for hanger in tie.hangers[i + 1]:
             sinus_sum += np.sin(hanger.inclination)
         hanger_force = node_forces[i] / sinus_sum
-        for hanger in tie.hanger_group[i]:
+        for hanger in tie.hangers[i + 1]:
             hanger.prestressing_force = hanger_force
+        j += 1
     return

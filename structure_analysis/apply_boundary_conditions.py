@@ -10,7 +10,6 @@ force matrix into unrestricted and restricted components.
 
 import numpy as np
 import scipy.sparse as sps
-from contextlib import suppress
 
 
 def apply_boundary_conditions(boundary_conditions, stiffness_matrix, force_matrix):

@@ -8,8 +8,10 @@ The module contains the functions to create a local stiffness matrix and to
 modify it to take into account releases.
 """
 
-import numpy as np
 from copy import deepcopy
+
+import numpy as np
+
 
 def get_local_stiffness_matrix(length, beam_stiffness):
     """Returns the local stiffness matrix of a beam element.

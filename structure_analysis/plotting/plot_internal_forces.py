@@ -1,11 +1,13 @@
+import os
+
 import matplotlib.pyplot as plt
 import numpy as np
 from matplotlib.patches import Polygon
+
 from .plotHinges import plotHinges
+from .plotSettings import plotTitle, initialize_plot, adjustPlot
 from .plotStructure import plotStructure
 from .plotSupports import plot_supports
-from .plotSettings import plotLegend, plotTitle, initialize_plot, adjustPlot
-import os
 
 
 def plot_internal_forces(model, displacements, internal_forces, load_group, quantity, title, show_extrema=False,

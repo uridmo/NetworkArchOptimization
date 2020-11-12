@@ -1,6 +1,7 @@
-import numpy as np
 import os
+
 import matplotlib.pyplot as pyplot
+import numpy as np
 
 from structure_analysis import structure_analysis
 from structure_analysis import verify_input
@@ -8,7 +9,6 @@ from structure_analysis.plotting.plotSettings import initialize_plot, plotTitle,
 from structure_analysis.plotting.plotStructure import plotStructure
 from structure_analysis.plotting.plotSupports import plot_supports
 from structure_analysis.plotting.plot_loads import plot_loads
-from structure_analysis.plotting.plot_internal_forces import plot_internal_forces
 
 
 def zero_displacement(tie, nodes, dof_rz=False, plots=False, save_plot=False):

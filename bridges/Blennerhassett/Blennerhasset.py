@@ -3,14 +3,12 @@ from matplotlib import pyplot
 
 from structure_elements.arch.assign_arch_compression import define_by_peak_moment
 from structure_elements.arch.circular_arch import CircularArch
-from structure_elements.arch.parabolic_arch import ParabolicArch
-from structure_elements.hangers.parallel_hangers import ParallelHangerSet
+from structure_elements.hangers.assign_hanger_forces import zero_displacement
 from structure_elements.hangers.hangers import mirror_hanger_set
-from structure_elements.hangers.radial_hangers import RadialHangerSet
+from structure_elements.hangers.parallel_hangers import ParallelHangerSet
+from structure_elements.networkarch import NetworkArch
 from structure_elements.nodes.nodes import Nodes
 from structure_elements.tie import Tie
-from structure_elements.networkarch import NetworkArch
-from structure_elements.hangers.assign_hanger_forces import zero_displacement
 
 # Close all figures
 pyplot.close('all')
@@ -70,8 +68,17 @@ tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False)
 network_arch = NetworkArch(arch, tie, hangers)
 network_arch.dead_load(nodes)
 
+arch
+
 dead_load = arch.get_effects('DL', 'Moment')
 dead_load_2 = arch.get_effects('2 DL', 'Moment')
 dead_load_3 = arch.get_effects('2 DL - DL', 'Moment')
+null_effects = arch.get_effects('0', 'Moment')
 
+range_1 = arch.exclusive_range('0.9 DL, 1.35 DL', 'Test 1')
+range_2 = arch.exclusive_range('0, 1.5 DL, 0.9 DL', 'Test 2')
+
+
+range_3 = arch.inclusive_range('0.5 DL, 1.0 DL', 'Test 3')
+range_4 = arch.inclusive_range('Test 1, Test 2', 'Test 4')
 a=1

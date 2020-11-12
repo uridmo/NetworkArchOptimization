@@ -10,9 +10,11 @@ assembling.
 """
 
 import numpy as np
+
 from .assembly.local_stiffness_matrix import get_local_stiffness_matrix
-from .assembly.rotation_matrix import get_rotation_matrix
 from .assembly.local_stiffness_matrix import include_releases
+from .assembly.rotation_matrix import get_rotation_matrix
+
 
 def get_internal_forces(beams, displacement_matrix, internal_forces_assembly,
                         discretization_information):

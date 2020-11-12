@@ -11,9 +11,10 @@ at the discretization nodes.
 """
 
 import numpy as np
-from .assembly.shape_functions import *
-from .assembly.rotation_matrix import get_rotation_matrix
 import scipy.integrate as integrate
+
+from .assembly.rotation_matrix import get_rotation_matrix
+from .assembly.shape_functions import *
 
 
 def calculate_state_poi(loads, points_of_interest, discretization_information,

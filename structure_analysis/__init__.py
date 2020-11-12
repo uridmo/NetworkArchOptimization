@@ -8,14 +8,14 @@ This module contains the structure_analysis function, which uses all other
 functions of the package.
 """
 
-from .verification import verify_input
-from .discretization import discretize
-from .assembly import assemble
 from .apply_boundary_conditions import apply_boundary_conditions
-from .solve import solve
+from .assembly import assemble
 from .back_calculation import get_internal_forces
+from .discretization import discretize
 from .make_lists import get_dictionaries
 from .points_of_interest import calculate_state_poi
+from .solve import solve
+from .verification import verify_input
 
 
 def structure_analysis(model, *points_of_interest,

@@ -14,8 +14,7 @@ import numpy as np
 from .rotation_matrix import get_rotation_matrix
 
 
- 
-def assemble_distributed_loads(nodes_lists, elements_lists, beams_information, 
+def assemble_distributed_loads(nodes_lists, elements_lists, beams_information,
                                distributed_loads):
     """Assembles distributed loads into assembled nodal forces.
     

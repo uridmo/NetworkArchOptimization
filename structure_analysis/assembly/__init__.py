@@ -8,9 +8,10 @@ The module initializes the subpackage and contains the assemble function. It
 builds the stiffness matrix and the force matrix of the system.
 """
 
-from .stiffness_matrix import get_stiffness_matrix
 from .force_matrix import get_force_matrices
 from .initial_displacements import apply_initial_displacements
+from .stiffness_matrix import get_stiffness_matrix
+
 
 def assemble(model,discretization_information):
     """Assembles the stiffness matrix of the system and the force matrix of the loadgroups.

@@ -1,4 +1,5 @@
-from structure_elements.effects import add_effects, multiply_effect
+from structure_elements.effects import add_effects, multiply_effect, add_ranges, merge_ranges, \
+    range_from_optional_effect, range_from_mandatory_effect
 
 
 class Element:
@@ -17,7 +18,6 @@ class Element:
         return
 
     def get_effects(self, name, key=None):
-        # Magic
         if ' + ' in name:
             names = name.split(' + ', 1)
             effects = add_effects(self.get_effects(names[0]), self.get_effects(names[1]))
@@ -30,14 +30,52 @@ class Element:
             effects = multiply_effect(self.get_effects(names[1]), factor)
         else:
             effects = self.effects[name]
-
         if key:
             return effects[key]
         else:
             return effects
 
-    def define_effect_range(self, name):
+    def inclusive_range(self, range_name, name=''):
+        if ', ' not in range_name:
+            if range_name in self.effects_range:
+                return self.effects_range[range_name]
+            else:
+                return range_from_optional_effect(self.get_effects(range_name))
+        else:
+            names = range_name.split(', ', 1)
+            range_1 = self.inclusive_range(names[0])
+            range_2 = self.inclusive_range(names[1])
+            range_new = add_ranges(range_1, range_2)
+            if name:
+                self.effects_range[name] = range_new
+            return range_new
 
-        effects_range = 1
-        self.effects_range[name] = effects_range
-        return
+    # def exclusive_optional_range(self, range_name, name=''):
+    #     if ', ' not in range_name:
+    #         if range_name in self.effects_range:
+    #             return self.effects_range[range_name]
+    #         else:
+    #             return range_from_optional_effect(self.get_effects(range_name))
+    #     else:
+    #         names = range_name.split(', ', 1)
+    #         range_1 = self.exclusive_optional_range(names[0])
+    #         range_2 = self.exclusive_optional_range(names[1])
+    #         range_new = merge_ranges(range_1, range_2)
+    #         if name:
+    #             self.effects_range[name] = range_new
+    #         return range_new
+
+    def exclusive_range(self, range_name, name=''):
+        if ', ' not in range_name:
+            if range_name in self.effects_range:
+                return self.effects_range[range_name]
+            else:
+                return range_from_mandatory_effect(self.get_effects(range_name))
+        else:
+            names = range_name.split(', ', 1)
+            range_1 = self.exclusive_range(names[0])
+            range_2 = self.exclusive_range(names[1])
+            range_new = merge_ranges(range_1, range_2)
+            if name:
+                self.effects_range[name] = range_new
+            return range_new

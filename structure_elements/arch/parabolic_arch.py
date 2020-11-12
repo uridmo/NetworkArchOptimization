@@ -1,5 +1,6 @@
-from .arch import Arch
 import numpy as np
+
+from .arch import Arch
 
 
 class ParabolicArch(Arch):

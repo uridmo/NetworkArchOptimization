@@ -9,14 +9,16 @@ internal force matrix (from assembling). The functions to calculate the nodal
 forces depending on the different loadtypes are used from separate modules. 
 """
 
+from copy import deepcopy
+
 import numpy as np
 from scipy.sparse import csr_matrix
-from copy         import deepcopy
 
-from .rotation_matrix   import get_rotation_matrix
-from .loads_point       import assemble_point_loads
 from .loads_distributed import assemble_distributed_loads
-from .loads_functions   import assemble_functional_loads
+from .loads_functions import assemble_functional_loads
+from .loads_point import assemble_point_loads
+from .rotation_matrix import get_rotation_matrix
+
 
 def get_force_matrices(loads, nodes_lists, elements_lists, releases_elements,
                        beams_information):

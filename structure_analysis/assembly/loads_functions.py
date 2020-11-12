@@ -10,11 +10,12 @@ calculate the internal forces.
 """
 
 import numpy as np
-
-from .shape_functions import *
 import scipy.integrate as integrate
 
-def assemble_functional_loads(nodes_lists, elements_lists, beams_information, 
+from .shape_functions import *
+
+
+def assemble_functional_loads(nodes_lists, elements_lists, beams_information,
                               function_loads):
     """Assembles global load functions into assembled nodal forces.
     

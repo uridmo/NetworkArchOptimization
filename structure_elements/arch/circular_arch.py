@@ -1,5 +1,6 @@
-from structure_elements.arch.arch import Arch
 import numpy as np
+
+from structure_elements.arch.arch import Arch
 
 
 class CircularArch(Arch):

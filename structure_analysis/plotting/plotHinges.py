@@ -1,5 +1,3 @@
-import matplotlib.pyplot as plt
-
 def plotHinges(model, ax):
     """
     Takes the structure and the figure to plot on.

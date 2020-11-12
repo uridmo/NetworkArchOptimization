@@ -8,9 +8,10 @@ This module contains all the functions needed for solving of the system
 including its main function solve.
 """
 
+from copy import deepcopy
+
 import numpy as np
 import scipy.sparse.linalg as spsl
-from copy import deepcopy
 
 
 def solve(stiffness_and_force_matrices, loads, boundary_conditions):

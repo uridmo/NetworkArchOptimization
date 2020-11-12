@@ -1,8 +1,3 @@
-import numpy as np
-
-from structure_analysis import structure_analysis
-from structure_analysis.plotting import plot_loads
-from structure_analysis.plotting import plot_internal_forces
 from structure_elements.line_element import LineElement
 
 

@@ -14,7 +14,8 @@ import numpy as np
 from .rotation_matrix import get_rotation_matrix
 from .shape_functions import *
 
-def assemble_point_loads(nodes_lists, elements_lists, beams_information, 
+
+def assemble_point_loads(nodes_lists, elements_lists, beams_information,
                          point_loads):
     """Assembles the global point loads into nodal forces.
     

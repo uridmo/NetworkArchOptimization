@@ -3,6 +3,7 @@ from matplotlib.patches import Polygon
 
 from structure_analysis import structure_analysis
 from structure_analysis.plotting import plot_loads, plot_internal_forces
+from structure_elements.effects import multiply_effect
 from structure_elements.element import Element
 
 
@@ -44,24 +45,6 @@ class LineElement(Element):
         load_distributed = [[i, 0, 0, 0, -q, 0, 0, -q, 0] for i in indices]
         return load_distributed
 
-    # def get_effect(self, name):
-    #     """
-    #
-    #     :type name: str
-    #     """
-    #     factor = ''
-    #     effect = ''
-    #     for letter in name:
-    #         if letter == ' ':
-    #             continue
-    #         if letter.isalpha():
-    #             effect += letter
-    #             continue
-    #         factor += letter
-    #
-    #     self.effects[effect]
-    #     return
-
     def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
@@ -102,6 +85,7 @@ class LineElement(Element):
                  'Boundary Conditions': boundary_conditions}
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
         self.effects['Permanent'] = i_f[0]
+        self.effects['0'] = multiply_effect(i_f[0], 0)
 
         # Create the plots if needed
         if plots:

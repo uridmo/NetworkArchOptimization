@@ -10,9 +10,10 @@ the package was altered to work with the data structure of this project. Aswell
 some graphical modifications were made.
 """
 
+from matplotlib.pyplot import close
+
 from .plot_internal_forces import plot_internal_forces
 from .plot_loads import plot_loads
-from matplotlib.pyplot import close
 
 
 def save_all_plots(model, displacements, internal_forces, title):

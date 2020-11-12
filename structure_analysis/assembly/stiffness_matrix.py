@@ -11,8 +11,8 @@ import numpy as np
 import scipy.sparse as sps
 
 from .local_stiffness_matrix import get_local_stiffness_matrix
-from .rotation_matrix import get_rotation_matrix
 from .local_stiffness_matrix import include_releases
+from .rotation_matrix import get_rotation_matrix
 
 
 def get_stiffness_matrix(beams_stiffness, nodes_lists, releases_beams, 

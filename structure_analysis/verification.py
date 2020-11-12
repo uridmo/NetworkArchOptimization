@@ -9,11 +9,13 @@ This module contains the function which veryfies the model. It raises Warnings
 issues and provides some input features.
 """
 
-import numpy as np
 import warnings
-from .discretization import discretize
-from .assembly.stiffness_matrix import get_stiffness_matrix
+
+import numpy as np
+
 from .apply_boundary_conditions import apply_boundary_conditions
+from .assembly.stiffness_matrix import get_stiffness_matrix
+from .discretization import discretize
 
 
 def verify_input(model):

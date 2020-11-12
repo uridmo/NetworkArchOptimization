@@ -1,6 +1,7 @@
 import numpy as np
 from copy import deepcopy
 from .hanger import Hanger
+from ..element import Element
 
 
 def mirror_hanger_set(nodes, hanger_set, span):
@@ -13,11 +14,12 @@ def mirror_hanger_set(nodes, hanger_set, span):
     return hangers
 
 
-class Hangers:
+class Hangers(Element):
     def __init__(self):
+        super().__init__()
         self.hangers = []
-        self.axial_stiffness = None
-        self.bending_stiffness = None
+        self.impacts_N = {}
+        self.impacts_range_N = {}
         return
 
     def __repr__(self):
@@ -50,7 +52,7 @@ class Hangers:
             hanger.bending_stiffness = ei
         return
 
-    def get_beams(self, indices):
+    def beams(self, indices):
         n = len(self)
         beams_nodes = [[self.hangers[i].tie_node.index, self.hangers[i].arch_node.index] for i in range(n)]
         beams_stiffness = []
@@ -59,3 +61,15 @@ class Hangers:
             beams_stiffness.append(stiffness)
         beams_releases = [[i, 1, 1] for i in indices]
         return beams_nodes, beams_stiffness, beams_releases
+
+    def set_impacts_n(self):
+
+        return
+
+    def plot_effects(self):
+
+        return
+
+    def plot_effects_range(self):
+
+        return

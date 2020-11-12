@@ -16,7 +16,7 @@ class NetworkArch:
 
         i_1 = len(self.tie) + len(self.arch)
         i_2 = i_1 + len(self.hangers)
-        hanger_nodes, hanger_stiffness, hanger_releases = self.hangers.get_beams(range(i_1, i_2))
+        hanger_nodes, hanger_stiffness, hanger_releases = self.hangers.beams(range(i_1, i_2))
 
         beams_nodes = tie_nodes + arch_nodes + hanger_nodes
         beams_stiffness = tie_stiffness + arch_stiffness + hanger_stiffness
@@ -48,16 +48,16 @@ class NetworkArch:
         i_tie = len(self.tie)
         i_arch = i_tie + len(self.arch)
 
-        if name not in self.arch.impacts:
-            self.arch.impacts[name] = {}
-        if name not in self.tie.impacts:
-            self.tie.impacts[name] = {}
+        if name not in self.arch.effects:
+            self.arch.effects[name] = {}
+        if name not in self.tie.effects:
+            self.tie.effects[name] = {}
 
         for effect in ['Moment', 'Shear Force', 'Normal Force']:
-            self.arch.impacts[name][effect] = i_f[effect][:i_tie]
-            self.tie.impacts[name][effect] = i_f[effect][i_tie:i_arch]
+            self.tie.set_effects(i_f[effect][:i_tie], name, key=effect)
+            self.arch.set_effects(i_f[effect][i_tie:i_arch], name, key=effect)
 
-        self.tie.impacts[name]['Normal Force'] = i_f['Normal Force'][i_arch:]
+        #self.tie.effects[name]['Normal Force'] = i_f['Normal Force'][i_arch:]
 
         self.support_reaction[name] = rd
         return
@@ -75,6 +75,6 @@ class NetworkArch:
 
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
         self.support_reaction['Permanent'] = rd[0]
-        self.assign_effects(d[0], i_f[0], rd[0], 'Self Weight')
+        self.assign_effects(d[0], i_f[0], rd[0], 'DL')
 
         return

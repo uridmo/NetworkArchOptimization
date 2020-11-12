@@ -57,7 +57,7 @@ tie.assign_hangers(hangers)
 arch.arch_connection_nodes(nodes, hangers)
 
 # Assign the constraint moment and the hanger forces
-mz_0 = zero_displacement(tie, nodes, save_plot=False)
+mz_0 = zero_displacement(tie, nodes, plots=True)
 
 # Determine the constraint tie tension force
 n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 6)
@@ -69,5 +69,9 @@ tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False)
 # Define the entire network arch structure
 network_arch = NetworkArch(arch, tie, hangers)
 network_arch.dead_load(nodes)
+
+dead_load = arch.get_effects('DL', 'Moment')
+dead_load_2 = arch.get_effects('2 DL', 'Moment')
+dead_load_3 = arch.get_effects('2 DL - DL', 'Moment')
 
 a=1

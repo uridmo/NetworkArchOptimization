@@ -3,29 +3,31 @@ from matplotlib.patches import Polygon
 
 from structure_analysis import structure_analysis
 from structure_analysis.plotting import plot_loads, plot_internal_forces
+from structure_elements.element import Element
 
 
-class LineElement:
+class LineElement(Element):
     def __init__(self, g, ea, ei, ga=0):
+        super().__init__()
         self.nodes = []
         self.sections = []
         self.weight = g
         self.axial_stiffness = ea
         self.bending_stiffness = ei
         self.shear_stiffness = ga
-        self.impacts = {}  # Maybe create class
-        self.impacts_max = {}
+        self.effects_section = {}
+
         return
 
     def __len__(self):
-        return len(self.nodes)-1
+        return len(self.nodes) - 1
 
     def insert_node(self, nodes, x, y):
         node = nodes.add_node(x, y)
         if node not in self.nodes:
-            for i in range(len(self.nodes)-1):
-                if self.nodes[i].x < x < self.nodes[i+1].x:
-                    self.nodes.insert(i+1, node)
+            for i in range(len(self.nodes) - 1):
+                if self.nodes[i].x < x < self.nodes[i + 1].x:
+                    self.nodes.insert(i + 1, node)
                     break
         return node
 
@@ -41,6 +43,24 @@ class LineElement:
         q = self.weight
         load_distributed = [[i, 0, 0, 0, -q, 0, 0, -q, 0] for i in indices]
         return load_distributed
+
+    # def get_effect(self, name):
+    #     """
+    #
+    #     :type name: str
+    #     """
+    #     factor = ''
+    #     effect = ''
+    #     for letter in name:
+    #         if letter == ' ':
+    #             continue
+    #         if letter.isalpha():
+    #             effect += letter
+    #             continue
+    #         factor += letter
+    #
+    #     self.effects[effect]
+    #     return
 
     def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False):
         # Define the list of all nodes
@@ -81,7 +101,7 @@ class LineElement:
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
-        self.impacts['Permanent'] = i_f[0]
+        self.effects['Permanent'] = i_f[0]
 
         # Create the plots if needed
         if plots:
@@ -89,7 +109,7 @@ class LineElement:
             plot_internal_forces(model, d, i_f, 0, 'Moment', 'Tie permanent impacts')
         return
 
-    def plot_internal_force(self, ax, nodes, impact, scale_max=0, color_line='red', color_fill='orange'):
+    def plot_effects(self, ax, nodes, name, key, reaction_max=0, color_line='red', color_fill='orange'):
         nodes_location = nodes.structural_nodes()['Location']
         elements, k = self.beams()
 
@@ -99,16 +119,17 @@ class LineElement:
         z_max = max([node.y for node in nodes])
         diag_length = (((x_max - x_min) ** 2 + (z_max - z_min) ** 2) ** 0.5)
 
-        if type(impact) is str:
-            reactions = self.impacts[impact]
+        if type(name) is str:
+            reactions = self.get_effects(name, key=key)
         else:
-            reactions = impact
+            reactions = name
 
-        reaction_max = max([max(max(sublist), -min(sublist)) for sublist in reactions])
+        if not reaction_max:
+            reaction_max = max([max(max(sublist), -min(sublist)) for sublist in reactions])
 
         # Define scaling
         if reaction_max > 1e-6:
-            scale = diag_length / 12 / max(reaction_max, scale_max)
+            scale = diag_length / 12 / reaction_max
         else:
             scale = 0
 
@@ -130,9 +151,9 @@ class LineElement:
             # sign convention
             dx = (nodes_location[end][0] - nodes_location[start][0])
             dy = (nodes_location[end][1] - nodes_location[start][1])
-            dl = (dx**2 + dy**2)**0.5
+            dl = (dx ** 2 + dy ** 2) ** 0.5
 
-            normal_vec = [dy/dl, -dx/dl]
+            normal_vec = [dy / dl, -dx / dl]
 
             # Absolute coordinates for displaying the values
             x_impact = x + normal_vec[0] * scale * values
@@ -153,4 +174,9 @@ class LineElement:
         xy_poly = np.stack((x_fill, y_fill))
         polygon = Polygon(np.transpose(xy_poly), edgecolor=None, fill=True, facecolor=color_fill, alpha=0.5)
         ax.add_patch(polygon)
+        return
+
+    def plot_effects_range(self):
+
+
         return

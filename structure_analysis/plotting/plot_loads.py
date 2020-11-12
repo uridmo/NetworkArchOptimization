@@ -325,4 +325,4 @@ def plot_loads(model, load_group, title, save_plot=False):
     if save_plot:
         if not os.path.isdir('Plots ' + title):
             os.makedirs('Plots ' + title)
-        plt.savefig('Plots ' + title + '/Loadgroup ' + str(load_group) + '_Forces.pdf', dpi=300, bbox_inches='tight')
+        plt.savefig('Plots ' + title + '/Loadgroup ' + str(load_group) + '_Forces.png', dpi=300, bbox_inches='tight')

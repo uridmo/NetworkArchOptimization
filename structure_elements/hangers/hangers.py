@@ -56,9 +56,3 @@ class Hangers:
         beams_stiffness = n * [[self.axial_stiffness, self.bending_stiffness]]
         beams_releases = [[i, 1, 1] for i in indices]
         return beams_nodes, beams_stiffness, beams_releases
-
-    # def self_weight_loads(self, indices):
-    #     n = len(self)
-    #     q = self.weight
-    #     load_distributed = [[i, 0, 0, 0, -q, 0, 0, -q, 0] for i in indices]
-    #     return load_distributed

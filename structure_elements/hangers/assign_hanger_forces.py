@@ -1,7 +1,12 @@
 import numpy as np
+import os
+import matplotlib.pyplot as pyplot
 
 from structure_analysis import structure_analysis
 from structure_analysis import verify_input
+from structure_analysis.plotting.plotSettings import initialize_plot, plotTitle, adjustPlot
+from structure_analysis.plotting.plotStructure import plotStructure
+from structure_analysis.plotting.plotSupports import plot_supports
 from structure_analysis.plotting.plot_loads import plot_loads
 from structure_analysis.plotting.plot_internal_forces import plot_internal_forces
 
@@ -11,10 +16,10 @@ def zero_displacement(tie, nodes, dof_rz=False, plots=False, save_plot=False):
     nodes_location = [node.coordinates() for node in nodes]
     structural_nodes = {'Location': nodes_location}
 
-    beams_nodes, beams_stiffness = tie.get_beams()
+    beams_nodes, beams_stiffness = tie.beams()
     beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
 
-    load_distributed = tie.self_weight_loads()
+    load_distributed = tie.self_weight()
     load_group = {'Distributed': load_distributed}
     loads = [load_group]
 
@@ -30,9 +35,6 @@ def zero_displacement(tie, nodes, dof_rz=False, plots=False, save_plot=False):
     verify_input(model)
     d_tie, if_tie, rd_tie = structure_analysis(model, discType='Lengthwise', discLength=1)
 
-    plot_loads(model, 0, 'Hello')
-    plot_internal_forces(model, d_tie, if_tie, 0, 'Moment', 'Hello 2')
-
     if dof_rz:
         mz_0 = if_tie[0]['Moment'][0][0]
     else:
@@ -43,8 +45,26 @@ def zero_displacement(tie, nodes, dof_rz=False, plots=False, save_plot=False):
     node_forces2hanger_forces_equal(node_forces, tie)
 
     if plots or save_plot:
-        plot_loads(model, 0, 'Hanger force Determination', save_plot=save_plot)
-        plot_internal_forces(model, d_tie, if_tie, 0, 'Moment', 'Hanger force Determination', save_plot=save_plot)
+        load_distributed = load_distributed[0]
+        load_distributed[2] = tie.end_node.x
+        load_group = {'Distributed': [load_distributed]}
+        loads = [load_group]
+        model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
+                 'Boundary Conditions': boundary_conditions}
+
+        plot_loads(model, 0, 'Hanger Force Determination', save_plot=save_plot)
+
+        fig, ax = initialize_plot()
+        plotStructure(model, ax)
+        plotTitle(fig, 'Moment')
+        tie.plot_internal_force(ax, nodes, if_tie[0]['Moment'])
+        plot_supports(model, ax)
+        adjustPlot(ax)
+        pyplot.show()
+        if save_plot:
+            if not os.path.isdir('Hanger Force Determination'):
+                os.makedirs('Hanger Force Determination')
+        fig.savefig('Structure.png')
     return mz_0
 
 

@@ -29,13 +29,13 @@ class LineElement:
                     break
         return node
 
-    def get_beams(self):
+    def beams(self):
         n = len(self)
         beams_nodes = [[self.nodes[i].index, self.nodes[i + 1].index] for i in range(n)]
         beams_stiffness = n * [[self.axial_stiffness, self.bending_stiffness]]
         return beams_nodes, beams_stiffness
 
-    def self_weight_loads(self, indices=range(0)):
+    def self_weight(self, indices=range(0)):
         if not indices:
             indices = range(len(self))
         q = self.weight
@@ -47,11 +47,11 @@ class LineElement:
         structural_nodes = nodes.structural_nodes()
 
         # Define the structural beams
-        beams_nodes, beams_stiffness = self.get_beams()
+        beams_nodes, beams_stiffness = self.beams()
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
 
         # Apply self weight
-        load_distributed = self.self_weight_loads()
+        load_distributed = self.self_weight()
 
         # Apply global self-stresses
         load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
@@ -91,7 +91,7 @@ class LineElement:
 
     def plot_internal_force(self, ax, nodes, impact, scale_max=0, color_line='red', color_fill='orange'):
         nodes_location = nodes.structural_nodes()['Location']
-        elements, k = self.get_beams()
+        elements, k = self.beams()
 
         x_min = min([node.x for node in nodes])
         x_max = max([node.x for node in nodes])
@@ -99,11 +99,15 @@ class LineElement:
         z_max = max([node.y for node in nodes])
         diag_length = (((x_max - x_min) ** 2 + (z_max - z_min) ** 2) ** 0.5)
 
-        reactions = self.impacts[impact]
+        if type(impact) is str:
+            reactions = self.impacts[impact]
+        else:
+            reactions = impact
+
         reaction_max = max([max(max(sublist), -min(sublist)) for sublist in reactions])
 
         # Define scaling
-        if max(reaction_max) > 1e-6:
+        if reaction_max > 1e-6:
             scale = diag_length / 12 / max(reaction_max, scale_max)
         else:
             scale = 0
@@ -135,10 +139,10 @@ class LineElement:
             y_impact = y + normal_vec[1] * scale * values
 
             # Append the arrays
-            x_arch = np.append((x_arch, x))
-            y_arch = np.append((y_arch, y))
-            x_react = np.append((x_react, x_impact))
-            y_react = np.append((y_react, y_impact))
+            x_arch = np.append(x_arch, x)
+            y_arch = np.append(y_arch, y)
+            x_react = np.append(x_react, x_impact)
+            y_react = np.append(y_react, y_impact)
 
         # Plot the impacts
         ax.plot(x_react, y_react, color=color_line, alpha=0.4)

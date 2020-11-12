@@ -9,8 +9,8 @@ class NetworkArch:
         return
 
     def get_beams(self):
-        tie_nodes, tie_stiffness = self.tie.get_beams()
-        arch_nodes, arch_stiffness = self.arch.get_beams()
+        tie_nodes, tie_stiffness = self.tie.beams()
+        arch_nodes, arch_stiffness = self.arch.beams()
 
         i_1 = len(self.tie) + len(self.arch)
         i_2 = i_1 + len(self.hangers)

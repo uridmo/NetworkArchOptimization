@@ -93,7 +93,7 @@ class LineElement(Element):
             plot_internal_forces(model, d, i_f, 0, 'Moment', 'Tie permanent impacts')
         return
 
-    def plot_effects(self, ax, nodes, name, key, reaction_max=0, color_line='red', color_fill='orange'):
+    def plot_effects(self, ax, nodes, name, key, reaction_amax=0, color_line='red', color_fill='orange'):
         nodes_location = nodes.structural_nodes()['Location']
         elements, k = self.beams()
 
@@ -104,16 +104,32 @@ class LineElement(Element):
         diag_length = (((x_max - x_min) ** 2 + (z_max - z_min) ** 2) ** 0.5)
 
         if type(name) is str:
-            reactions = self.get_effects(name, key=key)
+            if name in self.effects_range:
+                plot_range = True
+                reactions = self.effects_range[name]['Max'][key]
+                reactions_2 = self.effects_range[name]['Min'][key]
+            else:
+                plot_range = False
+                reactions = self.get_effects(name, key=key)
+                reactions_2 = self.get_effects(name, key=key)
         else:
-            reactions = name
+            if name is dict:
+                plot_range = True
+                reactions = name['Max'][key]
+                reactions_2 = name['Min'][key]
+            else:
+                plot_range = False
+                reactions = name[key]
+                reactions_2 = name[key]
 
-        if not reaction_max:
-            reaction_max = max([max(max(sublist), -min(sublist)) for sublist in reactions])
+        if not reaction_amax:
+            reaction_max = max([max(sublist) for sublist in reactions])
+            reaction_min = min([min(sublist) for sublist in reactions])
+            reaction_amax = max(reaction_max, -reaction_min)
 
         # Define scaling
-        if reaction_max > 1e-6:
-            scale = diag_length / 12 / reaction_max
+        if reaction_amax > 1e-6:
+            scale = diag_length / 12 / reaction_amax
         else:
             scale = 0
 
@@ -121,6 +137,10 @@ class LineElement(Element):
         y_arch = np.array([])
         x_react = np.array([])
         y_react = np.array([])
+        x_react_2 = np.array([])
+        y_react_2 = np.array([])
+        x_react_3 = np.array([])
+        y_react_3 = np.array([])
 
         # Cycle through elements
         for i, reaction in enumerate(reactions):
@@ -128,18 +148,15 @@ class LineElement(Element):
             x = np.linspace(nodes_location[start][0], nodes_location[end][0], num=len(reaction))
             y = np.linspace(nodes_location[start][1], nodes_location[end][1], num=len(reaction))
 
-            # Plot the combined x- and y-displacements if required
-            values = np.array(reaction)
-
             # Construct unit vector perpendicular to the corresponding element accoring to
             # sign convention
             dx = (nodes_location[end][0] - nodes_location[start][0])
             dy = (nodes_location[end][1] - nodes_location[start][1])
             dl = (dx ** 2 + dy ** 2) ** 0.5
-
             normal_vec = [dy / dl, -dx / dl]
 
             # Absolute coordinates for displaying the values
+            values = np.array(reaction)
             x_impact = x + normal_vec[0] * scale * values
             y_impact = y + normal_vec[1] * scale * values
 
@@ -149,18 +166,38 @@ class LineElement(Element):
             x_react = np.append(x_react, x_impact)
             y_react = np.append(y_react, y_impact)
 
+            if plot_range:
+                values_2 = np.array(reactions_2[i])
+                x_impact_2 = x + normal_vec[0] * scale * values_2
+                y_impact_2 = y + normal_vec[1] * scale * values_2
+                x_react_2 = np.append(x_react_2, x_impact_2)
+                y_react_2 = np.append(y_react_2, y_impact_2)
+                values_3 = np.array([np.max((np.min((0, values_2[i])), values[i])) for i in range(len(values_2))])
+                x_impact_3 = x + normal_vec[0] * scale * values_3
+                y_impact_3 = y + normal_vec[1] * scale * values_3
+                x_react_3 = np.append(x_react_3, x_impact_3)
+                y_react_3 = np.append(y_react_3, y_impact_3)
+
         # Plot the impacts
         ax.plot(x_react, y_react, color=color_line, alpha=0.4)
+        if plot_range:
+            ax.plot(x_react_2, y_react_2, color=color_line, alpha=0.4)
 
         # Fill it with a polygon
-        x_fill = np.concatenate((x_react, x_arch[::-1]))
-        y_fill = np.concatenate((y_react, y_arch[::-1]))
+        if not plot_range:
+            x_fill = np.concatenate((x_react, x_arch[::-1]))
+            y_fill = np.concatenate((y_react, y_arch[::-1]))
+        else:
+            x_fill = np.concatenate((x_react_3, x_arch[::-1]))
+            y_fill = np.concatenate((y_react_3, y_arch[::-1]))
+            xy_poly = np.stack((x_fill, y_fill))
+            polygon = Polygon(np.transpose(xy_poly), edgecolor=None, fill=True, facecolor=color_fill, alpha=0.3)
+            ax.add_patch(polygon)
+
+            x_fill = np.concatenate((x_react, x_react_2[::-1]))
+            y_fill = np.concatenate((y_react, y_react_2[::-1]))
         xy_poly = np.stack((x_fill, y_fill))
         polygon = Polygon(np.transpose(xy_poly), edgecolor=None, fill=True, facecolor=color_fill, alpha=0.5)
         ax.add_patch(polygon)
         return
 
-    def plot_effects_range(self):
-
-
-        return

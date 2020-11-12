@@ -64,21 +64,17 @@ n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 6)
 arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False)
 tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False)
 
+
 # Define the entire network arch structure
 network_arch = NetworkArch(arch, tie, hangers)
 network_arch.dead_load(nodes)
-
-arch
-
-dead_load = arch.get_effects('DL', 'Moment')
-dead_load_2 = arch.get_effects('2 DL', 'Moment')
-dead_load_3 = arch.get_effects('2 DL - DL', 'Moment')
-null_effects = arch.get_effects('0', 'Moment')
 
 range_1 = arch.exclusive_range('0.9 DL, 1.35 DL', 'Test 1')
 range_2 = arch.exclusive_range('0, 1.5 DL, 0.9 DL', 'Test 2')
 
 
+network_arch.create_model(nodes, plot=True)
+
 range_3 = arch.inclusive_range('0.5 DL, 1.0 DL', 'Test 3')
 range_4 = arch.inclusive_range('Test 1, Test 2', 'Test 4')
-a=1
+a = 1

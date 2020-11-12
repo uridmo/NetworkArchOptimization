@@ -57,7 +57,7 @@ def zero_displacement(tie, nodes, dof_rz=False, plots=False, save_plot=False):
         fig, ax = initialize_plot()
         plotStructure(model, ax)
         plotTitle(fig, 'Moment')
-        tie.plot_effects(ax, nodes, if_tie[0]['Moment'], '')
+        tie.plot_effects(ax, nodes, if_tie[0], 'Moment')
         plot_supports(model, ax)
         adjustPlot(ax)
         pyplot.show()

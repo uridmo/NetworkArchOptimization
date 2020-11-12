@@ -1,3 +1,5 @@
+from matplotlib import pyplot
+
 from structure_analysis import structure_analysis
 from structure_analysis.plotting import plot_loads
 
@@ -41,7 +43,9 @@ class NetworkArch:
                  'Boundary Conditions': boundary_conditions}
 
         if plot:
-            plot_loads(model, 0, 'Network arch structure')
+            ax = plot_loads(model, 0, 'Network arch structure')
+            self.arch.plot_effects(ax, nodes, 'Test 1', 'Moment')
+            pyplot.show()
         return model
 
     def assign_effects(self, d, i_f, rd, name):
@@ -52,12 +56,13 @@ class NetworkArch:
             self.arch.effects[name] = {}
         if name not in self.tie.effects:
             self.tie.effects[name] = {}
+        if name not in self.hangers.effects:
+            self.hangers.effects[name] = {}
 
         for effect in ['Moment', 'Shear Force', 'Normal Force']:
             self.tie.set_effects(i_f[effect][:i_tie], name, key=effect)
             self.arch.set_effects(i_f[effect][i_tie:i_arch], name, key=effect)
-
-        #self.tie.effects[name]['Normal Force'] = i_f['Normal Force'][i_arch:]
+            self.tie.set_effects(i_f[effect][i_arch:], name, key=effect)
 
         self.support_reaction[name] = rd
         return

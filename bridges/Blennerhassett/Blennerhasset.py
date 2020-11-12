@@ -53,22 +53,21 @@ arch = CircularArch(nodes, span, rise, g_arch, ea_arch, ei_arch)
 
 # Assign the hangers to the tie
 tie.assign_hangers(hangers)
-
-# Assign the constraint moment and the hanger forces
-mz_0 = zero_displacement(tie, nodes, save_plot=True)
-
 # Create the arch and get the connection to the hangers
 arch.arch_connection_nodes(nodes, hangers)
+
+# Assign the constraint moment and the hanger forces
+mz_0 = zero_displacement(tie, nodes, save_plot=False)
 
 # Determine the constraint tie tension force
 n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 6)
 
 # Calculate the states under permanent stresses
-arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=True)
+arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False)
 tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False)
-
-# arch.plot_internal_force(nodes, 'Moment')
 
 # Define the entire network arch structure
 network_arch = NetworkArch(arch, tie, hangers)
-network_arch.create_model(nodes, plot=True)
+network_arch.dead_load(nodes)
+
+a=1

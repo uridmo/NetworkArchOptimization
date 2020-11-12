@@ -80,13 +80,13 @@ class LineElement:
         # Calculate and assign the permanent impacts
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
-        d, if_, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
-        self.impacts['Permanent'] = if_[0]
+        d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
+        self.impacts['Permanent'] = i_f[0]
 
         # Create the plots if needed
         if plots:
             plot_loads(model, 0, 'Tie permanent impacts')
-            plot_internal_forces(model, d, if_, 0, 'Moment', 'Tie permanent impacts')
+            plot_internal_forces(model, d, i_f, 0, 'Moment', 'Tie permanent impacts')
         return
 
     def plot_internal_force(self, ax, nodes, impact, scale_max=0, color_line='red', color_fill='orange'):

@@ -15,9 +15,6 @@ class Tie(LineElement):
         self.hangers = [[], []]
         self.permanent_impacts = None
 
-    def __len__(self):
-        return len(self.nodes)-1
-
     def assign_hangers(self, hangers):
         hangers.hangers.sort(key=lambda n: n.tie_node.x)
         for hanger in hangers.hangers:

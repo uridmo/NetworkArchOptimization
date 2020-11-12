@@ -53,6 +53,9 @@ class Hangers:
     def get_beams(self, indices):
         n = len(self)
         beams_nodes = [[self.hangers[i].tie_node.index, self.hangers[i].arch_node.index] for i in range(n)]
-        beams_stiffness = n * [[self.axial_stiffness, self.bending_stiffness]]
+        beams_stiffness = []
+        for i in range(n):
+            stiffness = [self.hangers[i].axial_stiffness, self.hangers[i].bending_stiffness]
+            beams_stiffness.append(stiffness)
         beams_releases = [[i, 1, 1] for i in indices]
         return beams_nodes, beams_stiffness, beams_releases

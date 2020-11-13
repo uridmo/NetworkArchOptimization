@@ -4,7 +4,7 @@ from plotting.loads import plot_loads
 from plotting.supports import plot_supports_new
 
 
-def plot_model(model, elements, fig_size=(4, 1.5), title='', i=0):
+def plot_model(model, elements, fig_size=(4, 1.5), title='', i=0, show=True):
     fig = pyplot.figure(figsize=fig_size, dpi=240)
     ax = fig.add_subplot(111)
     if title:
@@ -15,6 +15,8 @@ def plot_model(model, elements, fig_size=(4, 1.5), title='', i=0):
     pyplot.margins(0.1, 0.1)
     elements.plot_elements(ax)
     plot_supports_new(model, ax)
-    plot_loads(model, i, ax)
-    pyplot.show()
-    return fig
+    if i is not None:
+        plot_loads(model, i, ax)
+    if show:
+        pyplot.show()
+    return fig, ax

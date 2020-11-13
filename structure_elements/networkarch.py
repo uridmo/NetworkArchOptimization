@@ -40,7 +40,7 @@ class NetworkArch:
                  'Boundary Conditions': boundary_conditions}
 
         if plot:
-            fig = plot_model(model, self)
+            fig, ax = plot_model(model, self)
             save_plot(fig, 'Models', 'Network Arch Bridge')
         return model
 

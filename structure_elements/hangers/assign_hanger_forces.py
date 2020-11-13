@@ -39,7 +39,7 @@ def zero_displacement(tie, nodes, dof_rz=False, plot=False):
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
 
-        fig = plot_model(model, tie)
+        fig, ax = plot_model(model, tie)
         save_plot(fig, 'Models', 'Hanger Forces')
     return mz_0
 

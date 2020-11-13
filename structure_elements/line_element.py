@@ -1,7 +1,11 @@
 import numpy as np
 from math import inf
+
+from matplotlib import pyplot
 from matplotlib.patches import Polygon
 
+from plotting.model import plot_model
+from plotting.save import save_plot
 from structure_analysis import structure_analysis
 from structure_analysis.plotting import plot_loads_old, plot_internal_forces
 from structure_elements.effects import multiply_effect
@@ -67,7 +71,7 @@ class LineElement(Element):
         load_distributed = [[i, 0, 0, 0, -q, 0, 0, -q, 0] for i in indices]
         return load_distributed
 
-    def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False):
+    def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
         beams_nodes, beams_stiffness = self.get_beams()
@@ -103,8 +107,12 @@ class LineElement(Element):
 
         # Create the plots if needed
         if plots:
-            plot_loads_old(model, 0, 'Tie permanent impacts')
-            plot_internal_forces(model, d, i_f, 0, 'Moment', 'Tie permanent impacts')
+            fig, ax = plot_model(model, self)
+            save_plot(fig, 'Models', name)
+
+            fig, ax = plot_model(model, self, i=None, show=False)
+            self.plot_effects(ax, nodes, 'Permanent', 'Moment')
+            save_plot(fig, 'Effects', name)
         return
 
     def assign_range_to_sections(self):
@@ -284,5 +292,6 @@ class LineElement(Element):
                 ax.plot(x_min[i], y_min[i], color=min_color, marker='.', markersize=10, linestyle='None',
                         label=f'min: {r_min[i]/1000:.0f} MNm')
             ax.legend(frameon=False, loc='center left', bbox_to_anchor=(1, 0.5))
+        pyplot.show()
         return
 

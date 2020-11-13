@@ -16,6 +16,7 @@ class NetworkArch:
         tie_nodes, tie_stiffness = self.tie.beams()
         arch_nodes, arch_stiffness = self.arch.beams()
 
+        # Indices for hangers are needed to specify the releases
         i_1 = len(self.tie) + len(self.arch)
         i_2 = i_1 + len(self.hangers)
         hanger_nodes, hanger_stiffness, hanger_releases = self.hangers.beams(range(i_1, i_2))
@@ -26,19 +27,11 @@ class NetworkArch:
         return beams
 
     def create_model(self, nodes, plot=False):
-        # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
-
-        # Define the beams
         beams = self.get_beams()
-
-        # Create an empty load group
         loads = [{}]
-
-        # Define the boundary conditions
         restricted_degrees = [[self.tie.nodes[0].index, 1, 1, 0, 0], [self.tie.nodes[-1].index, 0, 1, 0, 0]]
         boundary_conditions = {'Restricted Degrees': restricted_degrees}
-
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
 
@@ -48,26 +41,26 @@ class NetworkArch:
             pyplot.show()
         return model
 
-    def assign_effects(self, d, i_f, rd, name):
+    def set_effects(self, effects, name):
         i_tie = len(self.tie)
         i_arch = i_tie + len(self.arch)
+        for key in effects:
+            self.tie.set_effects(effects[key][:i_tie], name, key=key)
+            self.arch.set_effects(effects[key][i_tie:i_arch], name, key=key)
+            self.tie.set_effects(effects[key][i_arch:], name, key=key)
+        return
 
-        if name not in self.arch.effects:
-            self.arch.effects[name] = {}
-        if name not in self.tie.effects:
-            self.tie.effects[name] = {}
-        if name not in self.hangers.effects:
-            self.hangers.effects[name] = {}
+    def set_range(self, range_name, name):
+        self.tie.set_range(range_name, name=name)
+        self.arch.set_range(range_name, name=name)
+        self.hangers.set_range(range_name, name=name)
+        return
 
-        for effect in ['Moment', 'Shear Force', 'Normal Force']:
-            self.tie.set_effects(i_f[effect][:i_tie], name, key=effect)
-            self.arch.set_effects(i_f[effect][i_tie:i_arch], name, key=effect)
-            self.tie.set_effects(i_f[effect][i_arch:], name, key=effect)
-
+    def assign_support_reaction(self, rd, name):
         self.support_reaction[name] = rd
         return
 
-    def dead_load(self, nodes, plot=False):
+    def calculate_dead_load(self, nodes, plot=False):
         n_tie = len(self.tie)
         n_arch = len(self.arch)
 
@@ -80,6 +73,6 @@ class NetworkArch:
 
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
         self.support_reaction['Permanent'] = rd[0]
-        self.assign_effects(d[0], i_f[0], rd[0], 'DL')
+        self.set_effects(i_f[0], 'DL')
 
         return

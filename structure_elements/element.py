@@ -35,47 +35,28 @@ class Element:
         else:
             return effects
 
-    def inclusive_range(self, range_name, name=''):
-        if ', ' not in range_name:
-            if range_name in self.effects_range:
-                return self.effects_range[range_name]
-            else:
-                return range_from_optional_effect(self.get_effects(range_name))
-        else:
+    def set_range(self, range_name, name=''):
+        # if range_name[0] == '(' and range_name[-1] == ')':
+        #     range_name = range_name[1:-1]
+        #     range_1 = self.set_range('0')
+        #     range_2 = self.set_range(range_name)
+        #     range_new = merge_ranges(range_1, range_2)
+        # el
+        if ', ' in range_name:
             names = range_name.split(', ', 1)
-            range_1 = self.inclusive_range(names[0])
-            range_2 = self.inclusive_range(names[1])
+            range_1 = self.set_range(names[0])
+            range_2 = self.set_range(names[1])
             range_new = add_ranges(range_1, range_2)
-            if name:
-                self.effects_range[name] = range_new
-            return range_new
-
-    # def exclusive_optional_range(self, range_name, name=''):
-    #     if ', ' not in range_name:
-    #         if range_name in self.effects_range:
-    #             return self.effects_range[range_name]
-    #         else:
-    #             return range_from_optional_effect(self.get_effects(range_name))
-    #     else:
-    #         names = range_name.split(', ', 1)
-    #         range_1 = self.exclusive_optional_range(names[0])
-    #         range_2 = self.exclusive_optional_range(names[1])
-    #         range_new = merge_ranges(range_1, range_2)
-    #         if name:
-    #             self.effects_range[name] = range_new
-    #         return range_new
-
-    def exclusive_range(self, range_name, name=''):
-        if ', ' not in range_name:
-            if range_name in self.effects_range:
-                return self.effects_range[range_name]
-            else:
-                return range_from_mandatory_effect(self.get_effects(range_name))
-        else:
-            names = range_name.split(', ', 1)
-            range_1 = self.exclusive_range(names[0])
-            range_2 = self.exclusive_range(names[1])
+        elif '/' in range_name:
+            names = range_name.split('/', 1)
+            range_1 = self.set_range(names[0])
+            range_2 = self.set_range(names[1])
             range_new = merge_ranges(range_1, range_2)
-            if name:
-                self.effects_range[name] = range_new
-            return range_new
+        else:
+            if range_name in self.effects_range:
+                range_new = self.effects_range[range_name]
+            else:
+                range_new = range_from_mandatory_effect(self.get_effects(range_name))
+        if name:
+            self.effects_range[name] = range_new
+        return range_new

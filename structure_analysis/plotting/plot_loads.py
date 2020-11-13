@@ -11,7 +11,7 @@ from .plotSupports import plot_supports
 from .showOrientation import showOrientation
 
 
-def plot_loads(model, load_group, title, save_plot=False):
+def plot_loads_old(model, load_group, title, save_plot=False):
     """
     Takes the structure and load dictionary.
     

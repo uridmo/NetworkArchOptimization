@@ -13,12 +13,12 @@ some graphical modifications were made.
 from matplotlib.pyplot import close
 
 from .plot_internal_forces import plot_internal_forces
-from .plot_loads import plot_loads
+from .plot_loads import plot_loads_old
 
 
 def save_all_plots(model, displacements, internal_forces, title):
     for i in range(len(displacements)):
-        plot_loads(model, i, title, save_plot=True)
+        plot_loads_old(model, i, title, save_plot=True)
         plot_internal_forces(model, displacements, internal_forces, i, 'Deformed Shape', title, show_extrema=False,
                              save_plot=True)
         plot_internal_forces(model, displacements, internal_forces, i, 'Displacement X', title, show_extrema=False,
@@ -41,7 +41,7 @@ def save_all_plots(model, displacements, internal_forces, title):
 
 def plot_all_internal_forces(model, displacements, internal_forces):
     for i in range(len(displacements)):
-        plot_loads(model, i, '', save_plot=False)
+        plot_loads_old(model, i, '', save_plot=False)
         plot_internal_forces(model, displacements, internal_forces, i, 'Deformed Shape', '', show_extrema=False,
                              save_plot=False)
         plot_internal_forces(model, displacements, internal_forces, i, 'Normal Force', '', show_extrema=False,

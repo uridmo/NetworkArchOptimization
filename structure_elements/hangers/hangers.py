@@ -106,7 +106,7 @@ class Hangers(Element):
         for hanger in self.hangers:
             x = [hanger.tie_node.x, hanger.arch_node.x]
             y = [hanger.tie_node.y, hanger.arch_node.y]
-            ax.plot(x, y, color='black', linewidth=1)
+            ax.plot(x, y, color='black', linewidth=0.7)
         return
 
     def plot_internal_forces(self):

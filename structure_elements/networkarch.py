@@ -1,8 +1,10 @@
 import os
 from matplotlib import pyplot
 
+from plotting.model import plot_model
+from plotting.save import save_plot
 from structure_analysis import structure_analysis
-from structure_analysis.plotting import plot_loads
+from structure_analysis.plotting import plot_loads_old
 from plotting.supports import plot_supports_new
 
 
@@ -28,7 +30,7 @@ class NetworkArch:
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness, 'Releases': hanger_releases}
         return beams
 
-    def create_model(self, nodes, plot=False, save_plot=False):
+    def create_model(self, nodes, plot=False):
         structural_nodes = nodes.structural_nodes()
         beams = self.get_beams()
         loads = [{}]
@@ -37,20 +39,9 @@ class NetworkArch:
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
 
-        if plot or save_plot:
-            fig = pyplot.figure(figsize=(6, 2.5), dpi=240)
-            ax = fig.add_subplot(111)
-            fig.suptitle('Network Arch Structure', x=0.5, y=0.8, fontsize=18, fontweight='bold',
-                         va='bottom', ha='center')
-            pyplot.gca().set_aspect('equal', adjustable='box')
-            pyplot.margins(0.1, 0.1)
-            self.plot_elements(ax)
-            plot_supports_new(model, ax)
-            pyplot.show()
-            if save_plot:
-                if not os.path.isdir('Models'):
-                    os.makedirs('Models')
-                fig.savefig('Structures/Network Arch Bridge.png')
+        if plot:
+            fig = plot_model(model, self)
+            save_plot(fig, 'Models', 'Network Arch Bridge')
         return model
 
     def set_effects(self, effects, name):

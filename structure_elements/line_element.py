@@ -3,7 +3,7 @@ from math import inf
 from matplotlib.patches import Polygon
 
 from structure_analysis import structure_analysis
-from structure_analysis.plotting import plot_loads, plot_internal_forces
+from structure_analysis.plotting import plot_loads_old, plot_internal_forces
 from structure_elements.effects import multiply_effect
 from structure_elements.element import Element
 
@@ -103,7 +103,7 @@ class LineElement(Element):
 
         # Create the plots if needed
         if plots:
-            plot_loads(model, 0, 'Tie permanent impacts')
+            plot_loads_old(model, 0, 'Tie permanent impacts')
             plot_internal_forces(model, d, i_f, 0, 'Moment', 'Tie permanent impacts')
         return
 
@@ -129,7 +129,7 @@ class LineElement(Element):
         for i in range(len(self.nodes)-1):
             x = [self.nodes[i].x, self.nodes[i+1].x]
             y = [self.nodes[i].y, self.nodes[i+1].y]
-            ax.plot(x, y, color='black', linewidth=2)
+            ax.plot(x, y, color='black', linewidth=1.5)
         return
 
     def plot_effects(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):

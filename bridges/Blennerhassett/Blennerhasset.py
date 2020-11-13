@@ -58,7 +58,7 @@ arch.define_region(nodes, [20, -20], ['1', '2', '1'])
 tie.define_region(nodes, [], ['1'])
 
 # Assign the constraint moment and the hanger forces
-mz_0 = zero_displacement(tie, nodes, plots=False)
+mz_0 = zero_displacement(tie, nodes, plot=True)
 hangers.assign_permanent_effects()
 
 # Determine the constraint tie tension force
@@ -75,7 +75,7 @@ network_arch.calculate_dead_load(nodes)
 
 network_arch.set_range('0.9 DL/1.35 DL', 'Test 1')
 
-network_arch.create_model(nodes, save_plot=True)
+network_arch.create_model(nodes, plot=True)
 
 network_arch.set_range('DL, 0/0.5 DL, 0/1.0 DL', 'Test 2')
 

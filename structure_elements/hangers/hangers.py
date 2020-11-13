@@ -74,8 +74,8 @@ class Hangers(Element):
                 self.hangers[i].effects_N[name] = effects[i][0]
         return
 
-    def set_range(self, range_name, name=''):
-        range_new = super(Hangers, self).set_range(range_name, name=name)
+    def get_range(self, range_name, name=''):
+        range_new = super(Hangers, self).get_range(range_name, name=name)
         if name:
             for i in range(len(self)):
                 if name not in self.hangers[i].effects_range_N:

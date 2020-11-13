@@ -1,4 +1,5 @@
 import numpy as np
+from math import inf
 from matplotlib.patches import Polygon
 
 from structure_analysis import structure_analysis
@@ -12,6 +13,7 @@ class LineElement(Element):
         super().__init__()
         self.nodes = []
         self.sections = []
+        self.sections_set = []
         self.weight = g
         self.axial_stiffness = ea
         self.bending_stiffness = ei
@@ -23,7 +25,12 @@ class LineElement(Element):
     def __len__(self):
         return len(self.nodes) - 1
 
-    def insert_node(self, nodes, x, y):
+    def insert_node(self, nodes, x, y=None):
+        if y is None:
+            x_ref = [node.x for node in self.nodes]
+            y_ref = [node.y for node in self.nodes]
+            x = self.nodes[-1].x - x if x < 0 else x
+            y = np.interp(x, x_ref, y_ref)
         node = nodes.add_node(x, y)
         if node not in self.nodes:
             for i in range(len(self.nodes) - 1):
@@ -31,6 +38,20 @@ class LineElement(Element):
                     self.nodes.insert(i + 1, node)
                     break
         return node
+
+    def define_region(self, nodes, section_nodes, names):
+        if section_nodes and type(section_nodes) is list:
+            section_nodes = [self.insert_node(nodes, x) for x in section_nodes]
+        self.sections = []
+        section_nodes += [self.nodes[-1]]
+        j = 0
+        for i in range(len(self.nodes)-1):
+
+            if self.nodes[i] == section_nodes[j]:
+                j += 1
+            self.sections.append(names[j])
+        self.sections_set = list(set(self.sections))
+        return
 
     def beams(self):
         n = len(self)
@@ -48,15 +69,9 @@ class LineElement(Element):
     def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
-
-        # Define the structural beams
         beams_nodes, beams_stiffness = self.beams()
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
-
-        # Apply self weight
         load_distributed = self.self_weight()
-
-        # Apply global self-stresses
         load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
 
         # Apply hanger forces
@@ -75,15 +90,12 @@ class LineElement(Element):
         # Assign the load group
         load_group = {'Distributed': load_distributed, 'Nodal': load_nodal}
         loads = [load_group]
-
-        # Define the boundary conditions
         restricted_degrees = [[self.nodes[0].index, 1, 1, 0, 0], [self.nodes[-1].index, 0, 1, 0, 0]]
         boundary_conditions = {'Restricted Degrees': restricted_degrees}
-
-        # Calculate and assign the permanent impacts
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
+
         self.effects['Permanent'] = i_f[0]
         self.set_effects(i_f[0], 'Permanent')
         self.set_effects(multiply_effect(i_f[0], 0), '0')
@@ -92,6 +104,24 @@ class LineElement(Element):
         if plots:
             plot_loads(model, 0, 'Tie permanent impacts')
             plot_internal_forces(model, d, i_f, 0, 'Moment', 'Tie permanent impacts')
+        return
+
+    def assign_range_to_sections(self):
+        for key in self.effects_range:
+            effects_max = self.effects_range[key]['Max']
+            effects_min = self.effects_range[key]['Min']
+            self.effects_section[key] = {}
+            for eff in effects_min:
+                max_0 = [-inf for i in self.sections_set]
+                min_0 = [inf for i in self.sections_set]
+                self.effects_section[key][eff] = {'Max': max_0, 'Min': min_0}
+                for i in range(len(effects_max[eff])):
+                    section = self.sections[i]
+                    section_i = self.sections_set.index(section)
+                    max_new = max(self.effects_section[key][eff]['Max'][section_i], max(effects_max[eff][i]))
+                    min_new = min(self.effects_section[key][eff]['Min'][section_i], min(effects_max[eff][i]))
+                    self.effects_section[key][eff]['Max'][section_i] = max_new
+                    self.effects_section[key][eff]['Min'][section_i] = min_new
         return
 
     def plot_effects(self, ax, nodes, name, key, reaction_amax=0, color_line='red', color_fill='orange'):

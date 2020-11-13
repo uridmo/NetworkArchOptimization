@@ -35,7 +35,7 @@ class Element:
         else:
             return effects
 
-    def set_range(self, range_name, name=''):
+    def get_range(self, range_name, name=''):
         # if range_name[0] == '(' and range_name[-1] == ')':
         #     range_name = range_name[1:-1]
         #     range_1 = self.set_range('0')
@@ -44,13 +44,13 @@ class Element:
         # el
         if ', ' in range_name:
             names = range_name.split(', ', 1)
-            range_1 = self.set_range(names[0])
-            range_2 = self.set_range(names[1])
+            range_1 = self.get_range(names[0])
+            range_2 = self.get_range(names[1])
             range_new = add_ranges(range_1, range_2)
         elif '/' in range_name:
             names = range_name.split('/', 1)
-            range_1 = self.set_range(names[0])
-            range_2 = self.set_range(names[1])
+            range_1 = self.get_range(names[0])
+            range_2 = self.get_range(names[1])
             range_new = merge_ranges(range_1, range_2)
         else:
             if range_name in self.effects_range:

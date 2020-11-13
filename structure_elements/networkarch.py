@@ -51,9 +51,14 @@ class NetworkArch:
         return
 
     def set_range(self, range_name, name):
-        self.tie.set_range(range_name, name=name)
-        self.arch.set_range(range_name, name=name)
-        self.hangers.set_range(range_name, name=name)
+        self.tie.get_range(range_name, name=name)
+        self.arch.get_range(range_name, name=name)
+        self.hangers.get_range(range_name, name=name)
+        return
+
+    def assign_range_to_sections(self):
+        self.tie.assign_range_to_sections()
+        self.arch.assign_range_to_sections()
         return
 
     def assign_support_reaction(self, rd, name):

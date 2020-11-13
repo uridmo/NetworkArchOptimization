@@ -19,7 +19,7 @@ from .verification import verify_input
 
 
 def structure_analysis(model, *points_of_interest,
-                       discType='Elementwise', discElements=100, discLength=0.1):
+                       discType='Lengthwise', discElements=100, discLength=1):
     """Calculates the support reactions, the deformations and internal forces of the model.
     
     -----

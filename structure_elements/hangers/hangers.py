@@ -48,13 +48,13 @@ class Hangers(Element):
         self.hangers.append(hanger)
         return
 
-    def assign_stiffness(self, ea, ei):
+    def set_stiffness(self, ea, ei):
         for hanger in self.hangers:
             hanger.axial_stiffness = ea
             hanger.bending_stiffness = ei
         return
 
-    def beams(self, indices):
+    def get_beams(self, indices):
         n = len(self)
         beams_nodes = [[self.hangers[i].tie_node.index, self.hangers[i].arch_node.index] for i in range(n)]
         beams_stiffness = []
@@ -102,11 +102,13 @@ class Hangers(Element):
             self.set_effects(effects, 'Permanent', key=key)
         return
 
-
-    def plot_effects(self):
-
+    def plot_elements(self, ax):
+        for hanger in self.hangers:
+            x = [hanger.tie_node.x, hanger.arch_node.x]
+            y = [hanger.tie_node.y, hanger.arch_node.y]
+            ax.plot(x, y, color='black', linewidth=1)
         return
 
-    def assign_forces_to_effects(self):
+    def plot_internal_forces(self):
 
         return

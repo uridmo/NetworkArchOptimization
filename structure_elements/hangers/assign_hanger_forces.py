@@ -16,7 +16,7 @@ def zero_displacement(tie, nodes, dof_rz=False, plots=False, save_plot=False):
     nodes_location = [node.coordinates() for node in nodes]
     structural_nodes = {'Location': nodes_location}
 
-    beams_nodes, beams_stiffness = tie.beams()
+    beams_nodes, beams_stiffness = tie.get_beams()
     beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
 
     load_distributed = tie.self_weight()
@@ -64,7 +64,7 @@ def zero_displacement(tie, nodes, dof_rz=False, plots=False, save_plot=False):
         if save_plot:
             if not os.path.isdir('Hanger Force Determination'):
                 os.makedirs('Hanger Force Determination')
-        fig.savefig('Structure.png')
+            fig.savefig('Structure.png')
     return mz_0
 
 

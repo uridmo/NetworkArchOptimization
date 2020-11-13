@@ -187,7 +187,7 @@ def plot_internal_forces(model, displacements, internal_forces, load_group, quan
                         label=f'Min {quantity}={values[minIndex] * unitScale:.1f} {currentUnit} at ({x[minIndex]:.2f}, {y[minIndex]:.2f}) m')
 
     # plotLegend(ax)
-    plotHinges(model, ax)
+    # plotHinges(model, ax)
     plot_supports(model, ax)
     adjustPlot(ax)
     plt.show()

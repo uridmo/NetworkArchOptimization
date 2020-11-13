@@ -1,7 +1,9 @@
+import os
 from matplotlib import pyplot
 
 from structure_analysis import structure_analysis
 from structure_analysis.plotting import plot_loads
+from plotting.supports import plot_supports_new
 
 
 class NetworkArch:
@@ -13,20 +15,20 @@ class NetworkArch:
         return
 
     def get_beams(self):
-        tie_nodes, tie_stiffness = self.tie.beams()
-        arch_nodes, arch_stiffness = self.arch.beams()
+        tie_nodes, tie_stiffness = self.tie.get_beams()
+        arch_nodes, arch_stiffness = self.arch.get_beams()
 
         # Indices for hangers are needed to specify the releases
         i_1 = len(self.tie) + len(self.arch)
         i_2 = i_1 + len(self.hangers)
-        hanger_nodes, hanger_stiffness, hanger_releases = self.hangers.beams(range(i_1, i_2))
+        hanger_nodes, hanger_stiffness, hanger_releases = self.hangers.get_beams(range(i_1, i_2))
 
         beams_nodes = tie_nodes + arch_nodes + hanger_nodes
         beams_stiffness = tie_stiffness + arch_stiffness + hanger_stiffness
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness, 'Releases': hanger_releases}
         return beams
 
-    def create_model(self, nodes, plot=False):
+    def create_model(self, nodes, plot=False, save_plot=False):
         structural_nodes = nodes.structural_nodes()
         beams = self.get_beams()
         loads = [{}]
@@ -35,10 +37,20 @@ class NetworkArch:
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
 
-        if plot:
-            ax = plot_loads(model, 0, 'Network arch structure')
-            self.arch.plot_effects(ax, nodes, 'Test 1', 'Moment')
+        if plot or save_plot:
+            fig = pyplot.figure(figsize=(6, 2.5), dpi=240)
+            ax = fig.add_subplot(111)
+            fig.suptitle('Network Arch Structure', x=0.5, y=0.8, fontsize=18, fontweight='bold',
+                         va='bottom', ha='center')
+            pyplot.gca().set_aspect('equal', adjustable='box')
+            pyplot.margins(0.1, 0.1)
+            self.plot_elements(ax)
+            plot_supports_new(model, ax)
             pyplot.show()
+            if save_plot:
+                if not os.path.isdir('Models'):
+                    os.makedirs('Models')
+                fig.savefig('Structures/Network Arch Bridge.png')
         return model
 
     def set_effects(self, effects, name):
@@ -79,5 +91,10 @@ class NetworkArch:
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
         self.support_reaction['Permanent'] = rd[0]
         self.set_effects(i_f[0], 'DL')
+        return
 
+    def plot_elements(self, ax):
+        self.tie.plot_elements(ax)
+        self.arch.plot_elements(ax)
+        self.hangers.plot_elements(ax)
         return

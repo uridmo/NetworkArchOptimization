@@ -29,7 +29,7 @@ class LineElement(Element):
         if y is None:
             x_ref = [node.x for node in self.nodes]
             y_ref = [node.y for node in self.nodes]
-            x = self.nodes[-1].x - x if x < 0 else x
+            x = self.nodes[-1].x + x if x < 0 else x
             y = np.interp(x, x_ref, y_ref)
         node = nodes.add_node(x, y)
         if node not in self.nodes:
@@ -51,9 +51,10 @@ class LineElement(Element):
                 j += 1
             self.sections.append(names[j])
         self.sections_set = list(set(self.sections))
+        self.sections_set.sort()
         return
 
-    def beams(self):
+    def get_beams(self):
         n = len(self)
         beams_nodes = [[self.nodes[i].index, self.nodes[i + 1].index] for i in range(n)]
         beams_stiffness = n * [[self.axial_stiffness, self.bending_stiffness]]
@@ -69,7 +70,7 @@ class LineElement(Element):
     def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
-        beams_nodes, beams_stiffness = self.beams()
+        beams_nodes, beams_stiffness = self.get_beams()
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
         load_distributed = self.self_weight()
         load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
@@ -124,9 +125,20 @@ class LineElement(Element):
                     self.effects_section[key][eff]['Min'][section_i] = min_new
         return
 
-    def plot_effects(self, ax, nodes, name, key, reaction_amax=0, color_line='red', color_fill='orange'):
+    def plot_elements(self, ax):
+        for i in range(len(self.nodes)-1):
+            x = [self.nodes[i].x, self.nodes[i+1].x]
+            y = [self.nodes[i].y, self.nodes[i+1].y]
+            ax.plot(x, y, color='black', linewidth=2)
+        return
+
+    def plot_effects(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):
+
         nodes_location = nodes.structural_nodes()['Location']
-        elements, k = self.beams()
+        elements, k = self.get_beams()
+
+        max_color = 'red'  # Color used for max values
+        min_color = 'blue'  # Color used for min values
 
         x_min = min([node.x for node in nodes])
         x_max = max([node.x for node in nodes])
@@ -173,8 +185,22 @@ class LineElement(Element):
         x_react_3 = np.array([])
         y_react_3 = np.array([])
 
+        r_max = [-inf for i in range(len(self.sections_set))]
+        x_max = [0 for i in range(len(self.sections_set))]
+        y_max = [0 for i in range(len(self.sections_set))]
+        r_min = [inf for i in range(len(self.sections_set))]
+        x_min = [0 for i in range(len(self.sections_set))]
+        y_min = [0 for i in range(len(self.sections_set))]
+
         # Cycle through elements
         for i, reaction in enumerate(reactions):
+            section = self.sections[i]
+            section_i = self.sections_set.index(section)
+            # max_new = max(self.effects_section[key][eff]['Max'][section_i], max(effects_max[eff][i]))
+            # min_new = min(self.effects_section[key][eff]['Min'][section_i], min(effects_max[eff][i]))
+            # self.effects_section[key][eff]['Max'][section_i] = max_new
+            # self.effects_section[key][eff]['Min'][section_i] = min_new
+
             start, end = elements[i][0], elements[i][1]
             x = np.linspace(nodes_location[start][0], nodes_location[end][0], num=len(reaction))
             y = np.linspace(nodes_location[start][1], nodes_location[end][1], num=len(reaction))
@@ -197,6 +223,18 @@ class LineElement(Element):
             x_react = np.append(x_react, x_impact)
             y_react = np.append(y_react, y_impact)
 
+            if max(values) > r_max[section_i]:
+                i_max = int(np.argmax(values))
+                r_max[section_i] = values[i_max]
+                x_max[section_i] = x_impact[i_max]
+                y_max[section_i] = y_impact[i_max]
+
+            if min(values) < r_min[section_i]:
+                i_min = int(np.argmin(values))
+                r_min[section_i] = values[i_min]
+                x_min[section_i] = x_impact[i_min]
+                y_min[section_i] = y_impact[i_min]
+
             if plot_range:
                 values_2 = np.array(reactions_2[i])
                 x_impact_2 = x + normal_vec[0] * scale * values_2
@@ -208,6 +246,12 @@ class LineElement(Element):
                 y_impact_3 = y + normal_vec[1] * scale * values_3
                 x_react_3 = np.append(x_react_3, x_impact_3)
                 y_react_3 = np.append(y_react_3, y_impact_3)
+
+                if min(values_2) < r_min[section_i]:
+                    i_min = int(np.argmin(values_2))
+                    r_min[section_i] = values_2[i_min]
+                    x_min[section_i] = x_impact_2[i_min]
+                    y_min[section_i] = y_impact_2[i_min]
 
         # Plot the impacts
         ax.plot(x_react, y_react, color=color_line, alpha=0.4)
@@ -230,5 +274,15 @@ class LineElement(Element):
         xy_poly = np.stack((x_fill, y_fill))
         polygon = Polygon(np.transpose(xy_poly), edgecolor=None, fill=True, facecolor=color_fill, alpha=0.5)
         ax.add_patch(polygon)
+
+        if show_extrema:
+            for i in range(len(self.sections_set)):
+                ax.plot(0, 0, linestyle='None', label=self.sections_set[i])
+
+                ax.plot(x_max[i], y_max[i], color=max_color, marker='.', markersize=10, linestyle='None',
+                        label=f'max: {r_max[i]/1000:.0f} MNm')
+                ax.plot(x_min[i], y_min[i], color=min_color, marker='.', markersize=10, linestyle='None',
+                        label=f'min: {r_min[i]/1000:.0f} MNm')
+            ax.legend(frameon=False, loc='center left', bbox_to_anchor=(1, 0.5))
         return
 

@@ -90,8 +90,8 @@ def plot_loads(model, load_group, title, save_plot=False):
     plotStructure(model, ax)
     showOrientation(model, ax)
     plot_supports(model, ax)
-    if 'Releases' in model['Beams']:
-        plotHinges(model, ax)
+    # if 'Releases' in model['Beams']:
+        # plotHinges(model, ax)
 
     # Add identifiers for legend
     ax.plot(0, 0, color=displacementColor, label=f'Forced Displacement (scaled by factor {scaleDisplacements})')

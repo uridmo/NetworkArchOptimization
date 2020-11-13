@@ -43,7 +43,7 @@ hanger_set = ParallelHangerSet(nodes, span, alpha, n_hangers)
 
 # Mirror the hanger set and assign stiffness
 hangers = mirror_hanger_set(nodes, hanger_set, span)
-hangers.assign_stiffness(ea_hangers, ei_hangers)
+hangers.set_stiffness(ea_hangers, ei_hangers)
 
 # Create the structural elements
 tie = Tie(nodes, span, g_tie, ea_tie, ei_tie)
@@ -54,7 +54,7 @@ tie.assign_hangers(hangers)
 arch.arch_connection_nodes(nodes, hangers)
 
 # Define regions
-arch.define_region(nodes, [11, 22, -10], ['1', '2', '3', '4'])
+arch.define_region(nodes, [20, -20], ['1', '2', '1'])
 tie.define_region(nodes, [], ['1'])
 
 # Assign the constraint moment and the hanger forces
@@ -71,9 +71,12 @@ tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False)
 # Define the entire network arch structure
 network_arch = NetworkArch(arch, tie, hangers)
 network_arch.calculate_dead_load(nodes)
-network_arch.create_model(nodes, plot=False)
+
 
 network_arch.set_range('0.9 DL/1.35 DL', 'Test 1')
+
+network_arch.create_model(nodes, save_plot=True)
+
 network_arch.set_range('DL, 0/0.5 DL, 0/1.0 DL', 'Test 2')
 
 network_arch.assign_range_to_sections()

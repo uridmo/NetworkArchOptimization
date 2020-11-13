@@ -85,7 +85,8 @@ class LineElement(Element):
                  'Boundary Conditions': boundary_conditions}
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
         self.effects['Permanent'] = i_f[0]
-        self.effects['0'] = multiply_effect(i_f[0], 0)
+        self.set_effects(i_f[0], 'Permanent')
+        self.set_effects(multiply_effect(i_f[0], 0), '0')
 
         # Create the plots if needed
         if plots:

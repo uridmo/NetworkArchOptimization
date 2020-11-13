@@ -4,6 +4,7 @@ from math import ceil
 import numpy as np
 
 from .hanger import Hanger
+from ..effects import multiply_effect
 from ..element import Element
 
 
@@ -74,23 +75,26 @@ class Hangers(Element):
         return
 
     def set_range(self, range_name, name=''):
-        range_new = super(Hangers, self).set_range()
-        for i in range(len(self)):
-            if name not in self.hangers[i].effects_range_N:
-                self.hangers[i].effects_range_N[name] = {}
-            self.hangers[i].effects_range_N[name]['Max'] = range_new['Max']['Normal Force'][i][0]
-            self.hangers[i].effects_range_N[name]['Min'] = range_new['Min']['Normal Force'][i][0]
-        return
+        range_new = super(Hangers, self).set_range(range_name, name=name)
+        if name:
+            for i in range(len(self)):
+                if name not in self.hangers[i].effects_range_N:
+                    self.hangers[i].effects_range_N[name] = {}
+                self.hangers[i].effects_range_N[name]['Max'] = range_new['Max']['Normal Force'][i][0]
+                self.hangers[i].effects_range_N[name]['Min'] = range_new['Min']['Normal Force'][i][0]
+        return range_new
 
     def assign_permanent_effects(self, key=None):
         if not key:
             self.assign_permanent_effects('Normal Force')
             self.assign_permanent_effects('Shear Force')
             self.assign_permanent_effects('Moment')
+            effects = self.get_effects('Permanent')
+            self.set_effects(multiply_effect(effects, 0), '0')
         else:
             effects = []
             for hanger in self.hangers:
-                n = ceil(hanger.length())
+                n = ceil(hanger.length())+1
                 if key == 'Normal Force':
                     effects.append([hanger.prestressing_force for i in range(n)])
                 else:

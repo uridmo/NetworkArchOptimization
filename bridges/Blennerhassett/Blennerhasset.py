@@ -58,15 +58,15 @@ arch.define_region(nodes, [20, -20], ['1', '2', '1'])
 tie.define_region(nodes, [], ['1'])
 
 # Assign the constraint moment and the hanger forces
-mz_0 = zero_displacement(tie, nodes, dof_rz=True, plot=True)
+mz_0 = zero_displacement(tie, nodes, dof_rz=True, plot=False)
 hangers.assign_permanent_effects()
 
 # Determine the constraint tie tension force
 n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 6)
 
 # Calculate the states under permanent stresses
-arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=True, name='Arch Permanent Moment')
-tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=True, name='Tie Permanent Moment')
+arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False, name='Arch Permanent Moment')
+tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False, name='Tie Permanent Moment')
 
 # Define the entire network arch structure
 network_arch = NetworkArch(arch, tie, hangers)
@@ -75,10 +75,12 @@ network_arch.calculate_dead_load(nodes)
 
 network_arch.set_range('0.9 DL/1.35 DL', 'Test 1')
 
-network_arch.create_model(nodes, plot=True)
+network_arch.create_model(nodes, plot=False)
 
 network_arch.set_range('DL, 0/0.5 DL, 0/1.0 DL', 'Test 2')
 
 network_arch.assign_range_to_sections()
+
+network_arch.plot_effects('DL', 'Moment')
 
 a=1

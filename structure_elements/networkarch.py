@@ -1,11 +1,8 @@
-import os
 from matplotlib import pyplot
 
 from plotting.model import plot_model
 from plotting.save import save_plot
 from structure_analysis import structure_analysis
-from structure_analysis.plotting import plot_loads_old
-from plotting.supports import plot_supports_new
 
 
 class NetworkArch:
@@ -88,4 +85,20 @@ class NetworkArch:
         self.tie.plot_elements(ax)
         self.arch.plot_elements(ax)
         self.hangers.plot_elements(ax)
+        return
+
+    def plot_effects(self, name, key, fig_size=(4, 4)):
+        fig = pyplot.figure(figsize=fig_size, dpi=240)
+        ax = fig.add_subplot(211)
+        ax.set_title('Arch')
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        self.arch.plot_effects(ax, name, key)
+
+        ax = fig.add_subplot(212)
+        ax.set_title('Tie')
+        self.tie.plot_effects(ax, name, key)
+        ax.spines['top'].set_visible(False)
+        ax.spines['right'].set_visible(False)
+        pyplot.show()
         return

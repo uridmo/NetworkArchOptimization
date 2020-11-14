@@ -2,7 +2,6 @@ import numpy as np
 
 from plotting.model import plot_model
 from plotting.save import save_plot
-
 from structure_analysis import structure_analysis
 from structure_analysis import verify_input
 

@@ -1,13 +1,13 @@
-import numpy as np
 from math import inf
 
-from matplotlib import pyplot
+import numpy as np
 from matplotlib.patches import Polygon
 
+from plotting.line import get_scaling, get_value_list, get_value_list_2, get_value_location, \
+    get_coordinates, get_normal_vectors
 from plotting.model import plot_model
 from plotting.save import save_plot
 from structure_analysis import structure_analysis
-from structure_analysis.plotting import plot_loads_old, plot_internal_forces
 from structure_elements.effects import multiply_effect
 from structure_elements.element import Element
 
@@ -111,7 +111,7 @@ class LineElement(Element):
             save_plot(fig, 'Models', name)
 
             fig, ax = plot_model(model, self, i=None, show=False)
-            self.plot_effects(ax, nodes, 'Permanent', 'Moment')
+            self.plot_effects_on_arch(ax, nodes, 'Permanent', 'Moment')
             save_plot(fig, 'Effects', name)
         return
 
@@ -140,19 +140,29 @@ class LineElement(Element):
             ax.plot(x, y, color='black', linewidth=1.5)
         return
 
-    def plot_effects(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):
+    def plot_effects(self, ax, name, key, extrema='', color='black'):
 
-        nodes_location = nodes.structural_nodes()['Location']
-        elements, k = self.get_beams()
+        if extrema:
+            effects = self.effects_range[name][extrema][key]
+        else:
+            effects = self.get_effects(name, key=key)
+
+        xy_coord = get_coordinates(self, effects)
+        values = get_value_list(effects)
+        ax.plot(xy_coord[:, 0], values, color=color)
+        return
+
+    def plot_range(self, ax, name, key, color='black'):
+
+        self.plot_effects(ax, name, key, extrema='Max', color=color)
+        self.plot_effects(ax, name, key, extrema='Min', color=color)
+
+        return
+
+    def plot_effects_on_arch(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):
 
         max_color = 'red'  # Color used for max values
         min_color = 'blue'  # Color used for min values
-
-        x_min = min([node.x for node in nodes])
-        x_max = max([node.x for node in nodes])
-        z_min = min([node.y for node in nodes])
-        z_max = max([node.y for node in nodes])
-        diag_length = (((x_max - x_min) ** 2 + (z_max - z_min) ** 2) ** 0.5)
 
         if type(name) is str:
             if name in self.effects_range:
@@ -164,134 +174,48 @@ class LineElement(Element):
                 reactions = self.get_effects(name, key=key)
                 reactions_2 = self.get_effects(name, key=key)
         else:
-            if name is dict:
-                plot_range = True
-                reactions = name['Max'][key]
-                reactions_2 = name['Min'][key]
-            else:
-                plot_range = False
-                reactions = name[key]
-                reactions_2 = name[key]
+            plot_range = False
+            reactions = name[key]
+            reactions_2 = name[key]
 
-        if not reaction_amax:
-            reaction_max = max([max(sublist) for sublist in reactions])
-            reaction_min = min([min(sublist) for sublist in reactions])
-            reaction_amax = max(reaction_max, -reaction_min)
+        scale = get_scaling(nodes, reactions, reactions_2, reaction_abs_max=reaction_amax)
 
-        # Define scaling
-        if reaction_amax > 1e-6:
-            scale = diag_length / 12 / reaction_amax
-        else:
-            scale = 0
+        values_1 = get_value_list(reactions)
+        values_2 = get_value_list(reactions_2)
+        values_3 = get_value_list_2(reactions, reactions_2)
 
-        x_arch = np.array([])
-        y_arch = np.array([])
-        x_react = np.array([])
-        y_react = np.array([])
-        x_react_2 = np.array([])
-        y_react_2 = np.array([])
-        x_react_3 = np.array([])
-        y_react_3 = np.array([])
+        xy_coord = get_coordinates(self, reactions)
+        normal_vec = get_normal_vectors(self, reactions)
 
-        r_max = [-inf for i in range(len(self.sections_set))]
-        x_max = [0 for i in range(len(self.sections_set))]
-        y_max = [0 for i in range(len(self.sections_set))]
-        r_min = [inf for i in range(len(self.sections_set))]
-        x_min = [0 for i in range(len(self.sections_set))]
-        y_min = [0 for i in range(len(self.sections_set))]
-
-        # Cycle through elements
-        for i, reaction in enumerate(reactions):
-            section = self.sections[i]
-            section_i = self.sections_set.index(section)
-            # max_new = max(self.effects_section[key][eff]['Max'][section_i], max(effects_max[eff][i]))
-            # min_new = min(self.effects_section[key][eff]['Min'][section_i], min(effects_max[eff][i]))
-            # self.effects_section[key][eff]['Max'][section_i] = max_new
-            # self.effects_section[key][eff]['Min'][section_i] = min_new
-
-            start, end = elements[i][0], elements[i][1]
-            x = np.linspace(nodes_location[start][0], nodes_location[end][0], num=len(reaction))
-            y = np.linspace(nodes_location[start][1], nodes_location[end][1], num=len(reaction))
-
-            # Construct unit vector perpendicular to the corresponding element accoring to
-            # sign convention
-            dx = (nodes_location[end][0] - nodes_location[start][0])
-            dy = (nodes_location[end][1] - nodes_location[start][1])
-            dl = (dx ** 2 + dy ** 2) ** 0.5
-            normal_vec = [dy / dl, -dx / dl]
-
-            # Absolute coordinates for displaying the values
-            values = np.array(reaction)
-            x_impact = x + normal_vec[0] * scale * values
-            y_impact = y + normal_vec[1] * scale * values
-
-            # Append the arrays
-            x_arch = np.append(x_arch, x)
-            y_arch = np.append(y_arch, y)
-            x_react = np.append(x_react, x_impact)
-            y_react = np.append(y_react, y_impact)
-
-            if max(values) > r_max[section_i]:
-                i_max = int(np.argmax(values))
-                r_max[section_i] = values[i_max]
-                x_max[section_i] = x_impact[i_max]
-                y_max[section_i] = y_impact[i_max]
-
-            if min(values) < r_min[section_i]:
-                i_min = int(np.argmin(values))
-                r_min[section_i] = values[i_min]
-                x_min[section_i] = x_impact[i_min]
-                y_min[section_i] = y_impact[i_min]
-
-            if plot_range:
-                values_2 = np.array(reactions_2[i])
-                x_impact_2 = x + normal_vec[0] * scale * values_2
-                y_impact_2 = y + normal_vec[1] * scale * values_2
-                x_react_2 = np.append(x_react_2, x_impact_2)
-                y_react_2 = np.append(y_react_2, y_impact_2)
-                values_3 = np.array([np.max((np.min((0, values_2[i])), values[i])) for i in range(len(values_2))])
-                x_impact_3 = x + normal_vec[0] * scale * values_3
-                y_impact_3 = y + normal_vec[1] * scale * values_3
-                x_react_3 = np.append(x_react_3, x_impact_3)
-                y_react_3 = np.append(y_react_3, y_impact_3)
-
-                if min(values_2) < r_min[section_i]:
-                    i_min = int(np.argmin(values_2))
-                    r_min[section_i] = values_2[i_min]
-                    x_min[section_i] = x_impact_2[i_min]
-                    y_min[section_i] = y_impact_2[i_min]
+        xy_values_1 = get_value_location(xy_coord, normal_vec, values_1, scale)
+        xy_values_2 = get_value_location(xy_coord, normal_vec, values_2, scale)
+        xy_values_3 = get_value_location(xy_coord, normal_vec, values_3, scale)
 
         # Plot the impacts
-        ax.plot(x_react, y_react, color=color_line, alpha=0.4)
-        if plot_range:
-            ax.plot(x_react_2, y_react_2, color=color_line, alpha=0.4)
-
-        # Fill it with a polygon
+        ax.plot(xy_values_1[:, 0], xy_values_1[:, 1], color=color_line, alpha=0.4)
         if not plot_range:
-            x_fill = np.concatenate((x_react, x_arch[::-1]))
-            y_fill = np.concatenate((y_react, y_arch[::-1]))
+            xy = np.vstack((xy_values_1, xy_coord[::-1,:]))
+            polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.3)
+            ax.add_patch(polygon)
         else:
-            x_fill = np.concatenate((x_react_3, x_arch[::-1]))
-            y_fill = np.concatenate((y_react_3, y_arch[::-1]))
-            xy_poly = np.stack((x_fill, y_fill))
-            polygon = Polygon(np.transpose(xy_poly), edgecolor=None, fill=True, facecolor=color_fill, alpha=0.3)
+            ax.plot(xy_values_2[:, 0], xy_values_2[:, 1], color=color_line, alpha=0.4)
+
+            xy = np.vstack((xy_values_1, xy_values_2[::-1, :]))
+            polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.5)
             ax.add_patch(polygon)
 
-            x_fill = np.concatenate((x_react, x_react_2[::-1]))
-            y_fill = np.concatenate((y_react, y_react_2[::-1]))
-        xy_poly = np.stack((x_fill, y_fill))
-        polygon = Polygon(np.transpose(xy_poly), edgecolor=None, fill=True, facecolor=color_fill, alpha=0.5)
-        ax.add_patch(polygon)
+            xy = np.vstack((xy_values_3, xy_coord[::-1, :]))
+            polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.3)
+            ax.add_patch(polygon)
 
-        if show_extrema:
-            for i in range(len(self.sections_set)):
-                ax.plot(0, 0, linestyle='None', label=self.sections_set[i])
-
-                ax.plot(x_max[i], y_max[i], color=max_color, marker='.', markersize=10, linestyle='None',
-                        label=f'max: {r_max[i]/1000:.0f} MNm')
-                ax.plot(x_min[i], y_min[i], color=min_color, marker='.', markersize=10, linestyle='None',
-                        label=f'min: {r_min[i]/1000:.0f} MNm')
-            ax.legend(frameon=False, loc='center left', bbox_to_anchor=(1, 0.5))
-        pyplot.show()
+        # if show_extrema:
+        #     for i in range(len(self.sections_set)):
+        #         ax.plot(0, 0, linestyle='None', label=self.sections_set[i])
+        #
+        #         ax.plot(x_max[i], y_max[i], color=max_color, marker='.', markersize=10, linestyle='None',
+        #                 label=f'max: {r_max[i]/1000:.0f} MNm')
+        #         ax.plot(x_min[i], y_min[i], color=min_color, marker='.', markersize=10, linestyle='None',
+        #                 label=f'min: {r_min[i]/1000:.0f} MNm')
+        #     ax.legend(frameon=False, loc='center left', bbox_to_anchor=(1, 0.5))
         return
 

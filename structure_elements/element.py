@@ -1,5 +1,5 @@
 from structure_elements.effects import add_effects, multiply_effect, add_ranges, merge_ranges, \
-    range_from_optional_effect, range_from_mandatory_effect
+    range_from_mandatory_effect
 
 
 class Element:

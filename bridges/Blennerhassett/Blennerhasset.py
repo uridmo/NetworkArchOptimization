@@ -73,14 +73,12 @@ network_arch = NetworkArch(arch, tie, hangers)
 network_arch.calculate_dead_load(nodes)
 
 
-network_arch.set_range('0.9 DL/1.35 DL', 'Test 1')
+network_arch.set_range('0.9 DL/1.35 DL', 'Test')
 
 network_arch.create_model(nodes, plot=False)
 
-network_arch.set_range('DL, 0/0.5 DL, 0/1.0 DL', 'Test 2')
-
+network_arch.calculate_distributed_live_load(nodes, 22, 5)
 network_arch.assign_range_to_sections()
 
-network_arch.plot_effects('-1 DL', 'Moment')
 
 a=1

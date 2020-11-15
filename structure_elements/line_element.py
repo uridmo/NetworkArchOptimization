@@ -67,9 +67,22 @@ class LineElement(Element):
     def self_weight(self, indices=range(0)):
         if not indices:
             indices = range(len(self))
-        q = self.weight
-        load_distributed = [[i, 0, 0, 0, -q, 0, 0, -q, 0] for i in indices]
+        g = self.weight
+        load_distributed = [[i, 0, 0, 0, -g, 0, 0, -g, 0] for i in indices]
         return load_distributed
+
+    def distributed_live_load(self, q, x_start, x_end, first_index=0):
+        load_distributed = []
+        for i in range(len(self.nodes)-1):
+            x_1 = self.nodes[i].x
+            x_2 = self.nodes[i+1].x
+            if x_2 > x_start:
+                load_distributed.append([i+first_index, max(0, x_start-x_1), 0, 0, -q, 0, 0, -q, 0])
+            if x_2 > x_end:
+                load_distributed[-1][2] = x_end-x_2
+                break
+        loads = {'Distributed': load_distributed}
+        return loads
 
     def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
         # Define the list of all nodes

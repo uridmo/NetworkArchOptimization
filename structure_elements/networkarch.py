@@ -1,4 +1,5 @@
 from matplotlib import pyplot
+from numpy import linspace
 
 from plotting.model import plot_model
 from plotting.save import save_plot
@@ -30,7 +31,7 @@ class NetworkArch:
     def create_model(self, nodes, plot=False):
         structural_nodes = nodes.structural_nodes()
         beams = self.get_beams()
-        loads = [{}]
+        loads = []
         restricted_degrees = [[self.tie.nodes[0].index, 1, 1, 0, 0], [self.tie.nodes[-1].index, 0, 1, 0, 0]]
         boundary_conditions = {'Restricted Degrees': restricted_degrees}
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
@@ -76,9 +77,29 @@ class NetworkArch:
         loads = [{'Distributed': loads_tie + loads_arch}]
         model['Loads'] = loads
 
-        d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
+        d, i_f, rd = structure_analysis(model)
         self.support_reaction['Permanent'] = rd[0]
         self.set_effects(i_f[0], 'DL')
+        return
+
+    def calculate_distributed_live_load(self, nodes, q, n_loads):
+        span = self.tie.nodes[-1].x
+        model = self.create_model(nodes)
+        x_tie = linspace(0, span, num=n_loads+1)
+
+        for i in range(n_loads):
+            model['Loads'].append(self.tie.distributed_live_load(q, x_tie[i], x_tie[i+1]))
+
+        d, i_f, rd = structure_analysis(model)
+
+        range_name = ''
+        for i in range(n_loads):
+            name = 'LL'+str(i+1)
+            self.set_effects(i_f[i], name)
+            self.support_reaction[name] = rd[i]
+            range_name += name + ', '
+        range_name = range_name[0:-2]
+        self.set_range(range_name, 'LL')
         return
 
     def plot_elements(self, ax):

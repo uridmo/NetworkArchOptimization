@@ -116,9 +116,14 @@ class LineElement(Element):
         return
 
     def assign_range_to_sections(self):
-        for key in self.effects_range:
-            effects_max = self.effects_range[key]['Max']
-            effects_min = self.effects_range[key]['Min']
+        for key in self.effects:
+            effects = self.effects[key]
+            if 'Max' in effects:
+                effects_max = effects['Max']
+                effects_min = effects['Min']
+            else:
+                effects_max = effects
+                effects_min = effects
             self.effects_section[key] = {}
             for eff in effects_min:
                 max_0 = [-inf for i in self.sections_set]
@@ -145,7 +150,7 @@ class LineElement(Element):
         if extrema:
             effects = self.effects_range[name][extrema][key]
         else:
-            effects = self.get_effects(name, key=key)
+            effects = self.get_effects(name)[key]
 
         xy_coord = get_coordinates(self, effects)
         values = get_value_list(effects)

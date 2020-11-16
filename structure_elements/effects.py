@@ -17,7 +17,7 @@ def max_multiple_lists(*lists):
 
 
 def min_multiple_lists(*lists):
-    min_lists = list(map(add_multiple, *lists))
+    min_lists = list(map(min, *lists))
     return min_lists
 
 

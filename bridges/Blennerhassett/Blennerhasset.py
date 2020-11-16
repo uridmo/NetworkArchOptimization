@@ -13,6 +13,11 @@ from structure_elements.tie import Tie
 # Close all figures
 pyplot.close('all')
 
+# Colors (from Matlab)
+colors = [(0.0000, 0.4470, 0.7410), (0.8500, 0.3250, 0.0980), (0.9290, 0.6940, 0.1250),
+          (0.4940, 0.1840, 0.5560), (0.4660, 0.6740, 0.1880), (0.3010, 0.7450, 0.9330),
+          (0.6350, 0.0780, 0.1840), (0.1840, 0.6350, 0.0780)]
+
 # Geometry
 span = 267.8
 rise = 53.5
@@ -77,8 +82,9 @@ network_arch.set_range('0.9 DL/1.35 DL', 'Test')
 
 network_arch.create_model(nodes, plot=False)
 
-network_arch.calculate_distributed_live_load(nodes, 22, 5)
+network_arch.calculate_distributed_live_load(nodes, 22, 10)
 network_arch.assign_range_to_sections()
+network_arch.plot_effects('LL', 'Moment', color=colors[0])
 
 
 a=1

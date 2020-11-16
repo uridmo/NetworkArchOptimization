@@ -78,7 +78,7 @@ class LineElement(Element):
             x_2 = self.nodes[i+1].x
             if x_2 > x_start:
                 load_distributed.append([i+first_index, max(0, x_start-x_1), 0, 0, -q, 0, 0, -q, 0])
-            if x_2 > x_end:
+            if x_2 >= x_end:
                 load_distributed[-1][2] = x_end-x_2
                 break
         loads = {'Distributed': load_distributed}
@@ -158,16 +158,20 @@ class LineElement(Element):
             ax.plot(x, y, color='black', linewidth=1.5)
         return
 
-    def plot_effects(self, ax, name, key, extrema='', color='black'):
+    def plot_effects(self, ax, name, key, extrema='', color='black', ls='-'):
 
         if extrema:
-            effects = self.effects_range[name][extrema][key]
+            effects = self.effects[name][extrema][key]
         else:
-            effects = self.get_effects(name)[key]
+            if 'Min' in self.effects[name]:
+                self.plot_effects(ax, name, key, extrema='Min', color=color, ls='--')
+                effects = self.get_effects(name)['Max'][key]
+            else:
+                effects = self.get_effects(name)[key]
 
         xy_coord = get_coordinates(self, effects)
-        values = get_value_list(effects)
-        ax.plot(xy_coord[:, 0], values, color=color)
+        values = get_value_list(effects)/1000
+        ax.plot(xy_coord[:, 0], values, color=color, ls=ls)
         return
 
     def plot_range(self, ax, name, key, color='black'):

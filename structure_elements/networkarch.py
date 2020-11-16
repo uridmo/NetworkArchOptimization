@@ -97,7 +97,7 @@ class NetworkArch:
             name = 'LL'+str(i+1)
             self.set_effects(i_f[i], name)
             self.support_reaction[name] = rd[i]
-            range_name += name + ', '
+            range_name += '0/' + name + ', '
         range_name = range_name[0:-2]
         self.set_range(range_name, 'LL')
         return
@@ -108,18 +108,22 @@ class NetworkArch:
         self.hangers.plot_elements(ax)
         return
 
-    def plot_effects(self, name, key, fig_size=(4, 4)):
-        fig = pyplot.figure(figsize=fig_size, dpi=240)
+    def plot_effects(self, name, key, fig=None, fig_size=(4, 4), color='black'):
+        if not fig:
+            fig = pyplot.figure(figsize=fig_size, dpi=240)
         ax = fig.add_subplot(211)
         ax.set_title('Arch')
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
-        self.arch.plot_effects(ax, name, key)
+        self.arch.plot_effects(ax, name, key, color=color)
+        ax.set_xlim([0, self.tie.nodes[-1].x])
 
         ax = fig.add_subplot(212)
         ax.set_title('Tie')
-        self.tie.plot_effects(ax, name, key)
+        self.tie.plot_effects(ax, name, key, color=color)
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
+        ax.set_xlim([0, self.tie.nodes[-1].x])
+
         pyplot.show()
         return

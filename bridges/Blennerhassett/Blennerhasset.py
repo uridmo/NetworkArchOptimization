@@ -1,106 +1,36 @@
-import numpy as np
-from matplotlib import pyplot
-import tracemalloc
-
-from structure_elements.arch.assign_arch_compression import define_by_peak_moment
-from structure_elements.arch.circular_arch import CircularArch
-from structure_elements.arch.parabolic_arch import ParabolicArch
+from bridges.bridge import Bridge
 from structure_elements.cross_section import CrossSection
-from structure_elements.hangers.assign_hanger_forces import zero_displacement
-from structure_elements.hangers.hangers import mirror_hanger_set
-from structure_elements.hangers.parallel_hangers import ParallelHangerSet
-from structure_elements.networkarch import NetworkArch
-from structure_elements.nodes.nodes import Nodes
 from structure_elements.region import Region
-from structure_elements.tie import Tie
 
 
-tracemalloc.start()
+class BlennerhassettBridge(Bridge):
+    def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=170, n_hangers=13, arrangement='Parallel',
+                 hanger_params=tuple([1.0646]), qd_live_load=27, qc_live_load=200, arch_shape='Parabolic',
+                 exact_cross_sections=False, regions_arch=None, regions_tie=None,
+                 strength_combination='0.9 DL/1.35 DL, LL', cable_loss_combination=None):
 
-# Close all figures
-pyplot.close('all')
+        if True:
+            cs_tie_1 = CrossSection(178.1, 50146 * 10 ** 3, 38821 * 10 ** 3)
+            cs_tie = [cs_tie_1]
+            cs_tie_x = []
+            cs_arch_1 = CrossSection(32, 61814 * 10 ** 3, 28113 * 10 ** 3)
+            cs_arch = [cs_arch_1]
+            cs_arch_x = []
+            cs_hangers = CrossSection(0, 643.5 * 10 ** 3, 10 ** 3)
 
-# Colors (from Matlab)
-colors = [(0.0000, 0.4470, 0.7410), (0.8500, 0.3250, 0.0980), (0.9290, 0.6940, 0.1250),
-          (0.4940, 0.1840, 0.5560), (0.4660, 0.6740, 0.1880), (0.3010, 0.7450, 0.9330),
-          (0.6350, 0.0780, 0.1840), (0.1840, 0.6350, 0.0780)]
+        if True:
+            arch_region_1 = Region()
+            arch_region_2 = Region()
+            reg_arch = [arch_region_1, arch_region_2, arch_region_1]
+            reg_arch_x = [20, -20]
 
-# Geometry
-span = 267.8
-rise = 53.5
-n_hangers = 13
-alpha = np.radians(61)
-beta = np.radians(35)
+        if True:
+            tie_region_1 = Region()
+            reg_tie = [tie_region_1]
+            reg_tie_x = []
 
-cs_tie = CrossSection(178.1, 50146*10**3, 38821*10**3)
-cs_arch = CrossSection(32, 61814*10**3, 28113*10**3)
-cs_hangers = CrossSection(0, 643.5*10**3, 10**3)
-ea_hangers = 643.5*10**3
-ei_hangers = 10**3
-
-q_live_load = 27
-
-# Initialize nodes and create hanger set
-nodes = Nodes()
-
-# Define the hanger set
-hanger_set = ParallelHangerSet(nodes, span, alpha, n_hangers)
-# hanger_set = RadialHangerSet(nodes, span, rise, beta, n_hangers, skip=1)
-
-# Mirror the hanger set and assign stiffness
-hangers = mirror_hanger_set(nodes, hanger_set, span)
-hangers.set_stiffness(ea_hangers, ei_hangers)
-
-# Create the structural elements
-tie = Tie(nodes, span)
-arch = ParabolicArch(nodes, span, rise)
-
-# Assign the hangers to the tie
-tie.assign_hangers(hangers)
-arch.arch_connection_nodes(nodes, hangers)
-
-# Define regions
-arch.define_cross_sections(nodes, [], [cs_arch])
-tie.define_cross_sections(nodes, [], [cs_tie])
-
-arch_region_1 = Region()
-arch_region_2 = Region()
-tie_region_1 = Region()
-
-arch.define_regions(nodes, [20, -20], [arch_region_1, arch_region_2, arch_region_1])
-tie.define_regions(nodes, [], [tie_region_1])
-
-# Assign the constraint moment and the hanger forces
-mz_0 = zero_displacement(tie, nodes, dof_rz=True, plot=False)
-hangers.assign_permanent_effects()
-
-# Determine the constraint tie tension force
-n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 3)
-
-# Calculate the states under permanent stresses
-arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False, name='Arch Permanent Moment')
-tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False, name='Tie Permanent Moment')
-
-# Define the entire network arch structure
-network_arch = NetworkArch(arch, tie, hangers)
-network_arch.calculate_dead_load(nodes)
-
-
-network_arch.set_range('0.9 DL/1.35 DL', 'Test')
-
-network_arch.create_model(nodes, plot=False)
-
-
-network_arch.calculate_distributed_live_load(nodes, q_live_load, 20, 40)
-network_arch.assign_range_to_sections()
-
-network_arch.plot_effects('DL', 'Moment', color=colors[0])
-network_arch.plot_effects('DL', 'Normal Force', color=colors[0])
-# network_arch.plot_effects('LLd', 'Moment', color=colors[0])
-# network_arch.plot_effects('LLc', 'Moment', color=colors[0])
-network_arch.plot_effects('LL', 'Moment', color=colors[0])
-network_arch.plot_effects('LL', 'Normal Force', color=colors[0])
-
-current, peak = tracemalloc.get_traced_memory()
-print(f"Current memory usage is {current / 10**6}MB; Peak was {peak / 10**6}MB")
-tracemalloc.stop()
+        super().__init__(span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
+                         arch_shape, cs_arch_x, cs_arch, reg_arch_x, reg_arch, cs_tie_x, cs_tie,
+                         reg_tie_x, reg_tie, n_hangers, arrangement, hanger_params, cs_hangers,
+                         strength_combination, cable_loss_combination)
+        return

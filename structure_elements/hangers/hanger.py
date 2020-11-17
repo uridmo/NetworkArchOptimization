@@ -7,8 +7,7 @@ class Hanger:
         self.arch_node = None
         self.inclination = angle
         self.prestressing_force = None
-        self.axial_stiffness = None
-        self.bending_stiffness = None
+        self.cross_section = None
         self.effects_N = {}
         self.effects_range_N = {}
         return
@@ -23,3 +22,7 @@ class Hanger:
         dy = self.tie_node.y - self.arch_node.y
         dl = (dx ** 2 + dy ** 2) ** 0.5
         return dl
+
+    def get_beam(self):
+        beam = [self.cross_section.axial_stiffness, self.cross_section.bending_stiffness]
+        return beam

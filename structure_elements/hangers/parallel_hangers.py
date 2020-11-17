@@ -1,8 +1,8 @@
-from .hangers import Hangers
+from .hanger_set import HangerSet
 
 
-class ParallelHangerSet(Hangers):
-    def __init__(self, nodes, span, angle, n):
+class ParallelHangerSet(HangerSet):
+    def __init__(self, nodes, span, n, angle):
         super().__init__()
 
         for i in range(n):

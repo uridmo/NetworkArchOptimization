@@ -1,8 +1,8 @@
-from .hangers import Hangers
+from .hanger_set import HangerSet
 
 
-class ConstantChangeHangerSet(Hangers):
-    def __init__(self, nodes, span, angle_0, angle_mid, n):
+class ConstantChangeHangerSet(HangerSet):
+    def __init__(self, nodes, span, n, angle_0, angle_mid):
         super().__init__()
         da = angle_0 - angle_mid
         for i in range(n):

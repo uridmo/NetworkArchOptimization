@@ -18,7 +18,7 @@ def mirror_hanger_set(nodes, hanger_set, span):
     return hangers
 
 
-class Hangers(Element):
+class HangerSet(Element):
     def __init__(self):
         super().__init__()
         self.hangers = []
@@ -48,24 +48,22 @@ class Hangers(Element):
         self.hangers.append(hanger)
         return
 
-    def set_stiffness(self, ea, ei):
+    def define_cross_section(self, cross_section):
         for hanger in self.hangers:
-            hanger.axial_stiffness = ea
-            hanger.bending_stiffness = ei
+            hanger.cross_section = cross_section
         return
 
     def get_beams(self, indices):
         n = len(self)
         beams_nodes = [[self.hangers[i].tie_node.index, self.hangers[i].arch_node.index] for i in range(n)]
         beams_stiffness = []
-        for i in range(n):
-            stiffness = [self.hangers[i].axial_stiffness, self.hangers[i].bending_stiffness]
-            beams_stiffness.append(stiffness)
+        for hanger in self:
+            beams_stiffness.append(hanger.get_beam())
         beams_releases = [[i, 1, 1] for i in indices]
         return beams_nodes, beams_stiffness, beams_releases
 
     def set_effects(self, effects, name, key=None):
-        super(Hangers, self).set_effects(effects, name, key=key)
+        super(HangerSet, self).set_effects(effects, name, key=key)
         if not key:
             for i in range(len(self)):
                 self.hangers[i].effects_N[name] = effects['Normal Force'][i][0]
@@ -75,7 +73,7 @@ class Hangers(Element):
         return
 
     def get_range(self, range_name, name=''):
-        range_new = super(Hangers, self).get_range(range_name, name=name)
+        range_new = super(HangerSet, self).get_range(range_name, name=name)
         if name:
             for i in range(len(self)):
                 if name not in self.hangers[i].effects_range_N:

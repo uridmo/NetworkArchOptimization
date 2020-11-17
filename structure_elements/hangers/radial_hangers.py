@@ -2,11 +2,11 @@ from warnings import warn
 
 import numpy as np
 
-from .hangers import Hangers
+from .hanger_set import HangerSet
 
 
-class RadialHangerSet(Hangers):
-    def __init__(self, nodes, span, rise, beta, n, skip=0):
+class RadialHangerSet(HangerSet):
+    def __init__(self, nodes, span, rise, n, beta, skip=0):
         super().__init__()
         radius = (rise ** 2 + (span / 2) ** 2) / (2 * rise)
         diag = (rise ** 2 + (span / 2) ** 2) ** 0.5

@@ -1,14 +1,19 @@
 import numpy as np
 from matplotlib import pyplot
+import tracemalloc
 
 from structure_elements.arch.assign_arch_compression import define_by_peak_moment
 from structure_elements.arch.circular_arch import CircularArch
+from structure_elements.arch.parabolic_arch import ParabolicArch
 from structure_elements.hangers.assign_hanger_forces import zero_displacement
 from structure_elements.hangers.hangers import mirror_hanger_set
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
 from structure_elements.networkarch import NetworkArch
 from structure_elements.nodes.nodes import Nodes
 from structure_elements.tie import Tie
+
+
+tracemalloc.start()
 
 # Close all figures
 pyplot.close('all')
@@ -23,21 +28,23 @@ span = 267.8
 rise = 53.5
 
 # Tie
-ea_tie = 10 ** 6
-ei_tie = 10 ** 7
+ea_tie = 50146*10**3
+ei_tie = 38821*10**3
 g_tie = 178.1
 
 # Arch
-ea_arch = 10 ** 6
-ei_arch = 10 ** 7
-g_arch = 0
+ea_arch = 61814*10**3
+ei_arch = 28113*10**3
+g_arch = 32
 
 # Hangers
-ea_hangers = 10 ** 3
-ei_hangers = 10 ** 7
-n_hangers = 15
-alpha = np.radians(45)
+ea_hangers = 643.5*10**3
+ei_hangers = 10**3
+n_hangers = 13
+alpha = np.radians(61)
 beta = np.radians(35)
+
+q_live_load = 27
 
 # Initialize nodes and create hanger set
 nodes = Nodes()
@@ -52,7 +59,7 @@ hangers.set_stiffness(ea_hangers, ei_hangers)
 
 # Create the structural elements
 tie = Tie(nodes, span, g_tie, ea_tie, ei_tie)
-arch = CircularArch(nodes, span, rise, g_arch, ea_arch, ei_arch)
+arch = ParabolicArch(nodes, span, rise, g_arch, ea_arch, ei_arch)
 
 # Assign the hangers to the tie
 tie.assign_hangers(hangers)
@@ -67,7 +74,7 @@ mz_0 = zero_displacement(tie, nodes, dof_rz=True, plot=False)
 hangers.assign_permanent_effects()
 
 # Determine the constraint tie tension force
-n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 6)
+n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 3)
 
 # Calculate the states under permanent stresses
 arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False, name='Arch Permanent Moment')
@@ -82,9 +89,17 @@ network_arch.set_range('0.9 DL/1.35 DL', 'Test')
 
 network_arch.create_model(nodes, plot=False)
 
-network_arch.calculate_distributed_live_load(nodes, 22, 10)
+
+network_arch.calculate_distributed_live_load(nodes, q_live_load, 20, 40)
 network_arch.assign_range_to_sections()
+
+network_arch.plot_effects('DL', 'Moment', color=colors[0])
+network_arch.plot_effects('DL', 'Normal Force', color=colors[0])
+# network_arch.plot_effects('LLd', 'Moment', color=colors[0])
+# network_arch.plot_effects('LLc', 'Moment', color=colors[0])
 network_arch.plot_effects('LL', 'Moment', color=colors[0])
+network_arch.plot_effects('LL', 'Normal Force', color=colors[0])
 
-
-a=1
+current, peak = tracemalloc.get_traced_memory()
+print(f"Current memory usage is {current / 10**6}MB; Peak was {peak / 10**6}MB")
+tracemalloc.stop()

@@ -73,7 +73,7 @@ class NetworkArch:
         model = self.create_model(nodes, plot=plot)
 
         loads_tie = self.tie.self_weight()
-        loads_arch = self.arch.self_weight(range(n_tie, n_arch))
+        loads_arch = self.arch.self_weight(range(n_tie, n_tie+n_arch))
         loads = [{'Distributed': loads_tie + loads_arch}]
         model['Loads'] = loads
 
@@ -82,24 +82,38 @@ class NetworkArch:
         self.set_effects(i_f[0], 'DL')
         return
 
-    def calculate_distributed_live_load(self, nodes, q, n_loads):
+    def calculate_distributed_live_load(self, nodes, q, n_distributed, n_concentrated):
         span = self.tie.nodes[-1].x
         model = self.create_model(nodes)
-        x_tie = linspace(0, span, num=n_loads+1)
 
-        for i in range(n_loads):
-            model['Loads'].append(self.tie.distributed_live_load(q, x_tie[i], x_tie[i+1]))
+        x_tie = linspace(0, span, num=n_distributed + 1)
+        for i in range(n_distributed):
+            model['Loads'].append(self.tie.distributed_load(q, x_tie[i], x_tie[i + 1]))
+
+        x_tie = linspace(0, span, num=n_concentrated + 1)
+        for i in range(n_concentrated):
+            model['Loads'].append(self.tie.concentrated_live_load(x_tie[i]))
 
         d, i_f, rd = structure_analysis(model)
 
         range_name = ''
-        for i in range(n_loads):
-            name = 'LL'+str(i+1)
+        for i in range(n_distributed):
+            name = 'LLd'+str(i+1)
             self.set_effects(i_f[i], name)
             self.support_reaction[name] = rd[i]
             range_name += '0/' + name + ', '
         range_name = range_name[0:-2]
-        self.set_range(range_name, 'LL')
+        self.set_range(range_name, 'LLd')
+
+        range_name = '0/'
+        for i in range(n_concentrated):
+            name = 'LLc'+str(i+1)
+            self.set_effects(i_f[n_distributed+i], name)
+            self.support_reaction[name] = rd[n_distributed+i]
+            range_name += name + '/'
+        range_name = range_name[0:-1]
+        self.set_range(range_name, 'LLc')
+        self.set_range('LLc, LLd', 'LL')
         return
 
     def plot_elements(self, ax):
@@ -111,12 +125,16 @@ class NetworkArch:
     def plot_effects(self, name, key, fig=None, fig_size=(4, 4), color='black'):
         if not fig:
             fig = pyplot.figure(figsize=fig_size, dpi=240)
+
         ax = fig.add_subplot(211)
+        self.arch.plot_effects(ax, name, key, color=color)
         ax.set_title('Arch')
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
-        self.arch.plot_effects(ax, name, key, color=color)
         ax.set_xlim([0, self.tie.nodes[-1].x])
+        y_ticks = pyplot.yticks()
+        pyplot.yticks(y_ticks[0])
+        ax.set_ylim([y_ticks[0][0], y_ticks[0][-1]])
 
         ax = fig.add_subplot(212)
         ax.set_title('Tie')
@@ -124,6 +142,9 @@ class NetworkArch:
         ax.spines['top'].set_visible(False)
         ax.spines['right'].set_visible(False)
         ax.set_xlim([0, self.tie.nodes[-1].x])
+        y_ticks = pyplot.yticks()
+        pyplot.yticks(y_ticks[0])
+        ax.set_ylim([y_ticks[0][0], y_ticks[0][-1]])
 
         pyplot.show()
         return

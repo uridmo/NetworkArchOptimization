@@ -71,7 +71,7 @@ class LineElement(Element):
         load_distributed = [[i, 0, 0, 0, -g, 0, 0, -g, 0] for i in indices]
         return load_distributed
 
-    def distributed_live_load(self, q, x_start, x_end, first_index=0):
+    def distributed_load(self, q, x_start, x_end, first_index=0):
         load_distributed = []
         for i in range(len(self.nodes)-1):
             x_1 = self.nodes[i].x
@@ -82,6 +82,24 @@ class LineElement(Element):
                 load_distributed[-1][2] = x_end-x_2
                 break
         loads = {'Distributed': load_distributed}
+        return loads
+
+    def concentrated_live_load(self, x_ref, first_index=0):
+        x_1 = x_ref - 4.3
+        x_2 = x_ref
+        x_3 = x_ref + 4.3
+        load_point = []
+        for i in range(len(self.nodes)-1):
+            x_start = self.nodes[i].x
+            x_end = self.nodes[i+1].x
+            if x_start <= x_1 < x_end:
+                load_point.append([i+first_index, x_1 - x_start, 0, -145, 0])
+            if x_start <= x_2 < x_end:
+                load_point.append([i+first_index, x_2 - x_start, 0, -145, 0])
+            if x_start <= x_3 < x_end:
+                load_point.append([i+first_index, x_3 - x_start, 0, -35, 0])
+                break
+        loads = {'Point': load_point}
         return loads
 
     def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
@@ -163,7 +181,7 @@ class LineElement(Element):
         if extrema:
             effects = self.effects[name][extrema][key]
         else:
-            if 'Min' in self.effects[name]:
+            if 'Min' in self.get_effects(name):
                 self.plot_effects(ax, name, key, extrema='Min', color=color, ls='--')
                 effects = self.get_effects(name)['Max'][key]
             else:

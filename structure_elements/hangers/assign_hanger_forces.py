@@ -13,8 +13,8 @@ def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=False):
     load_distributed = tie.self_weight()
     loads = [{'Distributed': load_distributed}]
 
-    restricted_degrees = [[tie.start_node.index, 1, 1, int(dof_rz), 0]]
-    restricted_degrees += [[tie.end_node.index, 1, 1, int(dof_rz), 0]]
+    restricted_degrees = [[tie.nodes[0].index, 1, 1, int(dof_rz), 0]]
+    restricted_degrees += [[tie.nodes[-1].index, 1, 1, int(dof_rz), 0]]
     for hanger in hangers:
         restricted_degrees += [[hanger.tie_node.index, 0, 1, 0, 0]]
 

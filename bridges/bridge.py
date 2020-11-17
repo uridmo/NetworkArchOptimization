@@ -2,7 +2,7 @@ from structure_elements.arch.assign_arch_compression import define_by_peak_momen
 from structure_elements.arch.parabolic_arch import ParabolicArch
 from structure_elements.hangers.assign_hanger_forces import zero_displacement
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
-from structure_elements.hangers.hanger_set import mirror_hanger_set
+from structure_elements.hangers.hanger_set import mirror_hanger_set, Hangers
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
 from structure_elements.hangers.radial_hangers import RadialHangerSet
 from structure_elements.networkarch import NetworkArch
@@ -49,10 +49,10 @@ class Bridge:
         elif arrangement == 'Constant Change':
             hanger_set = ConstantChangeHangerSet(nodes, span, n_hangers, *hanger_params)
         else:
-            print('Hanger arrangement type "' + arrangement + '" is not defined')
+            raise Exception('Hanger arrangement type "' + arrangement + '" is not defined')
 
         # Mirror the hanger set and assign stiffness
-        hangers = mirror_hanger_set(nodes, hanger_set, span)
+        hangers = Hangers(nodes, hanger_set, span)
 
         # Create the structural elements
         tie = Tie(nodes, span)
@@ -72,7 +72,7 @@ class Bridge:
         tie.define_regions(nodes, reg_tie_x, reg_tie)
 
         # Assign the constraint moment and the hanger forces
-        mz_0 = zero_displacement(tie, nodes, dof_rz=True, plot=False)
+        mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True, plot=False)
         hangers.assign_permanent_effects()
 
         # Determine the constraint tie tension force

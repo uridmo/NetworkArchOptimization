@@ -8,11 +8,9 @@ class Tie(LineElement):
         self.end_node = nodes.add_node(span, 0)
         self.nodes = [self.start_node] + [self.end_node]
         self.hangers = [[], []]
-        # self.permanent_impacts = None
 
     def assign_hangers(self, hangers):
-        hangers.hangers.sort(key=lambda n: n.tie_node.x)
-        for hanger in hangers.hangers:
+        for hanger in hangers:
             if hanger.tie_node not in self.nodes:
                 for i in range(len(self.nodes)-1):
                     if self.nodes[i+1].x > hanger.tie_node.x:

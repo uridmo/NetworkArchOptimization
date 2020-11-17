@@ -120,7 +120,7 @@ class LineElement(Element):
         load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
 
         # Apply hanger forces
-        for hanger in hangers.hangers:
+        for hanger in hangers:
             if hanger.tie_node in self.nodes:
                 node = hanger.tie_node.index
                 vertical_force = hanger.prestressing_force * np.sin(hanger.inclination)

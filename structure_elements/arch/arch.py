@@ -4,8 +4,8 @@ from structure_elements.line_element import LineElement
 
 
 class Arch(LineElement):
-    def __init__(self, span, rise, g, ea, ei, ga=0):
-        super().__init__(g, ea, ei, ga=ga)
+    def __init__(self, span, rise):
+        super().__init__()
         self.span = span
         self.rise = rise
         return

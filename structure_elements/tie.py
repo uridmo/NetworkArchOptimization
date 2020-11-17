@@ -2,13 +2,13 @@ from structure_elements.line_element import LineElement
 
 
 class Tie(LineElement):
-    def __init__(self, nodes, span, g, ea, ei, ga=0):
-        super().__init__(g, ea, ei, ga=ga)
+    def __init__(self, nodes, span):
+        super().__init__()
         self.start_node = nodes.add_node(0, 0)
         self.end_node = nodes.add_node(span, 0)
         self.nodes = [self.start_node] + [self.end_node]
         self.hangers = [[], []]
-        self.permanent_impacts = None
+        # self.permanent_impacts = None
 
     def assign_hangers(self, hangers):
         hangers.hangers.sort(key=lambda n: n.tie_node.x)
@@ -24,15 +24,15 @@ class Tie(LineElement):
                 self.hangers[i].append(hanger)
         return
 
-    def insert_node(self, nodes, x, y):
-        node = nodes.add_node(x, y)
-        if node not in self.nodes:
-            for i in range(len(self.nodes)-1):
-                if self.nodes[i].x < x < self.nodes[i+1].x:
-                    self.nodes.insert(i+1, node)
-                    self.hangers.insert(i+1, [])
-                    break
-        return
+    # def insert_node(self, nodes, x, y):
+    #     node = nodes.add_node(x, y)
+    #     if node not in self.nodes:
+    #         for i in range(len(self.nodes)-1):
+    #             if self.nodes[i].x < x < self.nodes[i+1].x:
+    #                 self.nodes.insert(i+1, node)
+    #                 self.hangers.insert(i+1, [])
+    #                 break
+    #     return
 
     # def calculate_permanent_impacts(self, nodes, f_x, m_z, plots=False):
     #     # Define the list of all nodes

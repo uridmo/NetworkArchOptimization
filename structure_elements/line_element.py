@@ -13,17 +13,11 @@ from structure_elements.element import Element
 
 
 class LineElement(Element):
-    def __init__(self, g, ea, ei, ga=0):
+    def __init__(self):
         super().__init__()
         self.nodes = []
-        self.sections = []
-        self.sections_set = []
-        self.weight = g
-        self.axial_stiffness = ea
-        self.bending_stiffness = ei
-        self.shear_stiffness = ga
-        self.effects_section = {}
-
+        self.cross_sections = []
+        self.regions = []
         return
 
     def __len__(self):
@@ -40,34 +34,49 @@ class LineElement(Element):
             for i in range(len(self.nodes) - 1):
                 if self.nodes[i].x < x < self.nodes[i + 1].x:
                     self.nodes.insert(i + 1, node)
+                    if self.cross_sections:
+                        self.cross_sections.insert(i, self.cross_sections[i])
+                    if self.regions:
+                        self.regions.insert(i, self.regions[i])
                     break
         return node
 
-    def define_region(self, nodes, section_nodes, names):
+    def define_regions(self, nodes, section_nodes, regions):
         if section_nodes and type(section_nodes) is list:
             section_nodes = [self.insert_node(nodes, x) for x in section_nodes]
-        self.sections = []
+        self.regions = []
         section_nodes += [self.nodes[-1]]
         j = 0
         for i in range(len(self.nodes)-1):
-
             if self.nodes[i] == section_nodes[j]:
                 j += 1
-            self.sections.append(names[j])
-        self.sections_set = list(set(self.sections))
-        self.sections_set.sort()
+            self.regions.append(regions[j])
+        return
+
+    def define_cross_sections(self, nodes, section_nodes, cross_sections):
+        if section_nodes and type(section_nodes) is list:
+            section_nodes = [self.insert_node(nodes, x) for x in section_nodes]
+        self.cross_sections = []
+        section_nodes += [self.nodes[-1]]
+        j = 0
+        for i in range(len(self.nodes)-1):
+            if self.nodes[i] == section_nodes[j]:
+                j += 1
+            self.cross_sections.append(cross_sections[j])
         return
 
     def get_beams(self):
         n = len(self)
         beams_nodes = [[self.nodes[i].index, self.nodes[i + 1].index] for i in range(n)]
-        beams_stiffness = n * [[self.axial_stiffness, self.bending_stiffness]]
+        beams_stiffness = []
+        for i in range(n):
+            beams_stiffness.append(self.cross_sections[i].get_beam())
         return beams_nodes, beams_stiffness
 
     def self_weight(self, indices=range(0)):
         if not indices:
             indices = range(len(self))
-        g = self.weight
+        g = self.cross_sections[0].weight  # TODO
         load_distributed = [[i, 0, 0, 0, -g, 0, 0, -g, 0] for i in indices]
         return load_distributed
 
@@ -146,7 +155,7 @@ class LineElement(Element):
             save_plot(fig, 'Effects', name)
         return
 
-    def assign_range_to_sections(self):
+    def assign_range_to_regions(self):
         for key in self.effects:
             effects = self.effects[key]
             if 'Max' in effects:
@@ -155,18 +164,11 @@ class LineElement(Element):
             else:
                 effects_max = effects
                 effects_min = effects
-            self.effects_section[key] = {}
+
             for eff in effects_min:
-                max_0 = [-inf for i in self.sections_set]
-                min_0 = [inf for i in self.sections_set]
-                self.effects_section[key][eff] = {'Max': max_0, 'Min': min_0}
-                for i in range(len(effects_max[eff])):
-                    section = self.sections[i]
-                    section_i = self.sections_set.index(section)
-                    max_new = max(self.effects_section[key][eff]['Max'][section_i], max(effects_max[eff][i]))
-                    min_new = min(self.effects_section[key][eff]['Min'][section_i], min(effects_max[eff][i]))
-                    self.effects_section[key][eff]['Max'][section_i] = max_new
-                    self.effects_section[key][eff]['Min'][section_i] = min_new
+                for i in range(len(self)):
+                    self.regions[i].assign_extrema(effects_max[eff][i], key, eff)
+                    self.regions[i].assign_extrema(effects_min[eff][i], key, eff)
         return
 
     def plot_elements(self, ax):
@@ -190,13 +192,6 @@ class LineElement(Element):
         xy_coord = get_coordinates(self, effects)
         values = get_value_list(effects)/1000
         ax.plot(xy_coord[:, 0], values, color=color, ls=ls)
-        return
-
-    def plot_range(self, ax, name, key, color='black'):
-
-        self.plot_effects(ax, name, key, extrema='Max', color=color)
-        self.plot_effects(ax, name, key, extrema='Min', color=color)
-
         return
 
     def plot_effects_on_arch(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):

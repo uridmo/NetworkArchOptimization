@@ -58,8 +58,8 @@ class NetworkArch:
         return
 
     def assign_range_to_sections(self):
-        self.tie.assign_range_to_sections()
-        self.arch.assign_range_to_sections()
+        self.tie.assign_range_to_regions()
+        self.arch.assign_range_to_regions()
         return
 
     def assign_support_reaction(self, rd, name):

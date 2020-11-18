@@ -6,12 +6,11 @@ from structure_analysis import structure_analysis
 from structure_analysis import verify_input
 
 
-def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=False):
+def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=True):
     structural_nodes = nodes.structural_nodes()
     beams_nodes, beams_stiffness = tie.get_beams()
     beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
-    load_distributed = tie.self_weight()
-    loads = [{'Distributed': load_distributed}]
+    load_group = tie.self_weight()
 
     restricted_degrees = [[tie.nodes[0].index, 1, 1, int(dof_rz), 0]]
     restricted_degrees += [[tie.nodes[-1].index, 1, 1, int(dof_rz), 0]]
@@ -19,7 +18,7 @@ def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=False):
         restricted_degrees += [[hanger.tie_node.index, 0, 1, 0, 0]]
 
     boundary_conditions = {'Restricted Degrees': restricted_degrees}
-    model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
+    model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': [load_group],
              'Boundary Conditions': boundary_conditions}
 
     verify_input(model)
@@ -33,8 +32,8 @@ def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=False):
 
     if plot:
         # Adapt loads to have a nice plot
-        load_distributed = load_distributed[0]
-        load_distributed[2] = tie.end_node.x
+        load_distributed = load_group['Distributed'][0]
+        load_distributed[2] = tie.span
         load_group = {'Distributed': [load_distributed]}
         loads = [load_group]
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,

@@ -73,12 +73,12 @@ class LineElement(Element):
             beams_stiffness.append(self.cross_sections[i].get_beam())
         return beams_nodes, beams_stiffness
 
-    def self_weight(self, indices=range(0)):
-        if not indices:
-            indices = range(len(self))
-        g = self.cross_sections[0].weight  # TODO
-        load_distributed = [[i, 0, 0, 0, -g, 0, 0, -g, 0] for i in indices]
-        return load_distributed
+    def self_weight(self, first_index=0):
+        load_distributed = []
+        for i, cross_section in enumerate(self.cross_sections):
+            load_distributed.append(cross_section.get_self_weight(i + first_index))
+        load_group = {'Distributed': load_distributed}
+        return load_group
 
     def distributed_load(self, q, x_start, x_end, first_index=0):
         load_distributed = []
@@ -90,33 +90,25 @@ class LineElement(Element):
             if x_2 >= x_end:
                 load_distributed[-1][2] = x_end-x_2
                 break
-        loads = {'Distributed': load_distributed}
-        return loads
+        load_group = {'Distributed': load_distributed}
+        return load_group
 
-    def concentrated_live_load(self, x_ref, first_index=0):
-        x_1 = x_ref - 4.3
-        x_2 = x_ref
-        x_3 = x_ref + 4.3
-        load_point = []
+    def concentrated_load(self, x, force, first_index=0):
+        load_group = {}
         for i in range(len(self.nodes)-1):
             x_start = self.nodes[i].x
             x_end = self.nodes[i+1].x
-            if x_start <= x_1 < x_end:
-                load_point.append([i+first_index, x_1 - x_start, 0, -145, 0])
-            if x_start <= x_2 < x_end:
-                load_point.append([i+first_index, x_2 - x_start, 0, -145, 0])
-            if x_start <= x_3 < x_end:
-                load_point.append([i+first_index, x_3 - x_start, 0, -35, 0])
+            if x_start <= x < x_end:
+                load_group = {'Point': [[i+first_index, x - x_start, 0, force, 0]]}
                 break
-        loads = {'Point': load_point}
-        return loads
+        return load_group
 
     def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
         beams_nodes, beams_stiffness = self.get_beams()
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
-        load_distributed = self.self_weight()
+        load_group = self.self_weight()
         load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
 
         # Apply hanger forces
@@ -133,7 +125,7 @@ class LineElement(Element):
                 load_nodal.append([node, horizontal_force, vertical_force, 0])
 
         # Assign the load group
-        load_group = {'Distributed': load_distributed, 'Nodal': load_nodal}
+        load_group['Nodal'] = load_nodal
         loads = [load_group]
         restricted_degrees = [[self.nodes[0].index, 1, 1, 0, 0], [self.nodes[-1].index, 0, 1, 0, 0]]
         boundary_conditions = {'Restricted Degrees': restricted_degrees}

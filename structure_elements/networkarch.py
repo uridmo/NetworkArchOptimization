@@ -73,8 +73,8 @@ class NetworkArch:
         model = self.create_model(nodes, plot=plot)
 
         loads_tie = self.tie.self_weight()
-        loads_arch = self.arch.self_weight(range(n_tie, n_tie+n_arch))
-        loads = [{'Distributed': loads_tie + loads_arch}]
+        loads_arch = self.arch.self_weight(first_index=n_tie)
+        loads = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed']}]
         model['Loads'] = loads
 
         d, i_f, rd = structure_analysis(model)
@@ -82,22 +82,28 @@ class NetworkArch:
         self.set_effects(i_f[0], 'DL')
         return
 
-    def calculate_distributed_live_load(self, nodes, q, n_distributed, n_concentrated):
-        span = self.tie.nodes[-1].x
+    def calculate_distributed_live_load(self, nodes, q_d, q_c):
+        span = self.tie.span
         model = self.create_model(nodes)
+        n = self.tie.cross_girders_amount
+        f_d = -span * q_d / (n+1)
+        f_c = -q_c
 
-        x_tie = linspace(0, span, num=n_distributed + 1)
-        for i in range(n_distributed):
-            model['Loads'].append(self.tie.distributed_load(q, x_tie[i], x_tie[i + 1]))
+        loads = model['Loads']
+        loads.append({'Nodal': [[self.tie.nodes[0].index, 0, f_d/2, 0]]})
+        for i in range(n):
+            loads.append({'Nodal': [[self.tie.cross_girders_nodes[i].index, 0, f_d, 0]]})
+        loads.append({'Nodal': [[self.tie.nodes[-1].index, 0, f_d / 2, 0]]})
 
-        x_tie = linspace(0, span, num=n_concentrated + 1)
-        for i in range(n_concentrated):
-            model['Loads'].append(self.tie.concentrated_live_load(x_tie[i]))
+        loads.append({'Nodal': [[self.tie.nodes[0].index, 0, f_c/2, 0]]})
+        for i in range(n):
+            loads.append({'Nodal': [[self.tie.cross_girders_nodes[i].index, 0, f_c, 0]]})
+        loads.append({'Nodal': [[self.tie.nodes[-1].index, 0, f_c / 2, 0]]})
 
         d, i_f, rd = structure_analysis(model)
 
         range_name = ''
-        for i in range(n_distributed):
+        for i in range(n+2):
             name = 'LLd'+str(i+1)
             self.set_effects(i_f[i], name)
             self.support_reaction[name] = rd[i]
@@ -106,10 +112,10 @@ class NetworkArch:
         self.set_range(range_name, 'LLd')
 
         range_name = '0/'
-        for i in range(n_concentrated):
+        for i in range(n+2):
             name = 'LLc'+str(i+1)
-            self.set_effects(i_f[n_distributed+i], name)
-            self.support_reaction[name] = rd[n_distributed+i]
+            self.set_effects(i_f[n+i], name)
+            self.support_reaction[name] = rd[n+i]
             range_name += name + '/'
         range_name = range_name[0:-1]
         self.set_range(range_name, 'LLc')

@@ -4,13 +4,13 @@ from structure_elements.region import Region
 
 
 class BlennerhassettBridge(Bridge):
-    def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=170, n_hangers=13, arrangement='Parallel',
-                 hanger_params=tuple([1.0646]), qd_live_load=27, qc_live_load=200, arch_shape='Parabolic',
+    def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=146, n_hangers=13, arrangement='Parallel',
+                 hanger_params=tuple([1.0646]), qd_live_load=27, qc_live_load=325, arch_shape='Parabolic',
                  exact_cross_sections=False, regions_arch=None, regions_tie=None,
                  strength_combination='0.9 DL/1.35 DL, LL', cable_loss_combination=None):
 
         if True:
-            cs_tie_1 = CrossSection(178.1, 50146 * 10 ** 3, 38821 * 10 ** 3)
+            cs_tie_1 = CrossSection(32, 50146 * 10 ** 3, 38821 * 10 ** 3)
             cs_tie = [cs_tie_1]
             cs_tie_x = []
             cs_arch_1 = CrossSection(32, 61814 * 10 ** 3, 28113 * 10 ** 3)

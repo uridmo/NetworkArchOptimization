@@ -55,7 +55,7 @@ class Bridge:
         hangers = Hangers(nodes, hanger_set, span)
 
         # Create the structural elements
-        tie = Tie(nodes, span)
+        tie = Tie(nodes, span, n_cross_girders, g_deck)
         arch = ParabolicArch(nodes, span, rise)
 
         # Assign the hangers to the tie
@@ -72,7 +72,7 @@ class Bridge:
         tie.define_regions(nodes, reg_tie_x, reg_tie)
 
         # Assign the constraint moment and the hanger forces
-        mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True, plot=False)
+        mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
         hangers.assign_permanent_effects()
 
         # Determine the constraint tie tension force
@@ -87,7 +87,7 @@ class Bridge:
 
         # Calculate the load cases
         network_arch.calculate_dead_load(nodes)
-        network_arch.calculate_distributed_live_load(nodes, qd_live_load, 20, 40)
+        network_arch.calculate_distributed_live_load(nodes, qd_live_load, qc_live_load)
         network_arch.assign_range_to_sections()
 
         self.nodes = nodes

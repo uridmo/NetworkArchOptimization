@@ -84,11 +84,11 @@ class Bridge:
         hangers.assign_permanent_effects()
 
         # Determine the constraint tie tension force
-        n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 3)
+        n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 4)
 
         # Calculate the states under permanent stresses
-        arch.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False, name='Arch Permanent Moment')
-        tie.calculate_permanent_impacts(nodes, hangers, n_0, mz_0, plots=False, name='Tie Permanent Moment')
+        arch.calculate_permanent_impacts(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
+        tie.calculate_permanent_impacts(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
 
         # Define the entire network arch structure
         network_arch = NetworkArch(arch, tie, hangers)
@@ -106,6 +106,8 @@ class Bridge:
         network_arch = self.tie_regions
         return network_arch
 
-    def plot_effects(self, name, key):
-        self.network_arch.plot_effects(name, key)
+
+    def plot_effects(self, name, key, fig=None, color='black'):
+
+        self.network_arch.plot_effects(name, key, fig=fig, color=color)
         return

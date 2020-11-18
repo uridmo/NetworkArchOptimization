@@ -125,7 +125,10 @@ class LineElement(Element):
                 load_nodal.append([node, horizontal_force, vertical_force, 0])
 
         # Assign the load group
-        load_group['Nodal'] = load_nodal
+        if 'Nodal' in load_group:
+            load_group['Nodal'].extend(load_nodal)
+        else:
+            load_group['Nodal'] = load_nodal
         loads = [load_group]
         restricted_degrees = [[self.nodes[0].index, 1, 1, 0, 0], [self.nodes[-1].index, 0, 1, 0, 0]]
         boundary_conditions = {'Restricted Degrees': restricted_degrees}
@@ -133,7 +136,6 @@ class LineElement(Element):
                  'Boundary Conditions': boundary_conditions}
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
 
-        self.effects['Permanent'] = i_f[0]
         self.set_effects(i_f[0], 'Permanent')
         self.set_effects(multiply_effect(i_f[0], 0), '0')
 

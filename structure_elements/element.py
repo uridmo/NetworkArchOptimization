@@ -17,7 +17,7 @@ class Element:
         return
 
     def get_effects(self, name):
-        name.replace(' - ', ' + -1 ')
+        name = name.replace(' - ', ' + -1 ')
         if name in self.effects:
             effects = self.effects[name]
         elif ' + ' in name:

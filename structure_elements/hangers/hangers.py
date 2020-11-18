@@ -63,7 +63,7 @@ class HangerSet:
             for hanger in self:
                 x.append(hanger.tie_node.x)
                 n.append(hanger.effects_N[name][key])
-            ax.plot(x, n, color=color, ls=ls)
+            ax.plot(x, n, color=color, ls=ls, marker="x")
         return
 
 

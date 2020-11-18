@@ -28,7 +28,7 @@ class NetworkArch:
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness, 'Releases': hanger_releases}
         return beams
 
-    def create_model(self, nodes, plot=False):
+    def create_model(self, nodes):
         structural_nodes = nodes.structural_nodes()
         beams = self.get_beams()
         loads = []
@@ -36,10 +36,6 @@ class NetworkArch:
         boundary_conditions = {'Restricted Degrees': restricted_degrees}
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
-
-        if plot:
-            fig, ax = plot_model(model, self)
-            save_plot(fig, 'Models', 'Network Arch Bridge')
         return model
 
     def set_effects(self, effects, name):
@@ -66,12 +62,9 @@ class NetworkArch:
         self.support_reaction[name] = rd
         return
 
-    def calculate_dead_load(self, nodes, plot=False):
+    def calculate_dead_load(self, nodes):
         n_tie = len(self.tie)
-        n_arch = len(self.arch)
-
-        model = self.create_model(nodes, plot=plot)
-
+        model = self.create_model(nodes)
         loads_tie = self.tie.self_weight()
         loads_arch = self.arch.self_weight(first_index=n_tie)
         loads = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed']}]
@@ -136,9 +129,6 @@ class NetworkArch:
             axs = fig.get_axes()
 
         self.arch.plot_effects(axs[0], name, key, color=color)
-
         self.tie.plot_effects(axs[1], name, key, color=color)
-
         self.hangers.plot_effects(axs[2], name, color=color)
-
         return fig

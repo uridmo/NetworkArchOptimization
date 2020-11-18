@@ -1,7 +1,3 @@
-from copy import deepcopy
-from operator import add
-
-
 def add_multiple(*a_i):
     return sum(a_i)
 
@@ -31,13 +27,9 @@ def add_effects(*effects):
 
 def multiply_effect(effect_1, factor):
     if 'Min' in effect_1:
-        effect = {'Max': {}, 'Min': {}}
-        for key in effect_1['Min']:
-            effect['Max'][key] = []
-            effect['Min'][key] = []
-            for i in range(len(effect_1['Min'][key])):
-                effect['Max'][key].append(list(map(lambda x: factor*x, effect_1['Max'][key][i])))
-                effect['Min'][key].append(list(map(lambda x: factor*x, effect_1['Min'][key][i])))
+        effect = {}
+        effect['Max'] = multiply_effect(effect_1['Max'], factor)
+        effect['Min'] = multiply_effect(effect_1['Min'], factor)
     else:
         effect = {}
         for key in effect_1:

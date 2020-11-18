@@ -47,6 +47,25 @@ class HangerSet:
         self.hangers.append(hanger)
         return
 
+    def plot_effects(self, ax, name, key='', color='black', ls='-'):
+        x = []
+        n = []
+        if not key:
+            if type(self.hangers[0].effects_N[name]) is not dict:
+                for hanger in self:
+                    x.append(hanger.tie_node.x)
+                    n.append(hanger.effects_N[name])
+                ax.plot(x, n, color=color, ls=ls)
+            else:
+                self.plot_effects(ax, name, key='Max', color=color, ls=ls)
+                self.plot_effects(ax, name, key='Min', color=color, ls=ls)
+        else:
+            for hanger in self:
+                x.append(hanger.tie_node.x)
+                n.append(hanger.effects_N[name][key])
+            ax.plot(x, n, color=color, ls=ls)
+        return
+
 
 class Hangers(Element):
     def __init__(self, nodes, hanger_set, span):
@@ -106,10 +125,10 @@ class Hangers(Element):
         range_new = super(Hangers, self).get_range(range_name, name=name)
         if name:
             for i, hanger in enumerate(self):
-                if name not in hanger.effects_range_N:
-                    hanger.effects_range_N[name] = {}
-                hanger.effects_range_N[name]['Max'] = range_new['Max']['Normal Force'][i][0]
-                hanger.effects_range_N[name]['Min'] = range_new['Min']['Normal Force'][i][0]
+                if name not in hanger.effects_N:
+                    hanger.effects_N[name] = {}
+                hanger.effects_N[name]['Max'] = range_new['Max']['Normal Force'][i][0]
+                hanger.effects_N[name]['Min'] = range_new['Min']['Normal Force'][i][0]
         return range_new
 
     def assign_permanent_effects(self, key=None):
@@ -137,6 +156,6 @@ class Hangers(Element):
             ax.plot(x, y, color='black', linewidth=0.7)
         return
 
-    def plot_internal_forces(self):
-
+    def plot_effects(self, ax, name, key='', color='black', ls='-'):
+        self.hanger_sets[0].plot_effects(ax, name, key=key, color=color, ls=ls)
         return

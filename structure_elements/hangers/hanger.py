@@ -9,7 +9,6 @@ class Hanger:
         self.prestressing_force = None
         self.cross_section = None
         self.effects_N = {}
-        self.effects_range_N = {}
         return
 
     def __repr__(self):

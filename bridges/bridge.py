@@ -2,7 +2,7 @@ from structure_elements.arch.assign_arch_compression import define_by_peak_momen
 from structure_elements.arch.parabolic_arch import ParabolicArch
 from structure_elements.hangers.assign_hanger_forces import zero_displacement
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
-from structure_elements.hangers.hanger_set import mirror_hanger_set, Hangers
+from structure_elements.hangers.hangers import mirror_hanger_set, Hangers
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
 from structure_elements.hangers.radial_hangers import RadialHangerSet
 from structure_elements.networkarch import NetworkArch
@@ -16,6 +16,14 @@ class Bridge:
                  reg_tie_x, reg_tie, n_hangers, arrangement, hanger_params, cs_hangers,
                  strength_combination, cable_loss_combination):
 
+        geometry = {'Span': span, 'Rise': rise, 'Arch shape': arch_shape, 'Hanger arrangement': arrangement,
+                    'Hanger parameters': hanger_params, 'Amount of cross-girders': n_cross_girders,
+                    'Amount of hangers': n_hangers}
+        cross_sections = []
+        loads = {}
+        self.input = {'Span': span, 'Rise': rise, 'Amount of cross-girders': n_cross_girders,
+                      'Weight deck': g_deck, 'Distributed live load': qd_live_load,
+                      'Concentrated live load': qc_live_load, 'Arch shape': arch_shape, 'Arch cross-sections': cs_arch}
         self.span = span
         self.rise = rise
         self.cross_girder_amount = n_cross_girders
@@ -87,7 +95,7 @@ class Bridge:
 
         # Calculate the load cases
         network_arch.calculate_dead_load(nodes)
-        network_arch.calculate_distributed_live_load(nodes, qd_live_load, qc_live_load)
+        network_arch.calculate_live_load(nodes, qd_live_load, qc_live_load)
         network_arch.assign_range_to_sections()
 
         self.nodes = nodes
@@ -97,3 +105,7 @@ class Bridge:
     def analyse(self):
         network_arch = self.tie_regions
         return network_arch
+
+    def plot_effects(self, name, key):
+        self.network_arch.plot_effects(name, key)
+        return

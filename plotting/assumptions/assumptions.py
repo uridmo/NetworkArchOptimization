@@ -1,6 +1,9 @@
 import tracemalloc
 
+from matplotlib import pyplot
+
 from bridges.Blennerhassett.Blennerhasset import BlennerhassettBridge
+from plotting.adjustments import adjust_overview_plots
 
 tracemalloc.start()
 
@@ -10,14 +13,21 @@ colors = [(0.0000, 0.4470, 0.7410), (0.8500, 0.3250, 0.0980), (0.9290, 0.6940, 0
 
 blennerhassett_0 = BlennerhassettBridge()
 network_arch = blennerhassett_0.network_arch
+network_arch.set_range('0.9 DL/1.35 DL, 1.75 LL', 'Test')
 
-network_arch.set_range('0.9 DL/1.35 DL', 'Test')
-network_arch.plot_effects('DL', 'Moment', color=colors[0])
-network_arch.plot_effects('DL', 'Normal Force', color=colors[0])
-network_arch.plot_effects('LLd', 'Moment', color=colors[0])
-network_arch.plot_effects('LLc', 'Moment', color=colors[0])
-network_arch.plot_effects('LL', 'Moment', color=colors[0])
-network_arch.plot_effects('LL', 'Normal Force', color=colors[0])
+fig = network_arch.plot_effects('DL', 'Moment', color=colors[0])
+fig = network_arch.plot_effects('LLd', 'Moment', fig=fig, color=colors[1])
+adjust_overview_plots(fig)
+pyplot.show()
+
+fig = network_arch.plot_effects('Test', 'Moment', color=colors[0])
+adjust_overview_plots(fig)
+pyplot.show()
+
+
+# network_arch.plot_effects('LLc', 'Moment', color=colors[0])
+# network_arch.plot_effects('LL', 'Moment', color=colors[0])
+# network_arch.plot_effects('LL', 'Normal Force', color=colors[0])
 
 
 current, peak = tracemalloc.get_traced_memory()

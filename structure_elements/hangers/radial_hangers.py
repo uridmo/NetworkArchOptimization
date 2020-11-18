@@ -2,7 +2,7 @@ from warnings import warn
 
 import numpy as np
 
-from .hanger_set import HangerSet
+from .hangers import HangerSet
 
 
 class RadialHangerSet(HangerSet):

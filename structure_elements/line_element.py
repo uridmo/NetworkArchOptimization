@@ -170,13 +170,14 @@ class LineElement(Element):
             ax.plot(x, y, color='black', linewidth=1.5)
         return
 
-    def plot_effects(self, ax, name, key, extrema='', color='black', ls='-'):
+    def plot_effects(self, ax, name, key, color='black', ls='-'):
 
-        if extrema:
-            effects = self.effects[name][extrema][key]
+        if '-' in key:
+            keys = key.split('-', 1)
+            effects = self.effects[name][keys[0]][keys[1]]
         else:
             if 'Min' in self.get_effects(name):
-                self.plot_effects(ax, name, key, extrema='Min', color=color, ls='--')
+                self.plot_effects(ax, name, 'Min-'+key, color=color, ls='--')
                 effects = self.get_effects(name)['Max'][key]
             else:
                 effects = self.get_effects(name)[key]

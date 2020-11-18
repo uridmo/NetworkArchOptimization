@@ -30,11 +30,20 @@ def add_effects(*effects):
 
 
 def multiply_effect(effect_1, factor):
-    effect = {}
-    for key in effect_1:
-        effect[key] = []
-        for i in range(len(effect_1[key])):
-            effect[key].append(list(map(lambda x: factor*x, effect_1[key][i])))
+    if 'Min' in effect_1:
+        effect = {'Max': {}, 'Min': {}}
+        for key in effect_1['Min']:
+            effect['Max'][key] = []
+            effect['Min'][key] = []
+            for i in range(len(effect_1['Min'][key])):
+                effect['Max'][key].append(list(map(lambda x: factor*x, effect_1['Max'][key][i])))
+                effect['Min'][key].append(list(map(lambda x: factor*x, effect_1['Min'][key][i])))
+    else:
+        effect = {}
+        for key in effect_1:
+            effect[key] = []
+            for i in range(len(effect_1[key])):
+                effect[key].append(list(map(lambda x: factor*x, effect_1[key][i])))
     return effect
 
 

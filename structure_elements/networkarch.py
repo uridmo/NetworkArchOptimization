@@ -1,6 +1,6 @@
 from matplotlib import pyplot
-from numpy import linspace
 
+from plotting.adjustments import adjust_plot
 from plotting.model import plot_model
 from plotting.save import save_plot
 from structure_analysis import structure_analysis
@@ -82,26 +82,24 @@ class NetworkArch:
         self.set_effects(i_f[0], 'DL')
         return
 
-    def calculate_distributed_live_load(self, nodes, q_d, q_c):
+    def calculate_live_load(self, nodes, q_d, q_c):
         span = self.tie.span
-        model = self.create_model(nodes)
         n = self.tie.cross_girders_amount
         f_d = -span * q_d / (n+1)
         f_c = -q_c
 
+        # Define the model
+        model = self.create_model(nodes)
         loads = model['Loads']
-        loads.append({'Nodal': [[self.tie.nodes[0].index, 0, f_d/2, 0]]})
-        for i in range(n):
-            loads.append({'Nodal': [[self.tie.cross_girders_nodes[i].index, 0, f_d, 0]]})
-        loads.append({'Nodal': [[self.tie.nodes[-1].index, 0, f_d / 2, 0]]})
-
-        loads.append({'Nodal': [[self.tie.nodes[0].index, 0, f_c/2, 0]]})
-        for i in range(n):
-            loads.append({'Nodal': [[self.tie.cross_girders_nodes[i].index, 0, f_c, 0]]})
-        loads.append({'Nodal': [[self.tie.nodes[-1].index, 0, f_c / 2, 0]]})
+        for f in [f_d, f_c]:
+            loads.append({'Nodal': [[self.tie.nodes[0].index, 0, f / 2, 0]]})
+            for i in range(n):
+                loads.append({'Nodal': [[self.tie.cross_girders_nodes[i].index, 0, f, 0]]})
+            loads.append({'Nodal': [[self.tie.nodes[-1].index, 0, f / 2, 0]]})
 
         d, i_f, rd = structure_analysis(model)
 
+        # Save distributed effects and calculate inclusive range
         range_name = ''
         for i in range(n+2):
             name = 'LLd'+str(i+1)
@@ -111,6 +109,7 @@ class NetworkArch:
         range_name = range_name[0:-2]
         self.set_range(range_name, 'LLd')
 
+        # Save concentrated effects and calculate exclusive range
         range_name = '0/'
         for i in range(n+2):
             name = 'LLc'+str(i+1)
@@ -119,6 +118,8 @@ class NetworkArch:
             range_name += name + '/'
         range_name = range_name[0:-1]
         self.set_range(range_name, 'LLc')
+
+        # Merge the two ranges
         self.set_range('LLc, LLd', 'LL')
         return
 
@@ -128,29 +129,16 @@ class NetworkArch:
         self.hangers.plot_elements(ax)
         return
 
-    def plot_effects(self, name, key, fig=None, fig_size=(4, 4), color='black'):
+    def plot_effects(self, name, key, fig=None, color='black'):
         if not fig:
-            fig = pyplot.figure(figsize=fig_size, dpi=240)
+            fig, axs = pyplot.subplots(3, 1, figsize=(4, 6), dpi=240)
+        else:
+            axs = fig.get_axes()
 
-        ax = fig.add_subplot(211)
-        self.arch.plot_effects(ax, name, key, color=color)
-        ax.set_title('Arch')
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.set_xlim([0, self.tie.nodes[-1].x])
-        y_ticks = pyplot.yticks()
-        pyplot.yticks(y_ticks[0])
-        ax.set_ylim([y_ticks[0][0], y_ticks[0][-1]])
+        self.arch.plot_effects(axs[0], name, key, color=color)
 
-        ax = fig.add_subplot(212)
-        ax.set_title('Tie')
-        self.tie.plot_effects(ax, name, key, color=color)
-        ax.spines['top'].set_visible(False)
-        ax.spines['right'].set_visible(False)
-        ax.set_xlim([0, self.tie.nodes[-1].x])
-        y_ticks = pyplot.yticks()
-        pyplot.yticks(y_ticks[0])
-        ax.set_ylim([y_ticks[0][0], y_ticks[0][-1]])
+        self.tie.plot_effects(axs[1], name, key, color=color)
 
-        pyplot.show()
-        return
+        self.hangers.plot_effects(axs[2], name, color=color)
+
+        return fig

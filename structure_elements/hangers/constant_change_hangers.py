@@ -1,4 +1,4 @@
-from .hanger_set import HangerSet
+from .hangers import HangerSet
 
 
 class ConstantChangeHangerSet(HangerSet):

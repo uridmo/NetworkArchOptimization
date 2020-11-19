@@ -67,7 +67,7 @@ class NetworkArch:
         model = self.create_model(nodes)
         loads_tie = self.tie.self_weight()
         loads_arch = self.arch.self_weight(first_index=n_tie)
-        loads = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed']}]
+        loads = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed'], 'Nodal': loads_tie['Nodal']}]
         model['Loads'] = loads
 
         d, i_f, rd = structure_analysis(model)

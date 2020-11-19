@@ -103,7 +103,7 @@ class LineElement(Element):
                 break
         return load_group
 
-    def calculate_permanent_impacts(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
+    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
         beams_nodes, beams_stiffness = self.get_beams()

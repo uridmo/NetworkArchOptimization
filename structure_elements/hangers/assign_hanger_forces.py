@@ -28,7 +28,9 @@ def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=True):
     # Assign the support reaction forces to the hangers
     nodes_x = [model['Nodes']['Location'][rd[0]][0] for rd in rd_tie[0][2:]]
     nodes_forces = [rd[2] for rd in rd_tie[0][2:]]
-    nodes_forces2hanger_forces_equal(nodes_x, nodes_forces, hangers)
+    # Assign the reaction forces to the hangers
+    sine_proportional(nodes_x, nodes_forces, hangers)
+    # sine_length_proportional(nodes_x, nodes_forces, hangers)
 
     if plot:
         # Adapt loads to have a nice plot
@@ -44,14 +46,27 @@ def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=True):
     return mz_0
 
 
-def nodes_forces2hanger_forces_equal(nodes_x, nodes_forces, hangers):
+def sine_proportional(nodes_x, nodes_forces, hangers):
     for i in range(len(nodes_forces)):
-        sinus_sum = 0
+        sine_sum = 0
         for hanger in hangers:
             if hanger.tie_node.x == nodes_x[i]:
-                sinus_sum += np.sin(hanger.inclination)
-        hanger_force = nodes_forces[i] / sinus_sum
+                sine_sum += np.sin(hanger.inclination)
+        hanger_force = nodes_forces[i] / sine_sum
         for hanger in hangers:
             if hanger.tie_node.x == nodes_x[i]:
                 hanger.prestressing_force = hanger_force
+    return
+
+
+def sine_length_proportional(nodes_x, nodes_forces, hangers):
+    for i in range(len(nodes_forces)):
+        sine_length_sum = 0
+        for hanger in hangers:
+            if hanger.tie_node.x == nodes_x[i]:
+                sine_length_sum += np.sin(hanger.inclination)**2 * hanger.length()**0.5
+        hanger_force = nodes_forces[i] / sine_length_sum
+        for hanger in hangers:
+            if hanger.tie_node.x == nodes_x[i]:
+                hanger.prestressing_force = hanger_force * np.sin(hanger.inclination) * hanger.length()**0.5
     return

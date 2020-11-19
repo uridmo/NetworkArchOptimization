@@ -79,16 +79,15 @@ class Bridge:
         arch.define_regions(nodes, reg_arch_x, reg_arch)
         tie.define_regions(nodes, reg_tie_x, reg_tie)
 
-        # Assign the constraint moment and the hanger forces
+        # Determine the self equilibrium stress-state
         mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
-        hangers.assign_permanent_effects()
+        n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5*10**3)
 
-        # Determine the constraint tie tension force
-        n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 ** 4)
 
         # Calculate the states under permanent stresses
-        arch.calculate_permanent_impacts(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
-        tie.calculate_permanent_impacts(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
+        hangers.assign_permanent_effects()
+        arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
+        tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
 
         # Define the entire network arch structure
         network_arch = NetworkArch(arch, tie, hangers)

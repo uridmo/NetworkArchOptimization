@@ -12,6 +12,13 @@ def max_multiple_lists(*lists):
     return max_lists
 
 
+def connect_inner_lists(effect):
+    results = []
+    for list_i in effect:
+        results.extend(list_i)
+    return results
+
+
 def min_multiple_lists(*lists):
     min_lists = list(map(min, *lists))
     return min_lists

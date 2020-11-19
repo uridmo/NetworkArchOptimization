@@ -1,12 +1,12 @@
-from structure_elements.arch.assign_arch_compression import define_by_peak_moment
 from structure_elements.arch.parabolic_arch import ParabolicArch
-from structure_elements.hangers.assign_hanger_forces import zero_displacement
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
-from structure_elements.hangers.hangers import mirror_hanger_set, Hangers
+from structure_elements.hangers.hangers import Hangers
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
 from structure_elements.hangers.radial_hangers import RadialHangerSet
 from structure_elements.networkarch import NetworkArch
 from structure_elements.nodes.nodes import Nodes
+from structure_elements.self_equilibrium import define_by_peak_moment, optimize_self_stresses
+from structure_elements.self_equilibrium import zero_displacement
 from structure_elements.tie import Tie
 
 
@@ -80,14 +80,16 @@ class Bridge:
         tie.define_regions(nodes, reg_tie_x, reg_tie)
 
         # Determine the self equilibrium stress-state
-        mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
-        n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5*10**3)
+        i = 0
+        if i == 1:
+            mz_0, hanger_forces = zero_displacement(tie, nodes, hangers, dof_rz=True)
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5*10**3)
 
-
-        # Calculate the states under permanent stresses
-        hangers.assign_permanent_effects()
-        arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
-        tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
+            hangers.assign_permanent_effects()
+            arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
+            tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
+        else:
+            optimize_self_stresses(arch, tie, nodes, hangers)
 
         # Define the entire network arch structure
         network_arch = NetworkArch(arch, tie, hangers)

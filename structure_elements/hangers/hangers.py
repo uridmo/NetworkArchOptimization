@@ -131,6 +131,23 @@ class Hangers(Element):
                 hanger.effects_N[name]['Min'] = range_new['Min']['Normal Force'][i][0]
         return range_new
 
+    def set_hanger_forces(self, forces):
+        forces_list = list(forces)
+        forces_list = forces_list + forces_list[::-1]
+        for i, hanger in enumerate(self):
+            hanger.prestressing_force = forces_list[i]
+        return
+
+    def get_hanger_forces(self, i=None):
+        hanger_forces = []
+        if type(i) is int:
+            for hanger in self.hanger_sets[i]:
+                hanger_forces.append(hanger.prestressing_force)
+        else:
+            for hanger in self:
+                hanger_forces.append(hanger.prestressing_force)
+        return hanger_forces
+
     def assign_permanent_effects(self, key=None):
         if not key:
             self.assign_permanent_effects('Normal Force')

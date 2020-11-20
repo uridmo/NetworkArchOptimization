@@ -26,10 +26,10 @@ adjust_overview_plots(fig)
 pyplot.show()
 
 
-network_arch.set_range('PRE, 0.9 DL/1.35 DL, 1.75 LL', 'Strength')
-fig = network_arch.plot_effects('Strength', 'Moment', color=colors[0])
-adjust_overview_plots(fig)
-pyplot.show()
+# network_arch.set_range('PRE, 0.9 DL/1.35 DL, 1.75 LL', 'Strength')
+# fig = network_arch.plot_effects('Strength', 'Moment', color=colors[0])
+# adjust_overview_plots(fig)
+# pyplot.show()
 
 current, peak = tracemalloc.get_traced_memory()
 print(f"Current memory usage is {current / 10**6}MB; Peak was {peak / 10**6}MB")

@@ -4,7 +4,7 @@ from structure_elements.region import Region
 
 
 class BlennerhassettBridge(Bridge):
-    def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=135.3, n_hangers=13, arrangement='Parallel',
+    def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=147.3, n_hangers=13, arrangement='Parallel',
                  hanger_params=tuple([1.0646]), qd_live_load=27, qc_live_load=325, arch_shape='Parabolic',
                  exact_cross_sections=False, regions_arch=None, regions_tie=None,
                  strength_combination='0.9 DL/1.35 DL, LL', cable_loss_combination=None):

@@ -173,21 +173,21 @@ class LineElement(Element):
             ax.plot(x, y, color='black', linewidth=1.5)
         return
 
-    def plot_effects(self, ax, name, key, color='black', ls='-'):
+    def plot_effects(self, ax, name, key, label='', c='black', lw=1.0, ls='-'):
 
         if '-' in key:
             keys = key.split('-', 1)
             effects = self.effects[name][keys[0]][keys[1]]
         else:
             if 'Min' in self.get_effects(name):
-                self.plot_effects(ax, name, 'Min-'+key, color=color, ls='--')
+                self.plot_effects(ax, name, 'Min-'+key, label='', c=c, lw=lw, ls=ls)
                 effects = self.get_effects(name)['Max'][key]
             else:
                 effects = self.get_effects(name)[key]
 
         xy_coord = get_coordinates(self, effects)
         values = get_value_list(effects)/1000
-        ax.plot(xy_coord[:, 0], values, color=color, ls=ls)
+        ax.plot(xy_coord[:, 0], values, label=label, c=c, lw=lw, ls=ls)
         return
 
     def plot_effects_on_arch(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):

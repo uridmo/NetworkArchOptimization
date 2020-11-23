@@ -1,3 +1,5 @@
+from matplotlib import pyplot
+
 from structure_elements.arch.parabolic_arch import ParabolicArch
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
 from structure_elements.hangers.hangers import Hangers
@@ -109,6 +111,31 @@ class Bridge:
         network_arch = self.tie_regions
         return network_arch
 
-    def plot_effects(self, name, key, fig=None, color='black'):
-        self.network_arch.plot_effects(name, key, fig=fig, color=color)
+    def plot_elements(self, ax):
+        self.network_arch.tie.plot_elements(ax)
+        self.network_arch.arch.plot_elements(ax)
+        self.network_arch.hangers.plot_elements(ax)
         return
+
+    def plot_effects(self, name, key, fig=None, label='', c='black', lw=1.0, ls='-'):
+        if not fig:
+            fig, axs = pyplot.subplots(2, 2, figsize=(8, 4), dpi=240)
+        axs = fig.get_axes()
+
+        self.network_arch.arch.plot_effects(axs[0], name, key, label=label, c=c, lw=lw, ls=ls)
+        self.network_arch.tie.plot_effects(axs[1], name, key, label=label, c=c, lw=lw, ls=ls)
+        self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls)
+        return fig
+
+    def plot_all_effects(self, name, fig=None, label='', c='black', lw=1.0, ls='-'):
+        if not fig:
+            fig, axs = pyplot.subplots(2, 3, figsize=(12, 4), dpi=240)
+        axs = fig.get_axes()
+
+        self.network_arch.arch.plot_effects(axs[0], name, 'Normal Force', label=label, c=c, lw=lw, ls=ls)
+        self.network_arch.tie.plot_effects(axs[1], name, 'Normal Force', label=label, c=c, lw=lw, ls=ls)
+        self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls)
+        self.network_arch.arch.plot_effects(axs[3], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
+        self.network_arch.tie.plot_effects(axs[4], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
+
+        return fig

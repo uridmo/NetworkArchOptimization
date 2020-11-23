@@ -103,8 +103,8 @@ class NetworkArch:
         range_name = '0/'
         for i in range(n+2):
             name = 'LLc'+str(i+1)
-            self.set_effects(i_f[n+i], name)
-            self.support_reaction[name] = rd[n+i]
+            self.set_effects(i_f[n+2+i], name)
+            self.support_reaction[name] = rd[n+2+i]
             range_name += name + '/'
         range_name = range_name[0:-1]
         self.set_range(range_name, 'LLc')
@@ -112,20 +112,3 @@ class NetworkArch:
         # Merge the two ranges
         self.set_range('LLc, LLd', 'LL')
         return
-
-    def plot_elements(self, ax):
-        self.tie.plot_elements(ax)
-        self.arch.plot_elements(ax)
-        self.hangers.plot_elements(ax)
-        return
-
-    def plot_effects(self, name, key, fig=None, color='black'):
-        if not fig:
-            fig, axs = pyplot.subplots(3, 1, figsize=(4, 6), dpi=240)
-        else:
-            axs = fig.get_axes()
-
-        self.arch.plot_effects(axs[0], name, key, color=color)
-        self.tie.plot_effects(axs[1], name, key, color=color)
-        self.hangers.plot_effects(axs[2], name, color=color)
-        return fig

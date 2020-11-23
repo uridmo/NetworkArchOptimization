@@ -6,6 +6,7 @@ def adjust_overview_plots(fig):
 
     axs[0].set_title('Arch')
     axs[0].set_xlim([0, 270])
+    axs[0].set_ylabel('Normal Force [MN]')
     adjust_plot(axs[0])
 
     axs[1].set_title('Tie')
@@ -14,10 +15,40 @@ def adjust_overview_plots(fig):
 
     axs[2].set_title('Hangers')
     axs[2].set_xlim([0, 270])
+    axs[2].set_ylim(bottom=0)
+    adjust_plot(axs[2])
+
+    axs[3].set_xlim([0, 270])
+    axs[3].set_ylabel('Bending Moment [MNm]')
+    adjust_plot(axs[3])
+
+    axs[4].set_xlim([0, 270])
+    adjust_plot(axs[4])
+
+    pyplot.show()
+    return
+
+
+def adjust_small_plots(fig):
+    axs = fig.get_axes()
+
+    axs[0].set_title('Arch')
+    axs[0].set_xlim([0, 270])
+    axs[0].set_ylabel('Bending Moment [MNm]')
+    adjust_plot(axs[0])
+
+    axs[1].set_title('Tie')
+    axs[1].set_xlim([0, 270])
+    adjust_plot(axs[1])
+
+    axs[2].set_title('Hangers')
+    axs[2].set_xlim([0, 270])
+    axs[2].set_ylabel('Normal Force [MN]')
     adjust_plot(axs[2])
 
     pyplot.show()
     return
+
 
 
 def adjust_plot(ax):

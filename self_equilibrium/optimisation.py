@@ -5,26 +5,29 @@ from structure_elements.effects import connect_inner_lists
 from self_equilibrium.static_analysis import zero_displacement
 
 
-def get_self_stress_matrix(arch, tie, nodes, hangers):
+def get_self_stress_matrix(arch, tie, nodes, hangers, factors=None):
     n = 2 + len(hangers.get_hanger_forces(i=0))
     x = [0 for i in range(n)]
-    b = moment_distribution(x, hangers, arch, tie, nodes)
+    b = moment_distribution(x, hangers, arch, tie, nodes, factors=factors)
     a = []
     for i in range(n):
         x[i] = 1
-        a_i = moment_distribution(x, hangers, arch, tie, nodes) - b
+        a_i = moment_distribution(x, hangers, arch, tie, nodes, factors=factors) - b
         a.append(list(a_i))
         x[i] = 0
     a = np.array(a).transpose()
     return a, b
 
 
-def moment_distribution(x, hangers, arch, tie, nodes):
+def moment_distribution(x, hangers, arch, tie, nodes, factors=None):
     hangers.set_hanger_forces(x[2:])
     arch.assign_permanent_effects(nodes, hangers, x[0], -x[1])
     tie.assign_permanent_effects(nodes, hangers, -x[0], x[1])
     moment_arch = connect_inner_lists(arch.effects['Permanent']['Moment'])
     moment_tie = connect_inner_lists(tie.effects['Permanent']['Moment'])
+    if factors:
+        moment_arch = list(map(lambda f: f*factors[0], moment_arch))
+        moment_tie = list(map(lambda f: f*factors[1], moment_tie))
     result_array = np.array(moment_arch + moment_tie)
     return result_array
 
@@ -53,7 +56,7 @@ def blennerhassett_forces(arch, tie, nodes, hangers):
 
 
 def optimize_self_stresses(arch, tie, nodes, hangers):
-    a, b = get_self_stress_matrix(arch, tie, nodes, hangers)
+    a, b = get_self_stress_matrix(arch, tie, nodes, hangers, factors=[1, 1.5])
     ones = np.ones_like(np.expand_dims(b, axis=1))
     a_ub = np.vstack((np.hstack((-ones, -a)), np.hstack((-ones, a))))
     b_ub = np.array(list(b) + list(-b))

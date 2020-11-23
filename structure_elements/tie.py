@@ -25,8 +25,8 @@ class Tie(LineElement):
         load_group = super(Tie, self).self_weight(first_index=first_index)
         f_y = -self.weight_deck * self.span / (self.cross_girders_amount+1)
         load_group['Nodal'] = [[node.index, 0, f_y, 0] for node in self.cross_girders_nodes[1:-1]]
-        load_group['Nodal'].append([self.cross_girders_nodes[0].index, 0, 1.2*f_y, 0])
-        load_group['Nodal'].append([self.cross_girders_nodes[-1].index, 0, 1.2*f_y, 0])
-        load_group['Nodal'].append([self.nodes[0].index, 0, 0.3*f_y, 0])
-        load_group['Nodal'].append([self.nodes[-1].index, 0, 0.3*f_y, 0])
+        load_group['Nodal'].append([self.cross_girders_nodes[0].index, 0, 1.0*f_y, 0])
+        load_group['Nodal'].append([self.cross_girders_nodes[-1].index, 0, 1.0*f_y, 0])
+        load_group['Nodal'].append([self.nodes[0].index, 0, 0.5*f_y, 0])
+        load_group['Nodal'].append([self.nodes[-1].index, 0, 0.5*f_y, 0])
         return load_group

@@ -1,8 +1,5 @@
 from matplotlib import pyplot
 
-from plotting.adjustments import adjust_plot
-from plotting.model import plot_model
-from plotting.save import save_plot
 from structure_analysis import structure_analysis
 
 

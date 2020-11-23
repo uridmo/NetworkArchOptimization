@@ -2,51 +2,7 @@ import numpy as np
 
 from plotting.model import plot_model
 from plotting.save import save_plot
-from structure_analysis import structure_analysis
-from structure_analysis import verify_input
-from structure_elements.effects import min_multiple_lists, max_multiple_lists, connect_inner_lists
-from scipy import optimize
-
-
-def blennerhassett_forces(arch, tie, nodes, hangers):
-    forces = [2420, 2015, 2126, 2051, 1766, 1931, 1877, 1784, 1757, 1646, 1601, 2371, 1842]
-    # n_0 = 30906
-    mz_0 = -787
-    hangers.set_hanger_forces(forces)
-    n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 * 10 ** 3)
-    hangers.assign_permanent_effects()
-    arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0)
-    tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0)
-    return
-
-
-def optimize_self_stresses(arch, tie, nodes, hangers):
-    def absolute_moment_minimum(x):
-        hangers.set_hanger_forces(x[2:])
-        arch.assign_permanent_effects(nodes, hangers, x[0], -x[1])
-        tie.assign_permanent_effects(nodes, hangers, -x[0], x[1])
-        moment_arch = connect_inner_lists(arch.effects['Permanent']['Moment'])
-        moment_tie = connect_inner_lists(tie.effects['Permanent']['Moment'])
-        result_array = moment_arch + moment_tie
-        result = max(max(result_array), -min(result_array))
-        print(result)
-        return result
-
-    mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
-    n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-10 * 10 ** 3)
-    hanger_forces = hangers.get_hanger_forces(i=0)
-    x0 = [n_0, mz_0] + hanger_forces
-    lb = [-np.inf, -np.inf] + [0.8 * force for force in hanger_forces]
-    ub = [np.inf, np.inf] + [1.2 * force for force in hanger_forces]
-    bounds = optimize.Bounds(lb, ub)
-    sol = optimize.minimize(absolute_moment_minimum, x0, method='Nelder-Mead', bounds=bounds,
-                            options={'maxiter': 1000, 'disp': True})
-    x = sol.x
-    hangers.set_hanger_forces(x[2:])
-    hangers.assign_permanent_effects()
-    arch.assign_permanent_effects(nodes, hangers, x[0], -x[1])
-    tie.assign_permanent_effects(nodes, hangers, -x[0], x[1])
-    return
+from structure_analysis import verify_input, structure_analysis
 
 
 def define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=0):

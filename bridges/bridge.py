@@ -5,8 +5,8 @@ from structure_elements.hangers.parallel_hangers import ParallelHangerSet
 from structure_elements.hangers.radial_hangers import RadialHangerSet
 from structure_elements.networkarch import NetworkArch
 from structure_elements.nodes.nodes import Nodes
-from structure_elements.self_equilibrium import define_by_peak_moment, optimize_self_stresses, blennerhassett_forces
-from structure_elements.self_equilibrium import zero_displacement
+from self_equilibrium.optimisation import blennerhassett_forces, optimize_self_stresses
+from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
 from structure_elements.tie import Tie
 
 
@@ -81,7 +81,7 @@ class Bridge:
 
         # Determine the self equilibrium stress-state
         i = 0
-        if i == 0:
+        if i == 1:
             mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
 
@@ -90,8 +90,8 @@ class Bridge:
             tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
         else:
 
-            blennerhassett_forces(arch, tie, nodes, hangers)
-            # optimize_self_stresses(arch, tie, nodes, hangers)
+            # blennerhassett_forces(arch, tie, nodes, hangers)
+            optimize_self_stresses(arch, tie, nodes, hangers)
 
         # Define the entire network arch structure
         network_arch = NetworkArch(arch, tie, hangers)
@@ -110,6 +110,5 @@ class Bridge:
         return network_arch
 
     def plot_effects(self, name, key, fig=None, color='black'):
-
         self.network_arch.plot_effects(name, key, fig=fig, color=color)
         return

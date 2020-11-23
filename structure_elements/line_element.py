@@ -1,5 +1,3 @@
-from math import inf
-
 import numpy as np
 from matplotlib.patches import Polygon
 
@@ -103,12 +101,15 @@ class LineElement(Element):
                 break
         return load_group
 
-    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
+    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element', weight=True):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
         beams_nodes, beams_stiffness = self.get_beams()
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
-        load_group = self.self_weight()
+        if weight:
+            load_group = self.self_weight()
+        else:
+            load_group = {}
         load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
 
         # Apply hanger forces

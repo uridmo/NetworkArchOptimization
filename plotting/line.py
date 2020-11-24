@@ -3,12 +3,12 @@ import numpy as np
 
 def get_coordinates(line_element, reactions):
     xy_coord = np.empty((0, 2))
-    for i, reaction in enumerate(reactions):
+    for i in range(len(line_element.nodes)-1):
         x_start, x_end = line_element.nodes[i].x, line_element.nodes[i+1].x
         y_start, y_end = line_element.nodes[i].y, line_element.nodes[i+1].y
-
-        x = np.linspace(x_start, x_end, num=len(reaction))
-        y = np.linspace(y_start, y_end, num=len(reaction))
+        length = ((x_start-x_end)**2+(y_start-y_end)**2)**0.5
+        x = np.linspace(x_start, x_end, num=int(length)+2)
+        y = np.linspace(y_start, y_end, num=int(length)+2)
         xy_coord = np.vstack((xy_coord, np.vstack((x, y)).transpose()))
     return xy_coord
 

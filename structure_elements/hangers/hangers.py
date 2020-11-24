@@ -111,27 +111,30 @@ class Hangers(Element):
         beams_releases = [[i, 1, 1] for i in indices]
         return beams_nodes, beams_stiffness, beams_releases
 
-    def set_effects(self, effects, name, key=None):
-        super(Hangers, self).set_effects(effects, name, key=key)
-        if not key:
-            for i, hanger in enumerate(self):
-                hanger.effects_N[name] = effects['Normal Force'][i][0]
-        elif key == 'Normal Force':
-            for i, hanger in enumerate(self):
-                hanger.effects_N[name] = effects[i][0]
+    def set_effects(self, effects, name):
+        if type(effects) is dict:
+            if type(effects['Normal Force']) is list:
+                effects_i = np.array([effects['Normal Force'][i][0] for i in range(len(self))])
+            else:
+                effects_i = effects['Normal Force']
+        elif type(effects) is list:
+            effects_i = np.array([effects[i][0] for i in range(len(self))])
+        self.effects[name] = {'Normal Force': effects_i}
+        for i, hanger in enumerate(self):
+            hanger.effects_N[name] = effects_i[i]
         return
 
-    def get_range(self, range_name, name=''):
-        range_new = super(Hangers, self).get_range(range_name, name=name)
-        if name:
-            for i, hanger in enumerate(self):
-                if name not in hanger.effects_N:
-                    hanger.effects_N[name] = {}
-                hanger.effects_N[name]['Max'] = range_new['Max']['Normal Force'][i][0]
-                hanger.effects_N[name]['Min'] = range_new['Min']['Normal Force'][i][0]
-        return range_new
+    # def get_range(self, range_name, name=''):
+    #     range_new = super(Hangers, self).get_range(range_name, name=name)
+    #     if name:
+    #         for i, hanger in enumerate(self):
+    #             if name not in hanger.effects_N:
+    #                 hanger.effects_N[name] = {}
+    #             hanger.effects_N[name]['Max'] = range_new['Max']['Normal Force'][i][0]
+    #             hanger.effects_N[name]['Min'] = range_new['Min']['Normal Force'][i][0]
+    #     return range_new
 
-    def set_hanger_forces(self, forces):
+    def set_prestressing_forces(self, forces):
         forces_list = list(forces)
         forces_list = forces_list + forces_list[::-1]
         for i, hanger in enumerate(self):
@@ -148,22 +151,13 @@ class Hangers(Element):
                 hanger_forces.append(hanger.prestressing_force)
         return hanger_forces
 
-    def assign_permanent_effects(self, key=None):
-        if not key:
-            self.assign_permanent_effects('Normal Force')
-            self.assign_permanent_effects('Shear Force')
-            self.assign_permanent_effects('Moment')
-            effects = self.get_effects('Permanent')
-            self.set_effects(multiply_effect(effects, 0), '0')
-        else:
-            effects = []
-            for hanger in self:
-                n = ceil(hanger.length()) + 1
-                if key == 'Normal Force':
-                    effects.append([hanger.prestressing_force for i in range(n)])
-                else:
-                    effects.append([0 for i in range(n)])
-            self.set_effects(effects, 'Permanent', key=key)
+    def assign_permanent_effects(self):
+        effects = []
+        for hanger in self:
+            effects.append([hanger.prestressing_force])
+        self.set_effects(effects, 'Permanent')
+        effects = self.get_effects('Permanent')
+        self.set_effects(multiply_effect(effects, 0), '0')
         return
 
     def plot_elements(self, ax):

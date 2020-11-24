@@ -41,7 +41,7 @@ class NetworkArch:
         for key in effects:
             self.tie.set_effects(effects[key][:i_tie], name, key=key)
             self.arch.set_effects(effects[key][i_tie:i_arch], name, key=key)
-            self.hangers.set_effects(effects[key][i_arch:], name, key=key)
+        self.hangers.set_effects(effects['Normal Force'][i_arch:], name)
         return
 
     def set_range(self, range_name, name):

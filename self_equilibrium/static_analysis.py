@@ -8,7 +8,7 @@ from structure_analysis import verify_input, structure_analysis
 def define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=0):
     arch.assign_permanent_effects(nodes, hangers, 0, -mz_0)
     moments_arch = arch.effects['Permanent']['Moment']
-    moment_max = max([max(moments) for moments in moments_arch])
+    moment_max = max(moments_arch)
     n_0 = (moment_max - peak_moment) / arch.rise
     return n_0
 

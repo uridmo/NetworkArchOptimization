@@ -138,7 +138,8 @@ class LineElement(Element):
         d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
 
         self.set_effects(i_f[0], 'Permanent')
-        self.set_effects(multiply_effect(i_f[0], 0), '0')
+        effects = self.get_effects('Permanent')
+        self.set_effects(multiply_effect(effects, 0), '0')
 
         # Create the plots if needed
         if plots:
@@ -186,8 +187,7 @@ class LineElement(Element):
                 effects = self.get_effects(name)[key]
 
         xy_coord = get_coordinates(self, effects)
-        values = get_value_list(effects)/1000
-        ax.plot(xy_coord[:, 0], values, label=label, c=c, lw=lw, ls=ls)
+        ax.plot(xy_coord[:, 0], effects/1000, label=label, c=c, lw=lw, ls=ls)
         return
 
     def plot_effects_on_arch(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):

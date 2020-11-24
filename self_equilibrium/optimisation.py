@@ -20,15 +20,15 @@ def get_self_stress_matrix(arch, tie, nodes, hangers, factors=None):
 
 
 def moment_distribution(x, hangers, arch, tie, nodes, factors=None):
-    hangers.set_hanger_forces(x[2:])
+    hangers.set_prestressing_forces(x[2:])
     arch.assign_permanent_effects(nodes, hangers, x[0], -x[1])
     tie.assign_permanent_effects(nodes, hangers, -x[0], x[1])
-    moment_arch = connect_inner_lists(arch.effects['Permanent']['Moment'])
-    moment_tie = connect_inner_lists(tie.effects['Permanent']['Moment'])
+    moment_arch = arch.effects['Permanent']['Moment']
+    moment_tie = tie.effects['Permanent']['Moment']
     if factors:
-        moment_arch = list(map(lambda f: f*factors[0], moment_arch))
-        moment_tie = list(map(lambda f: f*factors[1], moment_tie))
-    result_array = np.array(moment_arch + moment_tie)
+        moment_arch *= factors[0]
+        moment_tie *= factors[1]
+    result_array = np.concatenate((moment_arch, moment_tie))
     return result_array
 
 
@@ -48,7 +48,7 @@ def blennerhassett_forces(arch, tie, nodes, hangers):
     sol = optimize.linprog(c, A_ub=a_ub, b_ub=b_ub, bounds=bounds, method='revised simplex')  # , x0=x0)
     x = sol.x
 
-    hangers.set_hanger_forces(list(x[3] * forces))
+    hangers.set_prestressing_forces(list(x[3] * forces))
     hangers.assign_permanent_effects()
     arch.assign_permanent_effects(nodes, hangers, x[1], -x[2])
     tie.assign_permanent_effects(nodes, hangers, -x[1], x[2])
@@ -68,7 +68,7 @@ def optimize_self_stresses(arch, tie, nodes, hangers):
     sol = optimize.linprog(c, A_ub=a_ub, b_ub=b_ub, bounds=bounds, method='revised simplex')  # , x0=x0)
     x = sol.x
 
-    hangers.set_hanger_forces(x[3:])
+    hangers.set_prestressing_forces(x[3:])
     hangers.assign_permanent_effects()
     arch.assign_permanent_effects(nodes, hangers, x[1], -x[2])
     tie.assign_permanent_effects(nodes, hangers, -x[1], x[2])

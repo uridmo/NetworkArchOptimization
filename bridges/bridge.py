@@ -82,7 +82,7 @@ class Bridge:
         tie.define_regions(nodes, reg_tie_x, reg_tie)
 
         # Determine the self equilibrium stress-state
-        i = 0
+        i = 1
         if i == 1:
             mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)

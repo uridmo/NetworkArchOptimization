@@ -63,7 +63,7 @@ class Element:
 
     def add_key(self, name, key, value):
         effects = self.get_effects(name)
-        key_ref = effects.keys()[0]
+        key_ref = list(effects.keys())[0]
         effects = value * np.ones_like(effects[key_ref])
         self.set_effects(effects, name, key=key)
         return

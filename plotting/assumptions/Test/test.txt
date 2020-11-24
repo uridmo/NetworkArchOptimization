@@ -1,0 +1,22 @@
+\begin{table}[H] 
+\begin{tabular}{llcccc}
+\hline
+Region & Limit state & Normal force & Moment (y) & Moment (z) & Demand/Capacity \\
+ & & [MN]   & [MNm] & [MNm] & \\ \hline
+\multirow{3}{*}{Arch 2} & Strength-I & 63004 & 27082 & 0 & 7.39\\
+ & Strength-III & 52895 & 22994 & 0 & 6.22\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Arch 1} & Strength-I & 63115 & 5320 & 0 & 6.53\\
+ & Strength-III & 53146 & 2699 & 280 & 5.43\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Arch 3} & Strength-I & 61767 & 26550 & 0 & 7.25\\
+ & Strength-III & 51753 & 23241 & 0 & 6.11\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Tie 1} & Strength-I & 49970 & 9741 & 0 & 5.39\\
+ & Strength-III & 41793 & 2852 & 0 & 4.29\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Tie 2} & Strength-I & 49998 & 9220 & 0 & 5.37\\
+ & Strength-III & 41807 & 2161 & 0 & 4.27\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\end{tabular}
+\end{table}

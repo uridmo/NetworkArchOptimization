@@ -1,5 +1,6 @@
 from matplotlib import pyplot
 
+from plotting.tables import table_from_cross_sections
 from self_equilibrium.optimisation import optimize_self_stresses
 from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
 from structure_elements.arch.parabolic_arch import ParabolicArch
@@ -93,8 +94,11 @@ class Bridge:
         # Calculate the load cases
         network_arch.calculate_dead_load(nodes)
         network_arch.calculate_live_load(nodes, qd_live_load, qc_live_load)
-        network_arch.assign_range_to_sections('LL')
+        network_arch.assign_wind_effects()
+        network_arch.calculate_ultimate_limit_states()
+        network_arch.assign_range_to_sections(['Strength-I', 'Strength-III'])
 
+        # network_arch.assign_range_to_sections(['LL'])
 
         self.nodes = nodes
         self.network_arch = network_arch
@@ -114,7 +118,6 @@ class Bridge:
         if not fig:
             fig, axs = pyplot.subplots(2, 2, figsize=(8, 4), dpi=240)
         axs = fig.get_axes()
-
         self.network_arch.arch.plot_effects(axs[0], name, key, label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[1], name, key, label=label, c=c, lw=lw, ls=ls)
         self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls)
@@ -124,7 +127,6 @@ class Bridge:
         if not fig:
             fig, axs = pyplot.subplots(2, 3, figsize=(12, 4), dpi=240)
         axs = fig.get_axes()
-
         self.network_arch.arch.plot_effects(axs[0], name, 'Normal Force', label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[1], name, 'Normal Force', label=label, c=c, lw=lw, ls=ls)
         self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls)
@@ -132,3 +134,8 @@ class Bridge:
         self.network_arch.tie.plot_effects(axs[4], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
 
         return fig
+
+    def cross_section_table(self):
+        cross_sections = list(set(self.arch_cross_sections)) + list(set(self.tie_cross_sections))
+        table_from_cross_sections("Test", "test", cross_sections)
+        return

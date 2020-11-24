@@ -36,25 +36,13 @@ class LineElement(Element):
                     break
         return node
 
-    def define_regions(self, nodes, section_nodes, regions):
-        if section_nodes and type(section_nodes) is list:
-            section_nodes = [self.insert_node(nodes, x) for x in section_nodes]
-        self.regions = []
-        section_nodes += [self.nodes[-1]]
-        j = 0
-        for i in range(len(self.nodes)-1):
-            if self.nodes[i] == section_nodes[j]:
-                j += 1
-            self.regions.append(regions[j])
-        return
-
     def define_cross_sections(self, nodes, section_nodes, cross_sections):
         if section_nodes and type(section_nodes) is list:
             section_nodes = [self.insert_node(nodes, x) for x in section_nodes]
         self.cross_sections = []
         section_nodes += [self.nodes[-1]]
         j = 0
-        for i in range(len(self.nodes)-1):
+        for i in range(len(self.nodes) - 1):
             if self.nodes[i] == section_nodes[j]:
                 j += 1
             self.cross_sections.append(cross_sections[j])
@@ -77,80 +65,30 @@ class LineElement(Element):
 
     def distributed_load(self, q, x_start, x_end, first_index=0):
         load_distributed = []
-        for i in range(len(self.nodes)-1):
+        for i in range(len(self.nodes) - 1):
             x_1 = self.nodes[i].x
-            x_2 = self.nodes[i+1].x
+            x_2 = self.nodes[i + 1].x
             if x_2 > x_start:
-                load_distributed.append([i+first_index, max(0, x_start-x_1), 0, 0, -q, 0, 0, -q, 0])
+                load_distributed.append([i + first_index, max(0, x_start - x_1), 0, 0, -q, 0, 0, -q, 0])
             if x_2 >= x_end:
-                load_distributed[-1][2] = x_end-x_2
+                load_distributed[-1][2] = x_end - x_2
                 break
         load_group = {'Distributed': load_distributed}
         return load_group
 
     def concentrated_load(self, x, force, first_index=0):
         load_group = {}
-        for i in range(len(self.nodes)-1):
+        for i in range(len(self.nodes) - 1):
             x_start = self.nodes[i].x
-            x_end = self.nodes[i+1].x
+            x_end = self.nodes[i + 1].x
             if x_start <= x < x_end:
-                load_group = {'Point': [[i+first_index, x - x_start, 0, force, 0]]}
+                load_group = {'Point': [[i + first_index, x - x_start, 0, force, 0]]}
                 break
         return load_group
 
-    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element', weight=True):
-        # Define the list of all nodes
-        structural_nodes = nodes.structural_nodes()
-        beams_nodes, beams_stiffness = self.get_beams()
-        beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
-        if weight:
-            load_group = self.self_weight()
-        else:
-            load_group = {}
-        load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
-
-        # Apply hanger forces
-        for hanger in hangers:
-            if hanger.tie_node in self.nodes:
-                node = hanger.tie_node.index
-                vertical_force = hanger.prestressing_force * np.sin(hanger.inclination)
-                horizontal_force = hanger.prestressing_force * np.cos(hanger.inclination)
-                load_nodal.append([node, horizontal_force, vertical_force, 0])
-            if hanger.arch_node in self.nodes:
-                node = hanger.arch_node.index
-                vertical_force = -hanger.prestressing_force * np.sin(hanger.inclination)
-                horizontal_force = -hanger.prestressing_force * np.cos(hanger.inclination)
-                load_nodal.append([node, horizontal_force, vertical_force, 0])
-
-        # Assign the load group
-        if 'Nodal' in load_group:
-            load_group['Nodal'].extend(load_nodal)
-        else:
-            load_group['Nodal'] = load_nodal
-        loads = [load_group]
-        restricted_degrees = [[self.nodes[0].index, 1, 1, 0, 0], [self.nodes[-1].index, 0, 1, 0, 0]]
-        boundary_conditions = {'Restricted Degrees': restricted_degrees}
-        model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
-                 'Boundary Conditions': boundary_conditions}
-        d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
-
-        self.set_effects(i_f[0], 'Permanent')
-        effects = self.get_effects('Permanent')
-        self.set_effects(multiply_effect(effects, 0), '0')
-
-        # Create the plots if needed
-        if plots:
-            fig, ax = plot_model(model, self)
-            save_plot(fig, 'Models', name)
-
-            fig, ax = plot_model(model, self, i=None, show=False)
-            # self.plot_effects_on_arch(ax, nodes, 'Permanent', 'Moment')
-            save_plot(fig, 'Effects', name)
-        return
-
     def assign_range_to_regions(self, name):
         effects = self.get_effects(name)
-        cs_i = self.get_cross_section_indices()
+        cs_i = self.get_cross_sections()
         for cs in set(self.cross_sections):
             mask = cs_i == cs
             for key in effects:
@@ -158,19 +96,41 @@ class LineElement(Element):
                     cs.assign_extrema(effects[key][mask], name, key)
                 else:
                     cs.assign_extrema(effects[key][:, mask], name, key)
+            cs.calculate_doc(name)
         return
 
+    def get_coordinates(self):
+        xy_coord = np.empty((0, 2))
+        for i in range(len(self.nodes) - 1):
+            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
+            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
+            length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
+            x = np.linspace(x_start, x_end, num=int(length) + 2)
+            y = np.linspace(y_start, y_end, num=int(length) + 2)
+            xy_coord = np.vstack((xy_coord, np.vstack((x, y)).transpose()))
+        return xy_coord
+
+    def get_cross_sections(self):
+        cs_i = []
+        for i in range(len(self.nodes) - 1):
+            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
+            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
+            length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
+            cs_i.extend([self.cross_sections[i] for j in range(int(length) + 2)])
+        cs_i = np.array(cs_i)
+        return cs_i
+
     def plot_elements(self, ax):
-        for i in range(len(self.nodes)-1):
-            x = [self.nodes[i].x, self.nodes[i+1].x]
-            y = [self.nodes[i].y, self.nodes[i+1].y]
+        for i in range(len(self.nodes) - 1):
+            x = [self.nodes[i].x, self.nodes[i + 1].x]
+            y = [self.nodes[i].y, self.nodes[i + 1].y]
             ax.plot(x, y, color='black', linewidth=1.5)
         return
 
     def plot_effects(self, ax, name, key, label='', c='black', lw=1.0, ls='-'):
         effects = self.get_effects(name)[key]
         xy_coord = self.get_coordinates()
-        ax.plot(xy_coord[:, 0], effects.transpose()/1000, label=label, c=c, lw=lw, ls=ls)
+        ax.plot(xy_coord[:, 0], effects.transpose() / 1000, label=label, c=c, lw=lw, ls=ls)
         return
 
     # def plot_effects_on_arch(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):
@@ -233,24 +193,52 @@ class LineElement(Element):
     #     #     ax.legend(frameon=False, loc='center left', bbox_to_anchor=(1, 0.5))
     #     return
 
-    def get_coordinates(self):
-        xy_coord = np.empty((0, 2))
-        for i in range(len(self.nodes) - 1):
-            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
-            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
-            length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
-            x = np.linspace(x_start, x_end, num=int(length) + 2)
-            y = np.linspace(y_start, y_end, num=int(length) + 2)
-            xy_coord = np.vstack((xy_coord, np.vstack((x, y)).transpose()))
-        return xy_coord
+    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element', weight=True):
+        # Define the list of all nodes
+        structural_nodes = nodes.structural_nodes()
+        beams_nodes, beams_stiffness = self.get_beams()
+        beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
+        if weight:
+            load_group = self.self_weight()
+        else:
+            load_group = {}
+        load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
 
-    def get_cross_section_indices(self):
-        cs_i = []
-        for i in range(len(self.nodes) - 1):
-            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
-            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
-            length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
-            cs_i.extend([self.cross_sections[i] for j in range(int(length) + 2)])
-        cs_i = np.array(cs_i)
-        return cs_i
+        # Apply hanger forces
+        for hanger in hangers:
+            if hanger.tie_node in self.nodes:
+                node = hanger.tie_node.index
+                vertical_force = hanger.prestressing_force * np.sin(hanger.inclination)
+                horizontal_force = hanger.prestressing_force * np.cos(hanger.inclination)
+                load_nodal.append([node, horizontal_force, vertical_force, 0])
+            if hanger.arch_node in self.nodes:
+                node = hanger.arch_node.index
+                vertical_force = -hanger.prestressing_force * np.sin(hanger.inclination)
+                horizontal_force = -hanger.prestressing_force * np.cos(hanger.inclination)
+                load_nodal.append([node, horizontal_force, vertical_force, 0])
 
+        # Assign the load group
+        if 'Nodal' in load_group:
+            load_group['Nodal'].extend(load_nodal)
+        else:
+            load_group['Nodal'] = load_nodal
+        loads = [load_group]
+        restricted_degrees = [[self.nodes[0].index, 1, 1, 0, 0], [self.nodes[-1].index, 0, 1, 0, 0]]
+        boundary_conditions = {'Restricted Degrees': restricted_degrees}
+        model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
+                 'Boundary Conditions': boundary_conditions}
+        d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
+
+        self.set_effects(i_f[0], 'Permanent')
+        effects = self.get_effects('Permanent')
+        self.set_effects(multiply_effect(effects, 0), '0')
+
+        # Create the plots if needed
+        if plots:
+            fig, ax = plot_model(model, self)
+            save_plot(fig, 'Models', name)
+
+            fig, ax = plot_model(model, self, i=None, show=False)
+            # self.plot_effects_on_arch(ax, nodes, 'Permanent', 'Moment')
+            save_plot(fig, 'Effects', name)
+        return

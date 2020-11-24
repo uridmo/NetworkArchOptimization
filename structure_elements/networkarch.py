@@ -48,13 +48,19 @@ class NetworkArch:
         self.hangers.get_range(range_name, name=name)
         return
 
-    def assign_range_to_sections(self, name):
-        self.tie.assign_range_to_regions(name)
-        self.arch.assign_range_to_regions(name)
+    def assign_range_to_sections(self, names):
+        for name in names:
+            self.tie.assign_range_to_regions(name)
+            self.arch.assign_range_to_regions(name)
         return
 
     def assign_support_reaction(self, rd, name):
         self.support_reaction[name] = rd
+        return
+
+    def add_key(self, name, key, value):
+        self.tie.add_key(name, key, value)
+        self.arch.add_key(name, key, value)
         return
 
     def calculate_dead_load(self, nodes):
@@ -109,4 +115,25 @@ class NetworkArch:
 
         # Merge the two ranges
         self.set_range('LLc, LLd', 'LL')
+        return
+
+    def assign_wind_effects(self):
+        self.set_range('0', 'WS')
+        for element in [self.arch, self.tie]:
+            element.add_key('WS', 'Moment y', 0)
+            cs_i = element.get_cross_sections()
+            for cs in set(element.cross_sections):
+                mask = cs_i == cs
+                for effect in cs.wind_effects:
+                    element.effects['WS'][effect][0, mask] = cs.wind_effects[effect][0]
+                    element.effects['WS'][effect][1, mask] = cs.wind_effects[effect][-1]
+        return
+
+    def calculate_ultimate_limit_states(self):
+        self.set_range('Permanent, -0.1 DL/0.25 DL, 0/1.75 LL', 'Strength-I')
+        self.add_key('Strength-I', 'Moment y', 0)
+
+        self.set_range('Permanent, -0.1 DL/0.25 DL', 'Strength-III')
+        self.add_key('Strength-III', 'Moment y', 0)
+        self.set_range('Strength-III, 1.4 WS', 'Strength-III')
         return

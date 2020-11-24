@@ -9,12 +9,13 @@ class BlennerhassettBridge(Bridge):
                  strength_combination='0.9 DL/1.35 DL, LL', cable_loss_combination=None):
 
         if exact_cross_sections:
-            cs_tie_1 = CrossSection(26.4, 62441 * 10 ** 3, 46255 * 10 ** 3)
-            cs_tie_2 = CrossSection(26.4, 53736 * 10 ** 3, 42811 * 10 ** 3)
+            cs_tie_1 = CrossSection(26.4, 62441 * 10 ** 3, 46255 * 10 ** 3, name="Tie 1")
+            cs_tie_2 = CrossSection(26.4, 53736 * 10 ** 3, 42811 * 10 ** 3, name="Tie 2")
             cs_tie = [cs_tie_1, cs_tie_2, cs_tie_1]
-            cs_arch_1 = CrossSection(29.8, 77429 * 10 ** 3, 31473 * 10 ** 3)
-            cs_arch_2 = CrossSection(29.8, 65997 * 10 ** 3, 28673 * 10 ** 3)
-            cs_arch_3 = CrossSection(29.8, 61814 * 10 ** 3, 28113 * 10 ** 3)
+            cs_arch_1 = CrossSection(29.8, 77429 * 10 ** 3, 31473 * 10 ** 3, name="Arch 1",
+                                     wind_effects={'Normal Force': [200, -100], 'Moment y': [200, -200]})
+            cs_arch_2 = CrossSection(29.8, 65997 * 10 ** 3, 28673 * 10 ** 3, name="Arch 2")
+            cs_arch_3 = CrossSection(29.8, 61814 * 10 ** 3, 28113 * 10 ** 3, name="Arch 3")
             cs_arch = [cs_arch_1, cs_arch_2, cs_arch_3, cs_arch_2, cs_arch_1]
             cs_hangers = CrossSection(0, 643.5 * 10 ** 3, 10 ** 3)
             cs_tie_x = [34.8, -34.8]

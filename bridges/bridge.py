@@ -1,5 +1,7 @@
 from matplotlib import pyplot
 
+from self_equilibrium.optimisation import optimize_self_stresses
+from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
 from structure_elements.arch.parabolic_arch import ParabolicArch
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
 from structure_elements.hangers.hangers import Hangers
@@ -7,15 +9,13 @@ from structure_elements.hangers.parallel_hangers import ParallelHangerSet
 from structure_elements.hangers.radial_hangers import RadialHangerSet
 from structure_elements.networkarch import NetworkArch
 from structure_elements.nodes.nodes import Nodes
-from self_equilibrium.optimisation import blennerhassett_forces, optimize_self_stresses
-from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
 from structure_elements.tie import Tie
 
 
 class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
-                 arch_shape, cs_arch_x, cs_arch, reg_arch_x, reg_arch, cs_tie_x, cs_tie,
-                 reg_tie_x, reg_tie, n_hangers, arrangement, hanger_params, cs_hangers,
+                 arch_shape, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
+                 n_hangers, arrangement, hanger_params, cs_hangers,
                  strength_combination, cable_loss_combination):
 
         geometry = {'Span': span, 'Rise': rise, 'Arch shape': arch_shape, 'Hanger arrangement': arrangement,
@@ -35,12 +35,8 @@ class Bridge:
         self.arch_shape = arch_shape
         self.arch_cross_sections = cs_arch
         self.arch_cross_sections_x = cs_arch_x
-        self.arch_regions = reg_arch
-        self.arch_regions_x = reg_arch_x
         self.tie_cross_sections = cs_tie
         self.tie_cross_sections_x = cs_tie_x
-        self.tie_regions = reg_tie
-        self.tie_regions_x = reg_tie_x
         self.hangers_amount = n_hangers
         self.hangers_arrangement = arrangement
         self.hangers_parameters = hanger_params
@@ -77,10 +73,6 @@ class Bridge:
         tie.define_cross_sections(nodes, cs_tie_x, cs_tie)
         hangers.define_cross_section(cs_hangers)
 
-        # Define regions
-        arch.define_regions(nodes, reg_arch_x, reg_arch)
-        tie.define_regions(nodes, reg_tie_x, reg_tie)
-
         # Determine the self equilibrium stress-state
         i = 1
         if i == 1:
@@ -101,7 +93,8 @@ class Bridge:
         # Calculate the load cases
         network_arch.calculate_dead_load(nodes)
         network_arch.calculate_live_load(nodes, qd_live_load, qc_live_load)
-        network_arch.assign_range_to_sections()
+        network_arch.assign_range_to_sections('LL')
+
 
         self.nodes = nodes
         self.network_arch = network_arch

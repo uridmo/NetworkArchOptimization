@@ -1,7 +1,6 @@
 import numpy as np
 from scipy import optimize
 
-from structure_elements.effects import connect_inner_lists
 from self_equilibrium.static_analysis import zero_displacement
 
 

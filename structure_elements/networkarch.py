@@ -1,5 +1,3 @@
-from matplotlib import pyplot
-
 from structure_analysis import structure_analysis
 
 
@@ -50,9 +48,9 @@ class NetworkArch:
         self.hangers.get_range(range_name, name=name)
         return
 
-    def assign_range_to_sections(self):
-        self.tie.assign_range_to_regions()
-        self.arch.assign_range_to_regions()
+    def assign_range_to_sections(self, name):
+        self.tie.assign_range_to_regions(name)
+        self.arch.assign_range_to_regions(name)
         return
 
     def assign_support_reaction(self, rd, name):

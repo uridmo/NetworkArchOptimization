@@ -1,6 +1,5 @@
 from bridges.bridge import Bridge
 from structure_elements.cross_section import CrossSection
-from structure_elements.region import Region
 
 
 class BlennerhassettBridge(Bridge):
@@ -26,19 +25,10 @@ class BlennerhassettBridge(Bridge):
             cs_hangers = CrossSection(0, 643.5 * 10 ** 3, 10 ** 3)
             cs_tie_x, cs_arch_x = [], []
 
-        if True:
-            arch_region_1 = Region()
-            arch_region_2 = Region()
-            reg_arch = [arch_region_1, arch_region_2, arch_region_1]
-            reg_arch_x = [20, -20]
 
-        if True:
-            tie_region_1 = Region()
-            reg_tie = [tie_region_1]
-            reg_tie_x = []
 
         super().__init__(span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
-                         arch_shape, cs_arch_x, cs_arch, reg_arch_x, reg_arch, cs_tie_x, cs_tie,
-                         reg_tie_x, reg_tie, n_hangers, arrangement, hanger_params, cs_hangers,
+                         arch_shape, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
+                         n_hangers, arrangement, hanger_params, cs_hangers,
                          strength_combination, cable_loss_combination)
         return

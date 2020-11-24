@@ -1,5 +1,4 @@
 from copy import deepcopy
-from math import ceil
 
 import numpy as np
 
@@ -121,18 +120,11 @@ class Hangers(Element):
             effects_i = np.array([effects[i][0] for i in range(len(self))])
         self.effects[name] = {'Normal Force': effects_i}
         for i, hanger in enumerate(self):
-            hanger.effects_N[name] = effects_i[i]
+            if effects_i.ndim == 1:
+                hanger.effects_N[name] = effects_i[i]
+            else:
+                hanger.effects_N[name] = effects_i[:, i]
         return
-
-    # def get_range(self, range_name, name=''):
-    #     range_new = super(Hangers, self).get_range(range_name, name=name)
-    #     if name:
-    #         for i, hanger in enumerate(self):
-    #             if name not in hanger.effects_N:
-    #                 hanger.effects_N[name] = {}
-    #             hanger.effects_N[name]['Max'] = range_new['Max']['Normal Force'][i][0]
-    #             hanger.effects_N[name]['Min'] = range_new['Min']['Normal Force'][i][0]
-    #     return range_new
 
     def set_prestressing_forces(self, forces):
         forces_list = list(forces)
@@ -167,6 +159,13 @@ class Hangers(Element):
             ax.plot(x, y, color='black', linewidth=0.7)
         return
 
-    def plot_effects(self, ax, name, key='', label='', c='black', lw=1.0, ls='-'):
-        self.hanger_sets[0].plot_effects(ax, name, key=key, label=label, c=c, lw=lw, ls=ls)
+    def plot_effects(self, ax, name, label='', c='black', lw=1.0, ls='-'):
+        n = len(self.hanger_sets[0])
+        effects = self.get_effects(name)['Normal Force']
+        if effects.ndim == 1:
+            values = effects[0:n]
+        else:
+            values = effects[:, 0:n]
+        tie_node_x = [hanger.tie_node.x for hanger in self.hanger_sets[0]]
+        ax.plot(tie_node_x, values.transpose()/1000, label=label, c=c, lw=lw, ls=ls)
         return

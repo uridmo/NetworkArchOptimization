@@ -22,7 +22,7 @@ class Element:
                 self.effects[name][key] = effects
         return
 
-    def get_effects(self, name):
+    def get_effects(self, name, key=''):
         name = name.replace(' - ', ' + -1 ')
         if name in self.effects:
             effects = self.effects[name]
@@ -35,7 +35,14 @@ class Element:
             effects = multiply_effect(self.get_effects(names[1]), factor)
         else:
             return
-        return effects
+
+        if key:
+            if key in effects:
+                return effects[key]
+            else:
+                return self.get_effects('0')['Normal Force']
+        else:
+            return effects
 
     def get_range(self, range_name, name=''):
         if ', ' in range_name:
@@ -46,10 +53,17 @@ class Element:
             range_new = merge_ranges(*(self.get_range(name) for name in names))
         else:
             effects = self.get_effects(range_name)
-            if 'Max' in effects:
+            if effects['Normal Force'].ndim == 2:
                 range_new = effects
             else:
                 range_new = range_from_effect(effects)
         if name:
             self.set_effects(range_new, name)
         return range_new
+
+    def add_key(self, name, key, value):
+        effects = self.get_effects(name)
+        key_ref = effects.keys()[0]
+        effects = value * np.ones_like(effects[key_ref])
+        self.set_effects(effects, name, key=key)
+        return

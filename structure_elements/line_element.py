@@ -1,8 +1,5 @@
 import numpy as np
-from matplotlib.patches import Polygon
 
-from plotting.line import get_scaling, get_value_list, get_value_list_2, get_value_location, \
-    get_coordinates, get_normal_vectors
 from plotting.model import plot_model
 from plotting.save import save_plot
 from structure_analysis import structure_analysis
@@ -147,24 +144,20 @@ class LineElement(Element):
             save_plot(fig, 'Models', name)
 
             fig, ax = plot_model(model, self, i=None, show=False)
-            self.plot_effects_on_arch(ax, nodes, 'Permanent', 'Moment')
+            # self.plot_effects_on_arch(ax, nodes, 'Permanent', 'Moment')
             save_plot(fig, 'Effects', name)
         return
 
-    def assign_range_to_regions(self):
-        for key in self.effects:
-            effects = self.effects[key]
-            if 'Max' in effects:
-                effects_max = effects['Max']
-                effects_min = effects['Min']
-            else:
-                effects_max = effects
-                effects_min = effects
-
-            for eff in effects_min:
-                for i in range(len(self)):
-                    self.regions[i].assign_extrema(effects_max[eff][i], key, eff)
-                    self.regions[i].assign_extrema(effects_min[eff][i], key, eff)
+    def assign_range_to_regions(self, name):
+        effects = self.get_effects(name)
+        cs_i = self.get_cross_section_indices()
+        for cs in set(self.cross_sections):
+            mask = cs_i == cs
+            for key in effects:
+                if effects[key].ndim == 1:
+                    cs.assign_extrema(effects[key][mask], name, key)
+                else:
+                    cs.assign_extrema(effects[key][:, mask], name, key)
         return
 
     def plot_elements(self, ax):
@@ -175,78 +168,89 @@ class LineElement(Element):
         return
 
     def plot_effects(self, ax, name, key, label='', c='black', lw=1.0, ls='-'):
-
-        if '-' in key:
-            keys = key.split('-', 1)
-            effects = self.effects[name][keys[0]][keys[1]]
-        else:
-            if 'Min' in self.get_effects(name):
-                self.plot_effects(ax, name, 'Min-'+key, label='', c=c, lw=lw, ls=ls)
-                effects = self.get_effects(name)['Max'][key]
-            else:
-                effects = self.get_effects(name)[key]
-
-        xy_coord = get_coordinates(self, effects)
-        ax.plot(xy_coord[:, 0], effects/1000, label=label, c=c, lw=lw, ls=ls)
+        effects = self.get_effects(name)[key]
+        xy_coord = self.get_coordinates()
+        ax.plot(xy_coord[:, 0], effects.transpose()/1000, label=label, c=c, lw=lw, ls=ls)
         return
 
-    def plot_effects_on_arch(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):
+    # def plot_effects_on_arch(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):
+    #
+    #     max_color = 'red'  # Color used for max values
+    #     min_color = 'blue'  # Color used for min values
+    #
+    #     if type(name) is str:
+    #         if name in self.effects_range:
+    #             plot_range = True
+    #             reactions = self.effects_range[name]['Max'][key]
+    #             reactions_2 = self.effects_range[name]['Min'][key]
+    #         else:
+    #             plot_range = False
+    #             reactions = self.get_effects(name, key=key)
+    #             reactions_2 = self.get_effects(name, key=key)
+    #     else:
+    #         plot_range = False
+    #         reactions = name[key]
+    #         reactions_2 = name[key]
+    #
+    #     scale = get_scaling(nodes, reactions, reactions_2, reaction_abs_max=reaction_amax)
+    #
+    #     values_1 = get_value_list(reactions)
+    #     values_2 = get_value_list(reactions_2)
+    #     values_3 = get_value_list_2(reactions, reactions_2)
+    #
+    #     xy_coord = get_coordinates(self, reactions)
+    #     normal_vec = get_normal_vectors(self, reactions)
+    #
+    #     xy_values_1 = get_value_location(xy_coord, normal_vec, values_1, scale)
+    #     xy_values_2 = get_value_location(xy_coord, normal_vec, values_2, scale)
+    #     xy_values_3 = get_value_location(xy_coord, normal_vec, values_3, scale)
+    #
+    #     # Plot the impacts
+    #     ax.plot(xy_values_1[:, 0], xy_values_1[:, 1], color=color_line, alpha=0.4)
+    #     if not plot_range:
+    #         xy = np.vstack((xy_values_1, xy_coord[::-1,:]))
+    #         polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.3)
+    #         ax.add_patch(polygon)
+    #     else:
+    #         ax.plot(xy_values_2[:, 0], xy_values_2[:, 1], color=color_line, alpha=0.4)
+    #
+    #         xy = np.vstack((xy_values_1, xy_values_2[::-1, :]))
+    #         polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.5)
+    #         ax.add_patch(polygon)
+    #
+    #         xy = np.vstack((xy_values_3, xy_coord[::-1, :]))
+    #         polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.3)
+    #         ax.add_patch(polygon)
+    #
+    #     # if show_extrema:
+    #     #     for i in range(len(self.sections_set)):
+    #     #         ax.plot(0, 0, linestyle='None', label=self.sections_set[i])
+    #     #
+    #     #         ax.plot(x_max[i], y_max[i], color=max_color, marker='.', markersize=10, linestyle='None',
+    #     #                 label=f'max: {r_max[i]/1000:.0f} MNm')
+    #     #         ax.plot(x_min[i], y_min[i], color=min_color, marker='.', markersize=10, linestyle='None',
+    #     #                 label=f'min: {r_min[i]/1000:.0f} MNm')
+    #     #     ax.legend(frameon=False, loc='center left', bbox_to_anchor=(1, 0.5))
+    #     return
 
-        max_color = 'red'  # Color used for max values
-        min_color = 'blue'  # Color used for min values
+    def get_coordinates(self):
+        xy_coord = np.empty((0, 2))
+        for i in range(len(self.nodes) - 1):
+            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
+            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
+            length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
+            x = np.linspace(x_start, x_end, num=int(length) + 2)
+            y = np.linspace(y_start, y_end, num=int(length) + 2)
+            xy_coord = np.vstack((xy_coord, np.vstack((x, y)).transpose()))
+        return xy_coord
 
-        if type(name) is str:
-            if name in self.effects_range:
-                plot_range = True
-                reactions = self.effects_range[name]['Max'][key]
-                reactions_2 = self.effects_range[name]['Min'][key]
-            else:
-                plot_range = False
-                reactions = self.get_effects(name, key=key)
-                reactions_2 = self.get_effects(name, key=key)
-        else:
-            plot_range = False
-            reactions = name[key]
-            reactions_2 = name[key]
-
-        scale = get_scaling(nodes, reactions, reactions_2, reaction_abs_max=reaction_amax)
-
-        values_1 = get_value_list(reactions)
-        values_2 = get_value_list(reactions_2)
-        values_3 = get_value_list_2(reactions, reactions_2)
-
-        xy_coord = get_coordinates(self, reactions)
-        normal_vec = get_normal_vectors(self, reactions)
-
-        xy_values_1 = get_value_location(xy_coord, normal_vec, values_1, scale)
-        xy_values_2 = get_value_location(xy_coord, normal_vec, values_2, scale)
-        xy_values_3 = get_value_location(xy_coord, normal_vec, values_3, scale)
-
-        # Plot the impacts
-        ax.plot(xy_values_1[:, 0], xy_values_1[:, 1], color=color_line, alpha=0.4)
-        if not plot_range:
-            xy = np.vstack((xy_values_1, xy_coord[::-1,:]))
-            polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.3)
-            ax.add_patch(polygon)
-        else:
-            ax.plot(xy_values_2[:, 0], xy_values_2[:, 1], color=color_line, alpha=0.4)
-
-            xy = np.vstack((xy_values_1, xy_values_2[::-1, :]))
-            polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.5)
-            ax.add_patch(polygon)
-
-            xy = np.vstack((xy_values_3, xy_coord[::-1, :]))
-            polygon = Polygon(xy, edgecolor=None, fill=True, facecolor=color_fill, alpha=0.3)
-            ax.add_patch(polygon)
-
-        # if show_extrema:
-        #     for i in range(len(self.sections_set)):
-        #         ax.plot(0, 0, linestyle='None', label=self.sections_set[i])
-        #
-        #         ax.plot(x_max[i], y_max[i], color=max_color, marker='.', markersize=10, linestyle='None',
-        #                 label=f'max: {r_max[i]/1000:.0f} MNm')
-        #         ax.plot(x_min[i], y_min[i], color=min_color, marker='.', markersize=10, linestyle='None',
-        #                 label=f'min: {r_min[i]/1000:.0f} MNm')
-        #     ax.legend(frameon=False, loc='center left', bbox_to_anchor=(1, 0.5))
-        return
+    def get_cross_section_indices(self):
+        cs_i = []
+        for i in range(len(self.nodes) - 1):
+            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
+            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
+            length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
+            cs_i.extend([self.cross_sections[i] for j in range(int(length) + 2)])
+        cs_i = np.array(cs_i)
+        return cs_i
 

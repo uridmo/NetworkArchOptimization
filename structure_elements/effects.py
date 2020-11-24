@@ -1,30 +1,11 @@
 import numpy as np
 
 
-def add_multiple(*a_i):
-    return sum(a_i)
-
-
-def add_multiple_lists(*lists):
-    added_lists = list(map(add_multiple, *lists))
-    return added_lists
-
-
-def max_multiple_lists(*lists):
-    max_lists = list(map(max, *lists))
-    return max_lists
-
-
 def connect_inner_lists(effect):
     results = []
     for list_i in effect:
         results.extend(list_i)
     return results
-
-
-def min_multiple_lists(*lists):
-    min_lists = list(map(min, *lists))
-    return min_lists
 
 
 def add_effects(*effects):
@@ -43,36 +24,24 @@ def multiply_effect(effect_1, factor):
     return effect
 
 
-# def get_minmax_effect(*effects):
-#     effect_max = effects[0]
-#     effect_min = effects[0]
-#     for key in effects[0]:
-#         for effect in effects[1:]:
-#             effect_max[key] = np.maximum(effect_max[key], effect[key])
-#             effect_min[key] = np.minimum(effect_max[key], effect[key])
-#     return effect_max, effect_min
-
-
 def range_from_effect(effect):
-    range_new = np.vstack((effect, effect))
+    range_new = {}
+    for key in effect:
+        range_new[key] = np.vstack((effect[key], effect[key]))
     return range_new
 
 
 def merge_ranges(*ranges):
-    range_merged = {'Min': {}, 'Max': {}}
-    for key in ranges[0]['Min']:
-        range_merged['Max'][key] = np.maximum(ranges[0][key][0], ranges[1][key][1])
-        range_merged['Min'][key] = np.minimum(ranges[0]['Min'][key], ranges[1]['Min'][key])
-        for range_i in ranges[2:]:
-            range_merged['Max'][key] = np.maximum(range_merged['Max'][key], range_i['Max'][key])
-            range_merged['Min'][key] = np.minimum(range_merged['Min'][key], range_i['Min'][key])
+    range_merged = {}
+    for key in ranges[0]:
+        max_stacked = np.vstack(tuple((range_i[key][0] for range_i in ranges)))
+        min_stacked = np.vstack(tuple((range_i[key][1] for range_i in ranges)))
+        range_merged[key] = np.zeros_like(ranges[0][key])
+        range_merged[key][0] = np.max(max_stacked, axis=0)
+        range_merged[key][1] = np.min(min_stacked, axis=0)
     return range_merged
 
 
 def add_ranges(*ranges):
-    range_added = {'Max': {}, 'Min': {}}
-    effects_max = (range_i['Max'] for range_i in ranges)
-    effects_min = (range_i['Min'] for range_i in ranges)
-    range_added['Max'] = add_effects(*effects_max)
-    range_added['Min'] = add_effects(*effects_min)
+    range_added = add_effects(*ranges)
     return range_added

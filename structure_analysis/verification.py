@@ -109,11 +109,11 @@ def verify_input(model):
         raise Exception('BeamsNodes and BeamsStiffness are of different length.')
 
     # Check whether the normal and bending stiffness are equal to zero
-    for beamstiffness in beamsstiffness:
-        if beamstiffness[0] == 0:
+    for beamstiffnes in beamsstiffness:
+        if beamstiffnes[0] == 0:
             raise Exception('The normal stiffness cannot be zero.')
-        if beamstiffness[1] == 0:
-            raise Exception('The bending stiffnes cannot be zero, even on pendulum beams.')
+        if beamstiffnes[1] == 0:
+            raise Exception('The bending stiffness cannot be zero, even on pendulum beams.')
 
     # Check whether there are unused nodes and delete or modify any other input
     # which is related to it.

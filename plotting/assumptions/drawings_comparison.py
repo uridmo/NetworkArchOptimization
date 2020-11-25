@@ -5,7 +5,6 @@ from matplotlib import pyplot
 from bridges.Blennerhassett.Blennerhassett import BlennerhassettBridge
 from plotting.adjustments import adjust_overview_plots, adjust_small_plots
 from plotting.save import save_plot
-from plotting.tables import table_from_cross_sections
 
 tracemalloc.start()
 
@@ -55,7 +54,7 @@ adjust_small_plots(fig)
 pyplot.show()
 save_plot(fig, 'Drawings comparison', 'Live load')
 
-bridge_ref.cross_section_table()
+bridge_ref.cross_section_table(slice(0, 4), slice(0, 4))
 
 
 current, peak = tracemalloc.get_traced_memory()

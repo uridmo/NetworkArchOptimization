@@ -2,29 +2,22 @@ import numpy as np
 
 
 class CrossSection:
-    def __init__(self, g, ea, ei, name='', ga=0, wind_effects={}, n_rd=10000, mz_rd=22000, my_rd=23000):
+    def __init__(self, name, g, stiffness, resistance, wind_effects={}):
         self.name = name
-
         self.weight = g
-        self.axial_stiffness = ea
-        self.bending_stiffness = ei
-        self.shear_stiffness = ga
+        self.stiffness = stiffness
 
         self.effects = {}
         self.degree_of_compliance = {}
-
         self.wind_effects = wind_effects
 
-        self.normal_force_resistance = n_rd
-        self.moment_z_resistance = mz_rd
-        self.moment_y_resistance = my_rd
+        self.normal_force_resistance = resistance[0]
+        self.moment_z_resistance = resistance[1]
+        self.moment_y_resistance = resistance[2]
         return
 
     def get_beam(self):
-        if self.shear_stiffness:
-            beam = [self.axial_stiffness, self.bending_stiffness, self.shear_stiffness]
-        else:
-            beam = [self.axial_stiffness, self.bending_stiffness]
+        beam = list(self.stiffness)
         return beam
 
     def get_self_weight(self, i):

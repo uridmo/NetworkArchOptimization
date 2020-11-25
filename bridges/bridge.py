@@ -4,6 +4,7 @@ from plotting.tables import table_from_cross_sections
 from self_equilibrium.optimisation import optimize_self_stresses
 from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
 from structure_elements.arch.parabolic_arch import ParabolicArch
+from structure_elements.arch.thrust_line_arch import get_arch_thrust_line
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
 from structure_elements.hangers.hangers import Hangers
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
@@ -15,7 +16,7 @@ from structure_elements.tie import Tie
 
 class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
-                 arch_shape, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
+                 arch_shape, arch_optimisation, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
                  n_hangers, arrangement, hanger_params, cs_hangers,
                  strength_combination, cable_loss_combination):
 
@@ -88,6 +89,10 @@ class Bridge:
             # blennerhassett_forces(arch, tie, nodes, hangers)
             optimize_self_stresses(arch, tie, nodes, hangers)
 
+        if arch_optimisation:
+            g_arch = cs_arch[0].weight
+            x, y = get_arch_thrust_line(span, rise, g_arch, hangers)
+
         # Define the entire network arch structure
         network_arch = NetworkArch(arch, tie, hangers)
 
@@ -135,7 +140,7 @@ class Bridge:
 
         return fig
 
-    def cross_section_table(self):
-        cross_sections = list(set(self.arch_cross_sections)) + list(set(self.tie_cross_sections))
+    def cross_section_table(self, slice_arch, slice_tie):
+        cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]
         table_from_cross_sections("Test", "test", cross_sections)
         return

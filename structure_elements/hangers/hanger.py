@@ -23,5 +23,5 @@ class Hanger:
         return dl
 
     def get_beam(self):
-        beam = [self.cross_section.axial_stiffness, self.cross_section.bending_stiffness]
+        beam = self.cross_section.stiffness
         return beam

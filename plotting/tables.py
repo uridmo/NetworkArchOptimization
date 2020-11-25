@@ -9,8 +9,8 @@ def table_from_cross_sections(directory, name, cross_sections):
     text.write(r"\begin{table}[H] "+"\n")
     text.write(r"\begin{tabular}{llcccc}"+"\n")
     text.write(r"\hline"+"\n")
-    text.write(r"Region & Limit state & Normal force & Moment (y) & Moment (z) & Demand/Capacity \\"+"\n")
-    text.write(r" & & [MN]   & [MNm] & [MNm] & \\ \hline"+"\n")
+    text.write(r"Region & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\"+"\n")
+    text.write(r" & & [MN]   & [MNm] & [MNm] & [-] \\ \hline"+"\n")
     for cs in cross_sections:
         name = cs.name
         p_i = cs.effects['Strength-I']['Normal Force'][2]

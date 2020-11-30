@@ -5,8 +5,7 @@ from structure_elements.cross_section import CrossSection
 class BlennerhassettBridge(Bridge):
     def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=150.4, n_hangers=13, arrangement='Parallel',
                  hanger_params=tuple([1.0646]), qd_live_load=27, qc_live_load=325, arch_shape='Parabolic',
-                 arch_optimisation=False,
-                 exact_cross_sections=False, strength_combination='0.9 DL/1.35 DL, LL', cable_loss_combination=None):
+                 arch_optimisation=False, exact_cross_sections=False):
 
         resistance_arch_1 = [130000, 78708, 79115]
         resistance_arch_2 = [108768, 71458, 63445]
@@ -27,7 +26,6 @@ class BlennerhassettBridge(Bridge):
         wind_load_arch_2 = {'Normal Force': [-7793], 'Moment': [-670], 'Moment y': [10749]}
         wind_load_arch_3 = {'Normal Force': [-4066], 'Moment': [-533], 'Moment y': [2591]}
         wind_load_arch_4 = {'Normal Force': [-3852], 'Moment': [117], 'Moment y': [111]}
-
         wind_load_tie_1 = {'Normal Force': [5369], 'Moment': [-2327], 'Moment y': [9653]}
         wind_load_tie_2 = {'Normal Force': [7002], 'Moment': [-1109], 'Moment y': [5880]}
         wind_load_tie_3 = {'Normal Force': [6152], 'Moment': [404], 'Moment y': [434]}
@@ -64,6 +62,5 @@ class BlennerhassettBridge(Bridge):
 
         super().__init__(span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
                          arch_shape, arch_optimisation, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
-                         n_hangers, arrangement, hanger_params, cs_hangers,
-                         strength_combination, cable_loss_combination)
+                         n_hangers, arrangement, hanger_params, cs_hangers)
         return

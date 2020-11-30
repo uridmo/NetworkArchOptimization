@@ -55,13 +55,19 @@ def verify_input(model_original):
     nodes = model['Nodes']['Location']
     beams_nodes = model['Beams']['Nodes']
     beams_stiffness = model['Beams']['Stiffness']
+    loads = model['Loads']
     if 'Releases' not in model['Beams']:
         model['Beams']['Releases'] = []
+    if 'Rotated Degrees' not in model['Boundary Conditions']:
+        model['Boundary Conditions']['Rotated Degrees'] = []
+    if 'Restricted Degrees' not in model['Boundary Conditions']:
+        model['Boundary Conditions']['Restricted Degrees'] = []
+    if 'Springs' not in model['Boundary Conditions']:
+        model['Boundary Conditions']['Springs'] = []
     beams_releases = model['Beams']['Releases']
-    loads = model['Loads']
-    rotated_degrees = []  # model['Boundary Conditions']['Rotated Degrees']
+    rotated_degrees = model['Boundary Conditions']['Rotated Degrees']
     restricted_degrees = model['Boundary Conditions']['Restricted Degrees']
-    springs = []  # model['Boundary Conditions']['Springs']
+    springs = model['Boundary Conditions']['Springs']
 
     # Convert to integer values in case floats were given
     for beam_nodes in beams_nodes:
@@ -115,43 +121,6 @@ def verify_input(model_original):
             # raise Exception('There are unused nodes.')
             unused_nodes.append(i)
 
-    # if unused_nodes:
-        # unused_nodes.sort()
-        # counter = -1
-        # warnings.warn('The following nodes were deleted because they were unsused: '
-        #               + str(unused_nodes), Warning)
-        # for unused_node in unused_nodes:
-        #     counter += 1
-        #     nodes.pop(unused_node - counter)
-        #     for beam_nodes in beams_nodes:
-        #         if beam_nodes[0] > unused_node - counter:
-        #             beam_nodes[0] -= 1
-        #         if beam_nodes[1] > unused_node - counter:
-        #             beam_nodes[1] -= 1
-        #     for load_group in loads:
-        #         if 'Nodal' in load_group and load_group['Nodal']:
-        #             for nodal_load in load_group['Nodal']:
-        #                 if nodal_load[0] > unused_node - counter:
-        #                     nodal_load[0] -= 1
-        #                 if nodal_load[0] == unused_node - counter:
-        #                     del nodal_load
-        #                     warnings.warn('A nodal load was deleted because it '
-        #                                   + 'was located on an unused node.', Warning)
-        #         if 'Initial Displacements' in load_group and load_group['Initial Displacements']:
-        #             for initial_displacement in load_group['Initial Displacements']:
-        #                 if initial_displacement[0] > unused_node - counter:
-        #                     initial_displacement[0] -= 1
-        #                 if initial_displacement[0] == unused_node - counter:
-        #                     del initial_displacement
-        #                     warnings.warn('An initial displacement was deleted because '
-        #                                   + 'it was located on an unused node.', Warning)
-        #     for restricted_degree in restricted_degrees:
-        #         if restricted_degree[0] == unused_node - counter:
-        #             del restricted_degree
-        #             warnings.warn('A restricted degree was deleted because it was '
-        #                           + 'located on an unused node.', Warning)
-        #         elif restricted_degree[0] > unused_node - counter:
-        #             restricted_degree[0] -= 1
     # delete or modify any other input which is related to it
     if unused_nodes:
         counter = 0

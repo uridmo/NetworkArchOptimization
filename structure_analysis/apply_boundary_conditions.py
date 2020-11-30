@@ -28,21 +28,34 @@ def apply_boundary_conditions(boundary_conditions, stiffness_matrix, force_matri
                                         directions
     """
     restricted_degrees = boundary_conditions['Restricted Degrees']
+    springs = boundary_conditions['Springs']
+    rotated_degrees = boundary_conditions['Rotated Degrees']
+
     size = stiffness_matrix.shape[0]
 
     # Determine the nodal directions which are restricted.    
-    indices, angles = get_indices_todelete(restricted_degrees)
+    indices = get_indices_todelete(restricted_degrees)
 
     # Get the matrices that can delete certain rows or columns
-    (delete_rows, delete_columns,
-     keep_rows, keep_columns) = modifier_matrices(size, indices, angles)
+    (delete_rows, delete_columns, keep_rows, keep_columns) = modifier_matrices(size, indices)
 
-    r, rt = rotation_matrices(size, indices, angles)
+    r, rt = rotation_matrices(size, rotated_degrees)
+
     # Delete the determined nodes with the help of the modifier matrices.
     force_matrix_modified = delete_rows @ r @ force_matrix
     force_matrix_supports = keep_rows @ r @ force_matrix
-    stiffness_matrix_modified = delete_rows @ r @ stiffness_matrix @ rt @ delete_columns
-    stiffness_matrix_supports = keep_rows @ r @ stiffness_matrix @ rt @ delete_columns
+
+    stiffness_mat = r @ stiffness_matrix @ rt
+
+    # Include springs
+    for spring in springs:
+        i = spring[0]
+        stiffness_mat[3*i, 3*i] += spring[1]
+        stiffness_mat[3*i+1, 3*i+1] += spring[2]
+        stiffness_mat[3*i+2, 3*i+2] += spring[3]
+
+    stiffness_matrix_modified = delete_rows @ stiffness_mat @ delete_columns
+    stiffness_matrix_supports = keep_rows @ stiffness_mat @ delete_columns
 
     stiffness_and_force_matrices = [stiffness_matrix_modified,
                                     stiffness_matrix_supports,
@@ -52,24 +65,25 @@ def apply_boundary_conditions(boundary_conditions, stiffness_matrix, force_matri
     return stiffness_and_force_matrices
 
 
-def rotation_matrices(original_size, indices, angles):
+def rotation_matrices(original_size, rotated_degrees):
     components = np.ones(original_size)
     count1 = np.arange(original_size)
     count2 = np.arange(original_size)
-    for i, index in enumerate(indices):
-        angle = angles[i]
+    for rotated_degree in rotated_degrees:
+        index = rotated_degree[0]*3
+        angle = rotated_degree[1]
         if angle != 0:
             c, s = np.cos(angle), np.sin(angle)
             components = np.concatenate([components, np.array([c-1, -s, s, c-1])])
-            count1 = np.concatenate([count1, np.array([index-1, index-1, index, index])])
-            count2 = np.concatenate([count2, np.array([index-1, index, index-1, index])])
+            count1 = np.concatenate([count1, np.array([index, index, index+1, index+1])])
+            count2 = np.concatenate([count2, np.array([index, index+1, index, index+1])])
 
     r1 = sps.csr_matrix((components, (count1, count2)), (original_size, original_size))
     rt = sps.csr_matrix((components, (count2, count1)), (original_size, original_size))
     return r1, rt
 
 
-def modifier_matrices(original_size, indices, angles):
+def modifier_matrices(original_size, indices):
     """Creates matrices that can keep or delete certain indices from a square matrix.
     
     It creates the four matrices to delete or extract the specified indices
@@ -112,26 +126,15 @@ def modifier_matrices(original_size, indices, angles):
 
     delete_columns = sps.csr_matrix((ones_kill, (elements_keep, count_kill)),
                                     (original_size, new_size))
+    if any(ones_keep):
+        keep_rows = sps.csr_matrix((ones_keep, (count_keep, elements_kill)),
+                                   (amount_todelete, original_size))
 
-    keep_rows = sps.csr_matrix((ones_keep, (count_keep, elements_kill)),
-                               (amount_todelete, original_size))
-
-    keep_columns = sps.csr_matrix((ones_keep, (elements_kill, count_keep)),
-                                  (original_size, amount_todelete))
-
-    # for i, index in enumerate(indices):
-    #     angle = angles[i]
-    #     if angle != 0:
-    #         with suppress(sps.SparseEfficiencyWarning):
-    #             delete_rows[index - 1 - i, index - 1] = np.cos(angle)
-    #             delete_rows[index - 1 - i, index] = np.sin(angle)
-    #             keep_rows[i, index - 1] = np.sin(angle)
-    #             keep_rows[i, index] = np.cos(angle)
-    #
-    #             delete_columns[index - 1, index - 1 - i] = np.cos(angle)
-    #             delete_columns[index, index - 1 - i] = np.sin(angle)
-    #             keep_columns[index - 1, i] = np.sin(angle)
-    #             keep_columns[index, i] = np.cos(angle)
+        keep_columns = sps.csr_matrix((ones_keep, (elements_kill, count_keep)),
+                                      (original_size, amount_todelete))
+    else:
+        keep_rows = sps.csr_matrix(([], ([], [])), (amount_todelete, original_size))
+        keep_columns = sps.csr_matrix(([], ([], [])), (original_size, amount_todelete))
 
     return delete_rows, delete_columns, keep_rows, keep_columns
 
@@ -146,24 +149,17 @@ def get_indices_todelete(restricted_degrees):
         indices_rdofs -- a numpy vector containing all the nodal degrees of
                             freedom which are to be deleted
     """
-    indices_rdofs = np.empty((1, 0), dtype=int)
-    angles_rdofs = np.empty((1, 0), dtype=float)
+    indices_rdofs = np.empty((0, 0), dtype=int)
 
     # Append the list for each restricted nodal degree of freedom
     for restricted_degree in restricted_degrees:
         if restricted_degree[1] == 1:
             indices_rdofs = np.append(indices_rdofs, restricted_degree[0] * 3 + 0)
-            angles_rdofs = np.append(angles_rdofs, 0)
 
         if restricted_degree[2] == 1:
             indices_rdofs = np.append(indices_rdofs, restricted_degree[0] * 3 + 1)
-            if restricted_degree[1] != 1:
-                angles_rdofs = np.append(angles_rdofs, restricted_degree[4])
-            else:
-                angles_rdofs = np.append(angles_rdofs, 0)
 
         if restricted_degree[3] == 1:
             indices_rdofs = np.append(indices_rdofs, restricted_degree[0] * 3 + 2)
-            angles_rdofs = np.append(angles_rdofs, 0)
 
-    return indices_rdofs, angles_rdofs
+    return indices_rdofs

@@ -2,7 +2,7 @@ import tracemalloc
 
 from matplotlib import pyplot
 
-from bridges.Blennerhassett.Blennerhassett import BlennerhassettBridge
+from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.adjustments import adjust_small_plots
 
 tracemalloc.start()

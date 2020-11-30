@@ -225,7 +225,7 @@ class LineElement(Element):
         boundary_conditions = {'Restricted Degrees': restricted_degrees}
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
-        d, i_f, rd = structure_analysis(model, discType='Lengthwise', discLength=1)
+        d, i_f, rd, sp = structure_analysis(model, discType='Lengthwise', discLength=1)
 
         self.set_effects(i_f[0], 'Permanent')
         effects = self.get_effects('Permanent')

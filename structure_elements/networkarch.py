@@ -71,7 +71,7 @@ class NetworkArch:
         loads = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed'], 'Nodal': loads_tie['Nodal']}]
         model['Loads'] = loads
 
-        d, i_f, rd = structure_analysis(model)
+        d, i_f, rd, sp = structure_analysis(model)
         self.support_reaction['Permanent'] = rd[0]
         self.set_effects(i_f[0], 'DL')
         return
@@ -91,7 +91,7 @@ class NetworkArch:
                 loads.append({'Nodal': [[self.tie.cross_girders_nodes[i].index, 0, f, 0]]})
             loads.append({'Nodal': [[self.tie.nodes[-1].index, 0, f / 2, 0]]})
 
-        d, i_f, rd = structure_analysis(model)
+        d, i_f, rd, sp = structure_analysis(model)
 
         # Save distributed effects and calculate inclusive range
         range_name = ''

@@ -17,8 +17,7 @@ from structure_elements.tie import Tie
 class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
                  arch_shape, arch_optimisation, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
-                 n_hangers, arrangement, hanger_params, cs_hangers,
-                 strength_combination, cable_loss_combination):
+                 n_hangers, arrangement, hanger_params, cs_hangers):
 
         geometry = {'Span': span, 'Rise': rise, 'Arch shape': arch_shape, 'Hanger arrangement': arrangement,
                     'Hanger parameters': hanger_params, 'Amount of cross-girders': n_cross_girders,
@@ -43,8 +42,6 @@ class Bridge:
         self.hangers_arrangement = arrangement
         self.hangers_parameters = hanger_params
         self.hangers_cross_section = cs_hangers
-        self.strength_combination = strength_combination
-        self.cable_loss_combination = cable_loss_combination
 
         # Initialize nodes and create hanger set
         nodes = Nodes(accuracy=0.0001)

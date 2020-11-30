@@ -110,10 +110,9 @@ def structure_analysis(model_original, *points_of_interest,
     # mat  = matrix
     # disc = discretization
 
-
-
     # Verify the input.
     model = verify_input(model_original)
+
     nodes = model['Nodes']
     beams = model['Beams']
     loads = model['Loads']
@@ -126,23 +125,18 @@ def structure_analysis(model_original, *points_of_interest,
     stiffness_mat, force_mat, if_mat_assembly = assemble(model, disc_information)
 
     # Apply the boundary conditions to the stiffness and the force matrix
-    modified_matrices = apply_boundary_conditions(boundary_conditions,
-                                                  stiffness_mat, force_mat)
+    modified_matrices = apply_boundary_conditions(boundary_conditions, stiffness_mat, force_mat)
 
     # Solve the system and create the support reactions list.
-    d_mat, support_reactions = solve(modified_matrices, loads, boundary_conditions)
+    d_mat, support_reactions, springs_reactions = solve(modified_matrices, loads, boundary_conditions)
 
     # Get the elementwise displacements and calculate the internal forces.
-    id_matrix, if_matrices = get_internal_forces(beams, d_mat, if_mat_assembly,
-                                                 disc_information)
+    id_matrix, if_matrices = get_internal_forces(beams, d_mat, if_mat_assembly, disc_information)
 
-    # Create the dictionaries to return, depending on whether points of interest
-    # are specified or not.
+    # Create the dictionaries to return, depending on whether points of interest are specified or not.
     if not points_of_interest:
-
         # Create Lists of dictionaries containing the data of all nodes.
         d_dict, if_dict = get_dictionaries(disc_information, id_matrix, if_matrices)
-
     else:
         # Create Lists of dictionaries containing the data of the points of interest.
         d_dict, if_dict = calculate_state_poi(loads, points_of_interest,
@@ -152,4 +146,4 @@ def structure_analysis(model_original, *points_of_interest,
     deformations = d_dict
     internal_forces = if_dict
 
-    return deformations, internal_forces, support_reactions
+    return deformations, internal_forces, support_reactions, springs_reactions

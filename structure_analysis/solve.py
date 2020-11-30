@@ -43,6 +43,7 @@ def solve(stiffness_and_force_matrices, loads, boundary_conditions):
                              reactions
     """
     restricted_degrees = boundary_conditions['Restricted Degrees']
+    springs = boundary_conditions['Springs']
     stiffness_matrix_modified = stiffness_and_force_matrices[0]
     stiffness_matrix_supports = stiffness_and_force_matrices[1]
     force_matrix_modified = stiffness_and_force_matrices[2]
@@ -71,13 +72,17 @@ def solve(stiffness_and_force_matrices, loads, boundary_conditions):
     # Include the restricted degrees and the initial displacements.
     displacements = insert_initial_displacements(displacements_modified, loads,
                                                  restricted_degrees)
+
+    # get the spring reactions
+    springs_reactions = get_spring_reactions(springs, displacements)
+
     displacements = rt @ displacements
 
     # Create the support reactions list.
     support_reactions = get_support_reactions(support_reactions_matrix,
                                               restricted_degrees)
 
-    return displacements, support_reactions
+    return displacements, support_reactions, springs_reactions
 
 
 def insert_initial_displacements(displacements_modified, loads, restricted_degrees):
@@ -159,3 +164,22 @@ def get_support_reactions(support_reactions_matrix, restricted_degrees):
         support_reactions.append(support_reactions_temp)
 
     return support_reactions
+
+
+def get_spring_reactions(springs, displacements):
+    amount_of_loadgroups = displacements.shape[1]
+
+    # Append the list for each loadgroup
+    spring_reactions = []
+    for k in range(amount_of_loadgroups):
+        springs_temp = []
+        # The format is the same as in the restricted degrees.
+        for spring in springs:
+            i = spring[0]
+            r1 = displacements[3*i, k] * spring[1]
+            r2 = displacements[3*i+1, k] * spring[2]
+            r3 = displacements[3*i+2, k] * spring[3]
+            springs_temp.append([i, r1, r2, r3])
+
+        spring_reactions.append(springs_temp)
+    return spring_reactions

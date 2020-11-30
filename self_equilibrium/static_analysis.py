@@ -28,7 +28,6 @@ def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=False):
     model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': [load_group],
              'Boundary Conditions': boundary_conditions}
 
-    verify_input(model)
     d_tie, if_tie, rd_tie = structure_analysis(model)
     mz_0 = if_tie[0]['Moment'][0][0] if dof_rz else 0
 

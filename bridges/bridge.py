@@ -4,7 +4,7 @@ from plotting.tables import table_from_cross_sections
 from self_equilibrium.optimisation import optimize_self_stresses
 from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
 from structure_elements.arch.parabolic_arch import ParabolicArch
-from structure_elements.arch.thrust_line_arch import get_arch_thrust_line
+from structure_elements.arch.thrust_line_arch import get_arch_thrust_line, ThrustLineArch
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
 from structure_elements.hangers.hangers import Hangers
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
@@ -47,7 +47,7 @@ class Bridge:
         self.cable_loss_combination = cable_loss_combination
 
         # Initialize nodes and create hanger set
-        nodes = Nodes()
+        nodes = Nodes(accuracy=0.0001)
 
         # Define the hanger set
         if arrangement == 'Parallel':
@@ -78,20 +78,27 @@ class Bridge:
         # Determine the self equilibrium stress-state
         i = 1
         if i == 1:
-            mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
+            mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=False)
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
 
             hangers.assign_permanent_effects()
             arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
             tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
         else:
-
-            # blennerhassett_forces(arch, tie, nodes, hangers)
             optimize_self_stresses(arch, tie, nodes, hangers)
 
+        # Optimize the arch shape
         if arch_optimisation:
             g_arch = cs_arch[0].weight
-            x, y = get_arch_thrust_line(span, rise, g_arch, hangers)
+            arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)
+            arch.arch_connection_nodes(nodes, hangers)
+            arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
+
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0)
+            hangers.assign_permanent_effects()
+            arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0)
+            tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0)
+
 
         # Define the entire network arch structure
         network_arch = NetworkArch(arch, tie, hangers)

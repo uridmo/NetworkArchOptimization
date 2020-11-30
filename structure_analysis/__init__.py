@@ -18,7 +18,7 @@ from .solve import solve
 from .verification import verify_input
 
 
-def structure_analysis(model, *points_of_interest,
+def structure_analysis(model_original, *points_of_interest,
                        discType='Lengthwise', discElements=100, discLength=1):
     """Calculates the support reactions, the deformations and internal forces of the model.
     
@@ -110,13 +110,14 @@ def structure_analysis(model, *points_of_interest,
     # mat  = matrix
     # disc = discretization
 
+
+
+    # Verify the input.
+    model = verify_input(model_original)
     nodes = model['Nodes']
     beams = model['Beams']
     loads = model['Loads']
     boundary_conditions = model['Boundary Conditions']
-
-    # Verify the input.
-    verify_input(model)
 
     # Discretize the structure.
     disc_information = discretize(nodes, beams, discType, discElements, discLength)

@@ -58,9 +58,9 @@ class BlennerhassettBridge(Bridge):
             cs_tie_x, cs_arch_x = [], []
 
         cs_tie = cs_tie + cs_tie[-2::-1]
-        cs_tie_x = cs_tie_x + [-x for x in cs_tie_x]
+        cs_tie_x = cs_tie_x + [-x for x in cs_tie_x[::-1]]
         cs_arch = cs_arch + cs_arch[-2::-1]
-        cs_arch_x = cs_arch_x + [-x for x in cs_arch_x]
+        cs_arch_x = cs_arch_x + [-x for x in cs_arch_x[::-1]]
 
         super().__init__(span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
                          arch_shape, arch_optimisation, cs_arch_x, cs_arch, cs_tie_x, cs_tie,

@@ -16,6 +16,9 @@ class CrossSection:
         self.moment_y_resistance = resistance[2]
         return
 
+    def __repr__(self):
+        return self.name
+
     def get_beam(self):
         beam = list(self.stiffness)
         return beam

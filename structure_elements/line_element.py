@@ -31,8 +31,6 @@ class LineElement(Element):
                     self.nodes.insert(i + 1, node)
                     if self.cross_sections:
                         self.cross_sections.insert(i, self.cross_sections[i])
-                    if self.regions:
-                        self.regions.insert(i, self.regions[i])
                     break
         return node
 
@@ -105,8 +103,8 @@ class LineElement(Element):
             x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
             y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
             length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
-            x = np.linspace(x_start, x_end, num=int(length) + 2)
-            y = np.linspace(y_start, y_end, num=int(length) + 2)
+            x = np.linspace(x_start, x_end, num=int(np.ceil(length)) + 1)
+            y = np.linspace(y_start, y_end, num=int(np.ceil(length)) + 1)
             xy_coord = np.vstack((xy_coord, np.vstack((x, y)).transpose()))
         return xy_coord
 
@@ -116,7 +114,7 @@ class LineElement(Element):
             x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
             y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
             length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
-            cs_i.extend([self.cross_sections[i] for j in range(int(length) + 2)])
+            cs_i.extend([self.cross_sections[i] for j in range(int(np.ceil(length)) + 1)])
         cs_i = np.array(cs_i)
         return cs_i
 

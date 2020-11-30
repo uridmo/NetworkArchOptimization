@@ -33,7 +33,7 @@ class Arch(LineElement):
                     tan_a = np.tan(angle)
                     a = -(dy * tan_a * x_tie - dy * tan_a * x_arch_1 + dx * tan_a * y_arch_1) / (dy - dx * tan_a)
                     b = -(y_arch_1 - tan_a * x_arch_1 + tan_a * x_tie) / (dy - dx * tan_a)
-                    if 0 <= b < 1:
+                    if -10**-10 <= b < 1:
                         x = x_arch_1 + b * dx
                         y = y_arch_1 + b * dy
                         node = self.insert_node(nodes, x, y)

@@ -3,29 +3,29 @@
 \hline
 Region & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\
  & & [MN]   & [MNm] & [MNm] & [-] \\ \hline
-\multirow{3}{*}{Arch 1} & Strength-I & 63781 & 6773 & 0 & 0.57\\
- & Strength-III & 65054 & 5245 & 19391 & 0.78\\
+\multirow{3}{*}{Arch 1} & Strength-I & 76425 & 5370 & 0 & 0.65\\
+ & Strength-III & 75616 & 3785 & 19391 & 0.84\\
  & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Arch 2} & Strength-I & 63670 & 10381 & 0 & 0.71\\
- & Strength-III & 64408 & 5026 & 15049 & 0.87\\
+\multirow{3}{*}{Arch 2} & Strength-I & 76326 & 24158 & 0 & 1.00\\
+ & Strength-III & 74982 & 18739 & 15049 & 1.13\\
  & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Arch 3} & Strength-I & 63774 & 9228 & 0 & 0.94\\
- & Strength-III & 59298 & 4697 & 3627 & 0.88\\
+\multirow{3}{*}{Arch 3} & Strength-I & 76414 & 31097 & 0 & 1.48\\
+ & Strength-III & 69858 & 25247 & 3627 & 1.37\\
  & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Arch 4} & Strength-I & 63662 & 10380 & 0 & 0.96\\
- & Strength-III & 58887 & 6147 & 155 & 0.83\\
+\multirow{3}{*}{Arch 4} & Strength-I & 76315 & 31129 & 0 & 1.48\\
+ & Strength-III & 69459 & 26201 & 155 & 1.31\\
  & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Tie 1} & Strength-I & 50729 & 6773 & 0 & 0.39\\
- & Strength-III & 50153 & 7568 & 13514 & 0.55\\
+\multirow{3}{*}{Tie 1} & Strength-I & 62809 & 5370 & 0 & 0.46\\
+ & Strength-III & 60197 & 6107 & 13514 & 0.60\\
  & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Tie 2} & Strength-I & 50860 & 10289 & 0 & 0.54\\
- & Strength-III & 52454 & 2782 & 8232 & 0.61\\
+\multirow{3}{*}{Tie 2} & Strength-I & 63097 & 7638 & 0 & 0.62\\
+ & Strength-III & 62614 & 3266 & 8232 & 0.70\\
  & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Tie 3} & Strength-I & 50860 & 8226 & 0 & 0.60\\
- & Strength-III & 51264 & 3646 & 608 & 0.56\\
+\multirow{3}{*}{Tie 3} & Strength-I & 63120 & 7272 & 0 & 0.71\\
+ & Strength-III & 61436 & 2711 & 608 & 0.65\\
  & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Tie 4} & Strength-I & 50857 & 10264 & 0 & 0.63\\
- & Strength-III & 50035 & 5296 & 1103 & 0.58\\
+\multirow{3}{*}{Tie 4} & Strength-I & 63119 & 7594 & 0 & 0.72\\
+ & Strength-III & 60208 & 3333 & 1103 & 0.66\\
  & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
 \end{tabular}
 \end{table}

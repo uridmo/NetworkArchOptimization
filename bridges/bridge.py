@@ -2,8 +2,10 @@ from matplotlib import pyplot
 
 from plotting.tables import table_from_cross_sections
 from self_equilibrium.embedded_beam import embedded_beam
-from self_equilibrium.optimisation import optimize_self_stresses
+from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_stresses_tie
 from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
+from structure_elements.arch.circular_arch import CircularArch
+from structure_elements.arch.continuous_arch import ContinuousArch
 from structure_elements.arch.parabolic_arch import ParabolicArch
 from structure_elements.arch.thrust_line_arch import get_arch_thrust_line, ThrustLineArch
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
@@ -17,54 +19,57 @@ from structure_elements.tie import Tie
 
 class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
-                 arch_shape, arch_optimisation, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
-                 n_hangers, arrangement, hanger_params, cs_hangers):
+                 arch_shape, arch_optimisation, self_stress_state, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
+                 n_hangers, hanger_arrangement, hanger_params, cs_hangers):
 
-        geometry = {'Span': span, 'Rise': rise, 'Arch shape': arch_shape, 'Hanger arrangement': arrangement,
-                    'Hanger parameters': hanger_params, 'Amount of cross-girders': n_cross_girders,
-                    'Amount of hangers': n_hangers}
-        cross_sections = []
-        loads = {}
-        self.input = {'Span': span, 'Rise': rise, 'Amount of cross-girders': n_cross_girders,
-                      'Weight deck': g_deck, 'Distributed live load': qd_live_load,
-                      'Concentrated live load': qc_live_load, 'Arch shape': arch_shape, 'Arch cross-sections': cs_arch}
         self.span = span
         self.rise = rise
         self.cross_girder_amount = n_cross_girders
         self.weight_deck = g_deck
         self.distributed_live_load = qd_live_load
         self.concentrated_live_load = qc_live_load
+        self.self_stress_state = self_stress_state
         self.arch_shape = arch_shape
+        self.arch_optimisation = arch_optimisation
         self.arch_cross_sections = cs_arch
         self.arch_cross_sections_x = cs_arch_x
         self.tie_cross_sections = cs_tie
         self.tie_cross_sections_x = cs_tie_x
         self.hangers_amount = n_hangers
-        self.hangers_arrangement = arrangement
+        self.hangers_arrangement = hanger_arrangement
         self.hangers_parameters = hanger_params
         self.hangers_cross_section = cs_hangers
 
-        # Initialize nodes and create hanger set
-        nodes = Nodes(accuracy=0.0001)
+        self.ultimate_limit_states = {'Strength-I': 'LL'}
 
-        # Define the hanger set
-        if arrangement == 'Parallel':
+        # Initialize nodes and create hanger set
+        nodes = Nodes(accuracy=0.001)
+
+        # Define the first hanger set
+        if hanger_arrangement == 'Parallel':
             hanger_set = ParallelHangerSet(nodes, span, n_hangers, *hanger_params)
-        elif arrangement == 'Radial':
+        elif hanger_arrangement == 'Radial':
             hanger_set = RadialHangerSet(nodes, span, rise, n_hangers, *hanger_params)
-        elif arrangement == 'Constant Change':
+        elif hanger_arrangement == 'Constant Change':
             hanger_set = ConstantChangeHangerSet(nodes, span, n_hangers, *hanger_params)
         else:
-            raise Exception('Hanger arrangement type "' + arrangement + '" is not defined')
+            raise Exception('Hanger arrangement type "' + hanger_arrangement + '" is not defined')
 
-        # Mirror the hanger set and assign stiffness
+        # Create the tie and the hangers
+        tie = Tie(nodes, span, n_cross_girders, g_deck)
         hangers = Hangers(nodes, hanger_set, span)
 
-        # Create the structural elements
-        tie = Tie(nodes, span, n_cross_girders, g_deck)
-        arch = ParabolicArch(nodes, span, rise)
+        # Define the arch shape (arch shape is optimised later)
+        if arch_shape == 'Parabolic':
+            arch = ParabolicArch(nodes, span, rise)
+        elif arch_shape == 'Circular':
+            arch = CircularArch(nodes, span, rise)
+        elif arch_shape == 'Continuous optimisation':
+            arch = ContinuousArch(nodes, hanger_set, span, rise)
+        else:
+            raise Exception('Arch shape "' + arch_shape + '" is not defined.')
 
-        # Assign the hangers to the tie
+        # Connect the hangers to the tie and the arch
         tie.assign_hangers(hangers)
         arch.arch_connection_nodes(nodes, hangers)
 
@@ -74,29 +79,35 @@ class Bridge:
         hangers.define_cross_section(cs_hangers)
 
         # Determine the self equilibrium stress-state
-        i = 1
-        if i == 1:
+        if self_stress_state == 'Zero-displacement':
+            mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
+
+        elif self_stress_state == 'Embedded-beam':
             mz_0 = embedded_beam(tie, nodes, hangers, cs_hangers.stiffness[0])
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
 
-            hangers.assign_permanent_effects()
-            arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
-            tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
-        else:
-            optimize_self_stresses(arch, tie, nodes, hangers)
+        elif self_stress_state == 'Tie-optimisation':
+            mz_0 = optimize_self_stresses_tie(tie, nodes, hangers)
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
 
-        # Optimize the arch shape
+        elif self_stress_state == 'Overall-optimisation':
+            n_0, mz_0 = optimize_self_stresses(arch, tie, nodes, hangers)
+
+        else:
+            raise Exception('Self-stress state "' + self_stress_state + '" is not defined')
+
+        # Optimize the arch shape if specified
         if arch_optimisation:
-            g_arch = cs_arch[0].weight
+            g_arch = cs_arch[0].weight  # TODO: non-constant weights
             arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)
             arch.arch_connection_nodes(nodes, hangers)
             arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
-
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0)
-            hangers.assign_permanent_effects()
-            arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0)
-            tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0)
 
+        hangers.assign_permanent_effects()
+        arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
+        tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
 
         # Define the entire network arch structure
         network_arch = NetworkArch(arch, tie, hangers)
@@ -108,15 +119,9 @@ class Bridge:
         network_arch.calculate_ultimate_limit_states()
         network_arch.assign_range_to_sections(['Strength-I', 'Strength-III'])
 
-        # network_arch.assign_range_to_sections(['LL'])
-
         self.nodes = nodes
         self.network_arch = network_arch
         return
-
-    def analyse(self):
-        network_arch = self.tie_regions
-        return network_arch
 
     def plot_elements(self, ax):
         self.network_arch.tie.plot_elements(ax)
@@ -145,7 +150,7 @@ class Bridge:
 
         return fig
 
-    def cross_section_table(self, slice_arch, slice_tie):
+    def cross_section_table(self, slice_arch, slice_tie, folder, name):
         cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]
-        table_from_cross_sections("Test", "test", cross_sections)
+        table_from_cross_sections(folder, name, cross_sections)
         return

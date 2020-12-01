@@ -30,3 +30,11 @@ class Tie(LineElement):
         # load_group['Nodal'].append([self.nodes[0].index, 0, 0.5*f_y, 0])
         # load_group['Nodal'].append([self.nodes[-1].index, 0, 0.5*f_y, 0])
         return load_group
+
+    def weight(self):
+        weight = self.weight_deck * self.span
+        for i, cross_section in enumerate(self.cross_sections):
+            dx = self.nodes[i+1].x - self.nodes[i].x
+            g = cross_section.weight
+            weight += dx * g
+        return weight

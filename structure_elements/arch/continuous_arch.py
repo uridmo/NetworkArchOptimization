@@ -70,6 +70,7 @@ class ContinuousArch(Arch):
 
         a_x = [hanger.tie_node.x for hanger in hanger_set.hangers]
         angles = [hanger.inclination for hanger in hanger_set.hangers]
+        g = 500
         f_n = g * span ** 2 / 8 / rise
         x_arch = np.linspace(span / 2, span, n + 1)
 

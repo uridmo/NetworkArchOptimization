@@ -1,75 +1,13 @@
-from copy import deepcopy
-
 import numpy as np
 
-from .hanger import Hanger
 from ..effects import multiply_effect
 from ..element import Element
-
-
-def mirror_hanger_set(nodes, hanger_set, span):
-    hanger_set_mirrored = deepcopy(hanger_set)
-    for hanger in hanger_set_mirrored:
-        hanger.tie_node = nodes.add_node(span - hanger.tie_node.x, 0)
-        hanger.inclination = np.pi - hanger.inclination
-    hanger_set_mirrored.hangers.sort(key=lambda h: h.tie_node.x)
-    hangers = [hanger_set, hanger_set_mirrored]
-    return hangers
-
-
-class HangerSet:
-    def __init__(self):
-        self.hangers = []
-        return
-
-    def __repr__(self):
-        return repr(self.hangers)
-
-    def __len__(self):
-        return len(self.hangers)
-
-    def __iter__(self):
-        self.i = 0
-        return self
-
-    def __next__(self):
-        if self.i < len(self):
-            result = self.hangers[self.i]
-            self.i += 1
-            return result
-        else:
-            raise StopIteration
-
-    def add_hanger(self, nodes, x_tie, angle):
-        node = nodes.add_node(x_tie, 0)
-        hanger = Hanger(node, angle)
-        self.hangers.append(hanger)
-        return
-
-    def plot_effects(self, ax, name, key='', label='', c='black', lw=1.0, ls='-'):
-        x = []
-        n = []
-        if not key:
-            if type(self.hangers[0].effects_N[name]) is not dict:
-                for hanger in self:
-                    x.append(hanger.tie_node.x)
-                    n.append(hanger.effects_N[name]/1000)
-                ax.plot(x, n, label=label, c=c, lw=lw, ls=ls)
-            else:
-                self.plot_effects(ax, name, key='Max', label=label, c=c, lw=lw, ls=ls)
-                self.plot_effects(ax, name, key='Min', label=label, c=c, lw=lw, ls=ls)
-        else:
-            for hanger in self:
-                x.append(hanger.tie_node.x)
-                n.append(hanger.effects_N[name][key]/1000)
-            ax.plot(x, n, label=label, c=c, lw=lw, ls=ls, marker="x")
-        return
 
 
 class Hangers(Element):
     def __init__(self, nodes, hanger_set, span):
         super().__init__()
-        self.hanger_sets = mirror_hanger_set(nodes, hanger_set, span)
+        self.hanger_sets = hanger_set.mirror(nodes, span)
         return
 
     def __len__(self):
@@ -167,5 +105,11 @@ class Hangers(Element):
         else:
             values = effects[:, 0:n]
         tie_node_x = [hanger.tie_node.x for hanger in self.hanger_sets[0]]
-        ax.plot(tie_node_x, values.transpose()/1000, label=label, c=c, lw=lw, ls=ls)
+        resistances = np.array([hanger.cross_section.normal_force_resistance for hanger in self.hanger_sets[0]])
+
+        if effects.ndim == 1:
+            ax.plot(tie_node_x, values/resistances, label=label, c=c, lw=lw, ls=ls)
+        else:
+            ax.plot(tie_node_x, values[0, :]/resistances, label=label, c=c, lw=lw, ls=ls)
+            ax.plot(tie_node_x, values[1, :]/resistances, c=c, lw=lw, ls=ls)
         return

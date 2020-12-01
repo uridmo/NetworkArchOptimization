@@ -15,8 +15,10 @@ def adjust_overview_plots(fig):
 
     axs[2].set_title('Hangers')
     axs[2].set_xlim([0, 270])
+    axs[2].set_ylabel('D/C [-]')
     axs[2].set_ylim(bottom=0)
     adjust_plot(axs[2])
+    axs[2].set_ylim([0, 1])
 
     axs[3].set_xlim([0, 270])
     axs[3].set_ylabel('M [MNm]')
@@ -25,6 +27,9 @@ def adjust_overview_plots(fig):
     axs[4].set_xlim([0, 270])
     adjust_plot(axs[4])
 
+    axs[5].remove()
+    handles, labels = axs[4].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper left', bbox_to_anchor=(0.7, 0.45), frameon=False)
     pyplot.show()
     return
 
@@ -43,12 +48,16 @@ def adjust_small_plots(fig):
 
     axs[2].set_title('Hangers')
     axs[2].set_xlim([0, 270])
-    axs[2].set_ylabel('N [MN]')
+    axs[2].set_ylabel('D/C [-]')
+
     adjust_plot(axs[2])
+
+    axs[3].remove()
+    handles, labels = axs[1].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper left', bbox_to_anchor=(0.55, 0.45), frameon=False)
 
     pyplot.show()
     return
-
 
 
 def adjust_plot(ax):

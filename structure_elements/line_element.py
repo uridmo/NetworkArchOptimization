@@ -128,7 +128,11 @@ class LineElement(Element):
     def plot_effects(self, ax, name, key, label='', c='black', lw=1.0, ls='-'):
         effects = self.get_effects(name)[key]
         xy_coord = self.get_coordinates()
-        ax.plot(xy_coord[:, 0], effects.transpose() / 1000, label=label, c=c, lw=lw, ls=ls)
+        if effects.ndim == 1:
+            ax.plot(xy_coord[:, 0], effects / 1000, label=label, c=c, lw=lw, ls=ls)
+        else:
+            ax.plot(xy_coord[:, 0], effects[0, :] / 1000, label=label, c=c, lw=lw, ls=ls)
+            ax.plot(xy_coord[:, 0], effects[1, :] / 1000, c=c, lw=lw, ls=ls)
         return
 
     # def plot_effects_on_arch(self, ax, nodes, name, key, reaction_amax=0, show_extrema=False, color_line='red', color_fill='orange'):

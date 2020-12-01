@@ -15,8 +15,10 @@ class Tie(LineElement):
             if hanger.tie_node not in self.nodes:
                 for i in range(len(self.nodes)-1):
                     if self.nodes[i+1].x > hanger.tie_node.x:
+                        self.nodes.insert(i+1, hanger.tie_node)
+                        if self.cross_sections:
+                            self.cross_sections.insert(i, self.cross_sections[i])
                         break
-                self.nodes.insert(i+1, hanger.tie_node)
             else:
                 i = self.nodes.index(hanger.tie_node)
         return

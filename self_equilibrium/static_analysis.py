@@ -2,7 +2,7 @@ import numpy as np
 
 from plotting.model import plot_model
 from plotting.save import save_plot
-from structure_analysis import verify_input, structure_analysis
+from structure_analysis import structure_analysis
 
 
 def define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=0):

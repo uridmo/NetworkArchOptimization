@@ -1,4 +1,5 @@
 from copy import deepcopy
+
 import numpy as np
 
 from structure_elements.hangers.hanger import Hanger

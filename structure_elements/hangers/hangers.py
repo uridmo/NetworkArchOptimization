@@ -1,5 +1,6 @@
 import numpy as np
 
+from .hanger_set import HangerSet
 from ..effects import multiply_effect
 from ..element import Element
 
@@ -25,8 +26,8 @@ class Hangers(Element):
             i = self.i
             j = 0
             while i >= len(self.hanger_sets[j]):
-                j += 1
                 i -= len(self.hanger_sets[j])
+                j += 1
             result = self.hanger_sets[j].hangers[i]
             self.i += 1
             return result
@@ -48,7 +49,7 @@ class Hangers(Element):
         beams_releases = [[i, 1, 1] for i in indices]
         return beams_nodes, beams_stiffness, beams_releases
 
-    def set_effects(self, effects, name):
+    def set_effects(self, effects, name, key=None):
         if type(effects) is dict:
             if type(effects['Normal Force']) is list:
                 effects_i = np.array([effects['Normal Force'][i][0] for i in range(len(self))])
@@ -89,6 +90,19 @@ class Hangers(Element):
         effects = self.get_effects('Permanent')
         self.set_effects(multiply_effect(effects, 0), '0')
         return
+
+    def define_knuckles(self, nodes, span, tie, arch, mz_0, cs_knuckle, knuckle_x, knuckle_inclination):
+        knuckle = HangerSet()
+        knuckle.add_hanger(nodes, knuckle_x, knuckle_inclination)
+        force = mz_0 / knuckle_x / np.sin(knuckle_inclination)
+        dn = force * np.cos(knuckle_inclination)
+        knuckle.hangers[0].prestressing_force = -force
+        knuckle.hangers[0].cross_section = cs_knuckle
+        knuckles = Hangers(nodes, knuckle, span)
+        tie.assign_hangers(knuckles)
+        arch.arch_connection_nodes(nodes, knuckles)
+        self.hanger_sets.extend(knuckles.hanger_sets)
+        return knuckles, dn
 
     def plot_elements(self, ax):
         for hanger in self:

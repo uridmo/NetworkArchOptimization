@@ -7,7 +7,7 @@ from self_equilibrium.static_analysis import zero_displacement, define_by_peak_m
 from structure_elements.arch.circular_arch import CircularArch
 from structure_elements.arch.continuous_arch import ContinuousArch
 from structure_elements.arch.parabolic_arch import ParabolicArch
-from structure_elements.arch.thrust_line_arch import get_arch_thrust_line, ThrustLineArch
+from structure_elements.arch.thrust_line_arch import ThrustLineArch
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
 from structure_elements.hangers.hangers import Hangers
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
@@ -20,7 +20,7 @@ from structure_elements.tie import Tie
 class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
                  arch_shape, arch_optimisation, self_stress_state, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
-                 n_hangers, hanger_arrangement, hanger_params, cs_hangers):
+                 n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle):
 
         self.span = span
         self.rise = rise
@@ -97,6 +97,11 @@ class Bridge:
         else:
             raise Exception('Self-stress state "' + self_stress_state + '" is not defined')
 
+        if knuckle:
+            knuckles, dn = hangers.define_knuckles(nodes, span, tie, arch, mz_0, *knuckle)
+            mz_0 = 0
+            n_0 -= dn
+
         # Optimize the arch shape if specified
         if arch_optimisation:
             g_arch = cs_arch[0].weight  # TODO: non-constant weights
@@ -123,11 +128,15 @@ class Bridge:
         self.network_arch = network_arch
         return
 
-    def plot_elements(self, ax):
+    def plot_elements(self, ax=None):
+        if not ax:
+            fig, ax = pyplot.subplots(1, 1, figsize=(4, 1.5), dpi=240)
         self.network_arch.tie.plot_elements(ax)
         self.network_arch.arch.plot_elements(ax)
         self.network_arch.hangers.plot_elements(ax)
-        return
+        ax.set_aspect('equal', adjustable='box')
+        pyplot.show()
+        return fig
 
     def plot_effects(self, name, key, fig=None, label='', c='black', lw=1.0, ls='-'):
         if not fig:

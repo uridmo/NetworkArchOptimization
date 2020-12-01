@@ -1,16 +1,15 @@
 import tracemalloc
-import numpy as np
-from matplotlib import pyplot
-from plotting.colors import colors
 
 from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.adjustments import adjust_overview_plots, adjust_small_plots
+from plotting.colors import colors
 from plotting.save import save_plot
 
 tracemalloc.start()
 
-bridge_ref = BlennerhassettBridge(exact_cross_sections=True, n_hangers=13)
+bridge_ref = BlennerhassettBridge(exact_cross_sections=True, n_hangers=13, knuckles=True)
 bridge_ref.network_arch.set_range('Permanent + -1 DL', 'PRE')
+bridge_ref.plot_elements()
 
 fig = bridge_ref.plot_all_effects('Permanent', label='Reference calculation', c=colors[0])
 

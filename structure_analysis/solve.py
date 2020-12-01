@@ -176,9 +176,9 @@ def get_spring_reactions(springs, displacements):
         # The format is the same as in the restricted degrees.
         for spring in springs:
             i = spring[0]
-            r1 = displacements[3*i, k] * spring[1]
-            r2 = displacements[3*i+1, k] * spring[2]
-            r3 = displacements[3*i+2, k] * spring[3]
+            r1 = -displacements[3*i, k] * spring[1]
+            r2 = -displacements[3*i+1, k] * spring[2]
+            r3 = -displacements[3*i+2, k] * spring[3]
             springs_temp.append([i, r1, r2, r3])
 
         spring_reactions.append(springs_temp)

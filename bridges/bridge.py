@@ -1,6 +1,7 @@
 from matplotlib import pyplot
 
 from plotting.tables import table_from_cross_sections
+from self_equilibrium.embedded_beam import embedded_beam
 from self_equilibrium.optimisation import optimize_self_stresses
 from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
 from structure_elements.arch.parabolic_arch import ParabolicArch
@@ -75,7 +76,7 @@ class Bridge:
         # Determine the self equilibrium stress-state
         i = 1
         if i == 1:
-            mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=False)
+            mz_0 = embedded_beam(tie, nodes, hangers, cs_hangers.stiffness[0])
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
 
             hangers.assign_permanent_effects()

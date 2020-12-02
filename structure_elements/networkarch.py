@@ -124,6 +124,12 @@ class NetworkArch:
                 for effect in cs.wind_effects:
                     element.effects['WS'][effect][0, mask] = cs.wind_effects[effect][0]
                     element.effects['WS'][effect][1, mask] = cs.wind_effects[effect][-1]
+        # Get the first hanger
+        hanger = self.hangers.hanger_sets[0].hangers[0]
+        cs = hanger.cross_section
+        for name in cs.wind_effects:
+            effect = cs.wind_effects[name]
+            self.hangers.set_effects(effect, 'WS')
         return
 
     def calculate_ultimate_limit_states(self):

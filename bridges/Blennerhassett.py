@@ -26,7 +26,7 @@ class BlennerhassettBridge(Bridge):
         stiffness_tie_1 = [77429 * 10 ** 3, 31473 * 10 ** 3]
         stiffness_tie_2 = [65997 * 10 ** 3, 28673 * 10 ** 3]
         stiffness_tie_3 = [61814 * 10 ** 3, 28113 * 10 ** 3]
-        stiffness_hanger = [n_hangers/13*643.5 * 10 ** 3, 10 ** 3]
+        stiffness_hanger = [n_hangers/13*643.5 * 10 ** 3, 10 ** 6]
 
         wind_load_arch_1 = {'Normal Force': [-8175], 'Moment': [668], 'Moment y': [13851]}
         wind_load_arch_2 = {'Normal Force': [-7793], 'Moment': [-670], 'Moment y': [10749]}
@@ -36,6 +36,7 @@ class BlennerhassettBridge(Bridge):
         wind_load_tie_2 = {'Normal Force': [7002], 'Moment': [-1109], 'Moment y': [5880]}
         wind_load_tie_3 = {'Normal Force': [6152], 'Moment': [404], 'Moment y': [434]}
         wind_load_tie_4 = {'Normal Force': [5275], 'Moment': [702], 'Moment y': [788]}
+        wind_load_hangers = {'Normal Force': [480]}
 
         if exact_cross_sections:
             cs_tie_1 = CrossSection('Tie 1', 26.4, stiffness_tie_1, resistance_tie_1, wind_effects=wind_load_tie_1)
@@ -54,12 +55,9 @@ class BlennerhassettBridge(Bridge):
             cs_arch = [cs_arch_1, cs_arch_2, cs_arch_3, cs_arch_4]
             cs_arch_x = [3.8, 28.8, 83.91]
 
-            cs_hangers = CrossSection('Hanger', 0, stiffness_hanger, resistance_hanger)
+            cs_hangers = CrossSection('Hanger', 0, stiffness_hanger, resistance_hanger, wind_effects=wind_load_hangers)
         else:
-            cs_tie = [CrossSection(26.4, 50146 * 10 ** 3, 38821 * 10 ** 3)]
-            cs_arch = [CrossSection(29.8, 61814 * 10 ** 3, 28113 * 10 ** 3)]
-            cs_hangers = CrossSection(0, 643.5 * 10 ** 3, 10 ** 3)
-            cs_tie_x, cs_arch_x = [], []
+            print('Not defined yet!')
 
         cs_tie = cs_tie + cs_tie[-2::-1]
         cs_tie_x = cs_tie_x + [-x for x in cs_tie_x[::-1]]

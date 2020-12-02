@@ -67,7 +67,15 @@ class Hangers(Element):
             else:
                 effects_i = effects['Normal Force']
         elif type(effects) is list:
-            effects_i = np.array([effects[i][0] for i in range(len(self))])
+            if type(effects[0]) is list:
+                effects_i = np.array([effects[i][0] for i in range(len(self))])
+            elif len(effects) == 1:
+                effects_i = np.array([effects[0] for i in range(len(self))])
+            else:
+                effects_i = np.array([effects for i in range(len(self))]).transpose()
+        else:
+            raise Exception('Problem with input.')
+
         self.effects[name] = {'Normal Force': effects_i}
         for i, hanger in enumerate(self):
             if effects_i.ndim == 1:

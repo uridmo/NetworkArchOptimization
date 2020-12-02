@@ -19,8 +19,8 @@ from structure_elements.tie import Tie
 
 class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load,
-                 arch_shape, arch_optimisation, self_stress_state, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
-                 n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle):
+                 arch_shape, arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch,
+                 cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle):
 
         self.span = span
         self.rise = rise
@@ -81,19 +81,24 @@ class Bridge:
 
         # Determine the self equilibrium stress-state
         if self_stress_state == 'Zero-displacement':
-            mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=True)
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
+            dof_rz = self_stress_state_params[0]
+            peak_moment = self_stress_state_params[1]
+            mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=dof_rz)
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Embedded-beam':
-            mz_0 = embedded_beam(tie, nodes, hangers, cs_hangers.stiffness[0])
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
+            k_y = self_stress_state_params[0]
+            peak_moment = self_stress_state_params[1]
+            mz_0 = embedded_beam(tie, nodes, hangers, k_y)
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Tie-optimisation':
-            mz_0 = optimize_self_stresses_tie(tie, nodes, hangers)
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=-5 * 10 ** 3)
+            peak_moment = self_stress_state_params[0]
+            mz_0 = optimize_self_stresses_tie(tie, nodes, hangers, *self_stress_state_params[1:2])
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Overall-optimisation':
-            n_0, mz_0 = optimize_self_stresses(arch, tie, nodes, hangers)
+            n_0, mz_0 = optimize_self_stresses(arch, tie, nodes, hangers, *self_stress_state_params)
 
         else:
             raise Exception('Self-stress state "' + self_stress_state + '" is not defined')

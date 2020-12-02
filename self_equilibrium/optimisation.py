@@ -4,16 +4,23 @@ from scipy import optimize
 from self_equilibrium.static_analysis import zero_displacement
 
 
-def optimize_self_stresses(arch, tie, nodes, hangers):
+def optimize_self_stresses(arch, tie, nodes, hangers, hanger_range=(0.7, 1.3), n_range=(-np.inf, np.inf)):
     a, b = get_self_stress_matrix(nodes, hangers, arch=arch, tie=tie, factors=(1, 1.5))
     ones = np.ones_like(np.expand_dims(b, axis=1))
     a_ub = np.vstack((np.hstack((-ones, -a)), np.hstack((-ones, a))))
     b_ub = np.array(list(b) + list(-b))
     c = np.array([1] + [0 for i in range(a.shape[1])])
 
-    zero_displacement(tie, nodes, hangers, dof_rz=True)
-    hanger_forces = hangers.get_hanger_forces(i=0)
-    bounds = [(-np.inf, np.inf) for i in range(3)] + [(0.8 * force, 1.25 * force) for force in hanger_forces]
+    weight = tie.weight()
+    sine_sum = 0
+    for hanger in hangers:
+        sine_sum += np.sin(hanger.inclination)
+    force = weight / sine_sum
+    n = len(hangers.hanger_sets[0].hangers)
+    force_range = (hanger_range[0]*force, hanger_range[1]*force)
+
+    inf_range = (-np.inf, np.inf)
+    bounds = [inf_range, n_range, inf_range] + [force_range]*n
     sol = optimize.linprog(c, A_ub=a_ub, b_ub=b_ub, bounds=bounds, method='revised simplex')  # , x0=x0)
 
     x = sol.x
@@ -22,7 +29,7 @@ def optimize_self_stresses(arch, tie, nodes, hangers):
     return n_0, m_z0
 
 
-def optimize_self_stresses_tie(tie, nodes, hangers):
+def optimize_self_stresses_tie(tie, nodes, hangers, hanger_range=(0.7, 1.3)):
     a, b = get_self_stress_matrix(nodes, hangers, tie=tie)
     ones = np.ones_like(np.expand_dims(b, axis=1))
     a = np.delete(a, 0, 1)
@@ -36,7 +43,9 @@ def optimize_self_stresses_tie(tie, nodes, hangers):
         sine_sum += np.sin(hanger.inclination)
     force = weight / sine_sum
     n = len(hangers.hanger_sets[0].hangers)
-    bounds = [(-np.inf, np.inf) for i in range(2)] + [(0.7 * force, 1.2 * force) for i in range(n)]
+    inf_range = (-np.inf, np.inf)
+    force_range = (hanger_range[0]*force, hanger_range[1]*force)
+    bounds = [inf_range]*2 + [force_range]*n
     sol = optimize.linprog(c, A_ub=a_ub, b_ub=b_ub, bounds=bounds, method='revised simplex')
     x = sol.x
 

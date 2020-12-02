@@ -2,13 +2,14 @@ from structure_elements.line_element import LineElement
 
 
 class Tie(LineElement):
-    def __init__(self, nodes, span, n, g_deck):
+    def __init__(self, nodes, span, n, g_deck, g_wearing):
         super().__init__()
         self.span = span
         self.cross_girders_amount = n
         self.cross_girders_nodes = [nodes.add_node(span*(i+1)/(n+1), 0) for i in range(n)]
         self.nodes = [nodes.add_node(0, 0)] + self.cross_girders_nodes + [nodes.add_node(span, 0)]
         self.weight_deck = g_deck
+        self.weight_wearing_utilities = g_wearing
 
     def assign_hangers(self, hangers):
         for hanger in hangers:
@@ -31,6 +32,14 @@ class Tie(LineElement):
         load_group['Nodal'].append([self.cross_girders_nodes[-1].index, 0, 1.0*f_y, 0])
         # load_group['Nodal'].append([self.nodes[0].index, 0, 0.5*f_y, 0])
         # load_group['Nodal'].append([self.nodes[-1].index, 0, 0.5*f_y, 0])
+        return load_group
+
+    def load_group_utilities(self):
+        load_group = {}
+        f_y = -self.weight_wearing_utilities * self.span / (self.cross_girders_amount+1)
+        load_group['Nodal'] = [[node.index, 0, f_y, 0] for node in self.cross_girders_nodes[1:-1]]
+        load_group['Nodal'].append([self.cross_girders_nodes[0].index, 0, 1.0*f_y, 0])
+        load_group['Nodal'].append([self.cross_girders_nodes[-1].index, 0, 1.0*f_y, 0])
         return load_group
 
     def weight(self):

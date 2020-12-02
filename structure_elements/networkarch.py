@@ -42,6 +42,18 @@ class NetworkArch:
         self.hangers.set_effects(effects['Normal Force'][i_arch:], name)
         return
 
+    # def get_effects(self, name, key=None):
+    #     effects_tie = self.tie.get_effects(name, key=key)
+    #     effects_arch = self.arch.get_effects(name, key=key)
+    #     effects_hangers = self.hangers.get_effects(name, key=key)
+    #     if key:
+    #         effects = {}
+    #         for key in effects_tie:
+    #             effects[key] = np.concatenate((effects_tie, effects_arch, effects_hangers))
+    #     else:
+    #         effects = np.concatenate((effects_tie, effects_arch, effects_hangers))
+    #     return effects
+
     def set_range(self, range_name, name):
         self.tie.get_range(range_name, name=name)
         self.arch.get_range(range_name, name=name)
@@ -54,10 +66,6 @@ class NetworkArch:
             self.arch.assign_range_to_regions(name)
         return
 
-    def assign_support_reaction(self, rd, name):
-        self.support_reaction[name] = rd
-        return
-
     def add_key(self, name, key, value):
         self.tie.add_key(name, key, value)
         self.arch.add_key(name, key, value)
@@ -68,12 +76,14 @@ class NetworkArch:
         model = self.create_model(nodes)
         loads_tie = self.tie.self_weight()
         loads_arch = self.arch.self_weight(first_index=n_tie)
-        loads = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed'], 'Nodal': loads_tie['Nodal']}]
-        model['Loads'] = loads
+        loads_dc = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed'], 'Nodal': loads_tie['Nodal']}]
+        loads_dw = self.tie.load_group_utilities()
+        model['Loads'] = [loads_dc] + [loads_dw]
 
         d, i_f, rd, sp = structure_analysis(model)
-        self.support_reaction['Permanent'] = rd[0]
-        self.set_effects(i_f[0], 'DL')
+        self.set_effects(i_f[0], 'DC')
+        self.set_effects(i_f[1], 'DW')
+        self.set_range('Permanent + -1 DC + -1 DW', 'EL')
         return
 
     def calculate_live_load(self, nodes, q_d, q_c):
@@ -98,7 +108,6 @@ class NetworkArch:
         for i in range(n+2):
             name = 'LLd'+str(i+1)
             self.set_effects(i_f[i], name)
-            self.support_reaction[name] = rd[i]
             range_name += '0/' + name + ', '
         range_name = range_name[0:-2]
         self.set_range(range_name, 'LLd')
@@ -108,7 +117,6 @@ class NetworkArch:
         for i in range(n+2):
             name = 'LLc'+str(i+1)
             self.set_effects(i_f[n+2+i], name)
-            self.support_reaction[name] = rd[n+2+i]
             range_name += name + '/'
         range_name = range_name[0:-1]
         self.set_range(range_name, 'LLc')
@@ -130,10 +138,15 @@ class NetworkArch:
         return
 
     def calculate_ultimate_limit_states(self):
-        self.set_range('Permanent, -0.1 DL/0.25 DL, 0/1.75 LL', 'Strength-I')
+        self.set_range('EL, 1.25 DC/0.9 DC, 1.5 DW/0.65 DW, 0/1.75 LL', 'Strength-I')
         self.add_key('Strength-I', 'Moment y', 0)
 
-        self.set_range('Permanent, -0.1 DL/0.25 DL', 'Strength-III')
+        self.set_range('EL, 1.25 DC/0.9 DC, 1.5 DW/0.65 DW', 'Strength-III')
         self.add_key('Strength-III', 'Moment y', 0)
         self.set_range('Strength-III, 1.4 WS', 'Strength-III')
+
+        self.set_range('EL, 1.5 DC, 1.5 DW', 'Strength-IV')
+        self.add_key('Strength-IV', 'Moment y', 0)
+
+        self.assign_range_to_sections(['Strength-I', 'Strength-III', 'Strength-IV'])
         return

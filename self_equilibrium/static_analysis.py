@@ -17,7 +17,7 @@ def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=False):
     structural_nodes = nodes.structural_nodes()
     beams_nodes, beams_stiffness = tie.get_beams()
     beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
-    load_group = tie.self_weight()
+    load_group = tie.permanent_loads()
 
     restricted_degrees = [[tie.nodes[0].index, 1, 1, int(dof_rz), 0]]
     restricted_degrees += [[tie.nodes[-1].index, 1, 1, int(dof_rz), 0]]

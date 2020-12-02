@@ -61,6 +61,16 @@ class LineElement(Element):
         load_group = {'Distributed': load_distributed}
         return load_group
 
+    def load_group_utilities(self):
+        return {}
+
+    def permanent_loads(self):
+        load_group = self.self_weight()
+        load_group_dw = self.load_group_utilities()
+        if load_group_dw:
+            load_group['Nodal'].extend(load_group_dw['Nodal'])
+        return load_group
+
     def distributed_load(self, q, x_start, x_end, first_index=0):
         load_distributed = []
         for i in range(len(self.nodes) - 1):
@@ -200,10 +210,8 @@ class LineElement(Element):
         structural_nodes = nodes.structural_nodes()
         beams_nodes, beams_stiffness = self.get_beams()
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
-        if weight:
-            load_group = self.self_weight()
-        else:
-            load_group = {}
+        load_group = self.permanent_loads()
+
         load_nodal = [[self.nodes[0].index, f_x, 0, -m_z], [self.nodes[-1].index, -f_x, 0, m_z]]
 
         # Apply hanger forces

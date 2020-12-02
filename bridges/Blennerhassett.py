@@ -5,10 +5,10 @@ from structure_elements.cross_section import CrossSection
 
 
 class BlennerhassettBridge(Bridge):
-    def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=150.4, n_hangers=13, hanger_arrangement='Parallel',
-                 hanger_params=tuple([1.0646]), qd_live_load=27, qc_live_load=325, arch_shape='Parabolic',
-                 arch_optimisation=False, self_stress_state='Overall-optimisation', exact_cross_sections=False,
-                 knuckles=False):
+    def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=115.3, g_wearing=35.1, n_hangers=13,
+                 hanger_arrangement='Parallel', hanger_params=tuple([1.0646]), qd_live_load=27, qc_live_load=325,
+                 arch_shape='Parabolic', arch_optimisation=False, self_stress_state='Overall-optimisation',
+                 exact_cross_sections=False, knuckles=False):
 
         resistance_arch_1 = [130000, 78708, 79115]
         resistance_arch_2 = [108768, 71458, 63445]
@@ -72,7 +72,7 @@ class BlennerhassettBridge(Bridge):
         else:
             knuckle = ()
 
-        super().__init__(span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
+        super().__init__(span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load,
                          arch_shape, arch_optimisation, self_stress_state, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
                          n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle)
         return

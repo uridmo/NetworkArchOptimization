@@ -18,7 +18,7 @@ from structure_elements.tie import Tie
 
 
 class Bridge:
-    def __init__(self, span, rise, n_cross_girders, g_deck, qd_live_load, qc_live_load,
+    def __init__(self, span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load,
                  arch_shape, arch_optimisation, self_stress_state, cs_arch_x, cs_arch, cs_tie_x, cs_tie,
                  n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle):
 
@@ -26,6 +26,7 @@ class Bridge:
         self.rise = rise
         self.cross_girder_amount = n_cross_girders
         self.weight_deck = g_deck
+        self.weight_surface_utilities = g_wearing
         self.distributed_live_load = qd_live_load
         self.concentrated_live_load = qc_live_load
         self.self_stress_state = self_stress_state
@@ -56,7 +57,7 @@ class Bridge:
             raise Exception('Hanger arrangement type "' + hanger_arrangement + '" is not defined')
 
         # Create the tie and the hangers
-        tie = Tie(nodes, span, n_cross_girders, g_deck)
+        tie = Tie(nodes, span, n_cross_girders, g_deck, g_wearing)
         hangers = Hangers(nodes, hanger_set, span)
 
         # Define the arch shape (arch shape is optimised later)
@@ -122,7 +123,6 @@ class Bridge:
         network_arch.calculate_live_load(nodes, qd_live_load, qc_live_load)
         network_arch.assign_wind_effects()
         network_arch.calculate_ultimate_limit_states()
-        network_arch.assign_range_to_sections(['Strength-I', 'Strength-III'])
 
         self.nodes = nodes
         self.network_arch = network_arch

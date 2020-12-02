@@ -13,7 +13,7 @@ def define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=0):
     return n_0
 
 
-def zero_displacement(tie, nodes, hangers, dof_rz=False, plot=False):
+def zero_displacement(tie, nodes, hangers, dof_rz=True, plot=False):
     structural_nodes = nodes.structural_nodes()
     beams_nodes, beams_stiffness = tie.get_beams()
     beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}

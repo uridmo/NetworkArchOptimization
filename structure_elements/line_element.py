@@ -34,16 +34,28 @@ class LineElement(Element):
                     break
         return node
 
+    def segment_length(self, i):
+        dx = self.nodes[i+1].x - self.nodes[i].x
+        dy = self.nodes[i+1].y - self.nodes[i].y
+        length = (dx ** 2 + dy ** 2)**0.5
+        return length
+
     def define_cross_sections(self, nodes, section_nodes, cross_sections):
         if section_nodes and type(section_nodes) is list:
             section_nodes = [self.insert_node(nodes, x) for x in section_nodes]
         self.cross_sections = []
         section_nodes += [self.nodes[-1]]
+
+        for cross_section in cross_sections:
+            cross_section.length = 0
+
         j = 0
         for i in range(len(self.nodes) - 1):
+            length = self.segment_length(i)
             if self.nodes[i] == section_nodes[j]:
                 j += 1
             self.cross_sections.append(cross_sections[j])
+            cross_sections[j].length += length
         return
 
     def get_beams(self):
@@ -94,7 +106,7 @@ class LineElement(Element):
                 break
         return load_group
 
-    def assign_range_to_regions(self, name):
+    def assign_range_to_sections(self, name):
         effects = self.get_effects(name)
         cs_i = self.get_cross_sections()
         for cs in set(self.cross_sections):

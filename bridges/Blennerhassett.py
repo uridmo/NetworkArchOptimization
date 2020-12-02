@@ -1,3 +1,5 @@
+import pickle
+
 import numpy as np
 
 from bridges.bridge import Bridge
@@ -76,3 +78,38 @@ class BlennerhassettBridge(Bridge):
                          arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch, cs_tie_x,
                          cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle)
         return
+
+    def cost_function(self):
+
+        weight_arch_1 = 2467.05
+        weight_arch_2 = 2310.68
+        weight_arch_3 = 2310.68
+        weight_tie_1 = 2334.10
+        weight_tie_2 = 2008.71
+        weight_tie_3 = 2008.71
+
+        weight_hanger = 31.9
+        weight_anchorages = 5000
+
+        unit_price_arch = 4
+        unit_price_tie = 3.5
+        unit_price_hanger = 22
+        unit_price_anchorages = 9
+
+        f = open('Base case/store.pckl', 'rb')
+        dc = pickle.load(f)
+        dc_arch_1_ref, dc_arch_2_ref, dc_arch_3_ref = dc[0], dc[1], dc[2]
+        dc_tie_1_ref, dc_tie_2_ref, dc_tie_3_ref, dc_hangers_ref = dc[3], dc[4], dc[5], dc[6]
+
+        arch_cs = self.arch_cross_sections
+        arch_cs_1, arch_cs_2, arch_cs_3 = arch_cs[1], arch_cs[2], arch_cs[3]
+
+        tie_cs = self.tie_cross_sections
+        tie_cs_1, tie_cs_2, tie_cs_3 = tie_cs[1], tie_cs[2], tie_cs[3]
+
+        cost_arch_1 = arch_cs_1.length * weight_arch_1 * unit_price_arch * arch_cs_1.max_doc() / dc_arch_1_ref
+        cost_arch_2 = arch_cs_2.length * weight_arch_2 * unit_price_arch * arch_cs_2.max_doc() / dc_arch_2_ref
+        cost_arch_3 = arch_cs_3.length * weight_arch_3 * unit_price_arch * arch_cs_3.max_doc() / dc_arch_3_ref
+
+        cost = cost_arch_1 + cost_arch_2 + cost_arch_3
+        return cost

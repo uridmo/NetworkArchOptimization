@@ -42,18 +42,6 @@ class NetworkArch:
         self.hangers.set_effects(effects['Normal Force'][i_arch:], name)
         return
 
-    # def get_effects(self, name, key=None):
-    #     effects_tie = self.tie.get_effects(name, key=key)
-    #     effects_arch = self.arch.get_effects(name, key=key)
-    #     effects_hangers = self.hangers.get_effects(name, key=key)
-    #     if key:
-    #         effects = {}
-    #         for key in effects_tie:
-    #             effects[key] = np.concatenate((effects_tie, effects_arch, effects_hangers))
-    #     else:
-    #         effects = np.concatenate((effects_tie, effects_arch, effects_hangers))
-    #     return effects
-
     def set_range(self, range_name, name):
         self.tie.get_range(range_name, name=name)
         self.arch.get_range(range_name, name=name)
@@ -62,8 +50,9 @@ class NetworkArch:
 
     def assign_range_to_sections(self, names):
         for name in names:
-            self.tie.assign_range_to_regions(name)
-            self.arch.assign_range_to_regions(name)
+            self.tie.assign_range_to_sections(name)
+            self.arch.assign_range_to_sections(name)
+            self.hangers.assign_range_to_sections(name)
         return
 
     def add_key(self, name, key, value):
@@ -149,4 +138,5 @@ class NetworkArch:
         self.add_key('Strength-IV', 'Moment y', 0)
 
         self.assign_range_to_sections(['Strength-I', 'Strength-III', 'Strength-IV'])
+
         return

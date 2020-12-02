@@ -7,7 +7,8 @@ from plotting.save import save_plot
 
 tracemalloc.start()
 
-bridge_ref = BlennerhassettBridge(exact_cross_sections=True, n_hangers=13)
+bridge_ref = BlennerhassettBridge(exact_cross_sections=True, self_stress_state='Zero-displacement',
+                                  self_stress_state_params=())
 bridge_ref.plot_elements()
 
 fig = bridge_ref.plot_all_effects('Permanent', label='Reference calculation', c=colors[0])
@@ -43,6 +44,9 @@ adjust_small_plots(fig)
 save_plot(fig, 'Drawings comparison', 'Live load')
 
 bridge_ref.cross_section_table(slice(0, 4), slice(0, 4), 'ULS Overview Tables', 'Final Design')
+
+a = bridge_ref.cost_function()
+print(round(a/1000)/1000, 'Mio. $')
 
 
 current, peak = tracemalloc.get_traced_memory()

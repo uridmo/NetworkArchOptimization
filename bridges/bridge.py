@@ -81,10 +81,8 @@ class Bridge:
 
         # Determine the self equilibrium stress-state
         if self_stress_state == 'Zero-displacement':
-            dof_rz = self_stress_state_params[0]
-            peak_moment = self_stress_state_params[1]
-            mz_0 = zero_displacement(tie, nodes, hangers, dof_rz=dof_rz)
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
+            mz_0 = zero_displacement(tie, nodes, hangers, *self_stress_state_params[0:1])
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, *self_stress_state_params[1:])
 
         elif self_stress_state == 'Embedded-beam':
             k_y = self_stress_state_params[0]
@@ -116,6 +114,7 @@ class Bridge:
             arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0)
 
+        hangers.assign_length_to_cross_section()
         hangers.assign_permanent_effects()
         arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
         tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')

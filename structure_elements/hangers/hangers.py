@@ -39,6 +39,17 @@ class Hangers(Element):
             hanger.cross_section = cross_section
         return
 
+    def assign_length_to_cross_section(self):
+        for hanger in self:
+            hanger.cross_section.length += hanger.length()
+        return
+
+    def assign_range_to_sections(self, name):
+        for i, hanger in enumerate(self):
+            hanger.cross_section.assign_extrema(hanger.effects_N[name], name, 'Normal Force')
+            hanger.cross_section.calculate_doc(name, is_hanger=True)
+        return
+
     def get_beams(self, indices):
         n = len(self)
         beams_nodes = []

@@ -1,0 +1,119 @@
+\section{Methods}\label{sec:methods}
+\subsection{Reference bridges}
+%Plane model is appropriate Smit: Design and construction of a railway arch bridge with a network arrangement
+
+\subsection{Structural modelling}
+
+\subsection{Load cases}
+
+\subsection{Self-equilibrium stress state}
+% Permanent state
+
+\subsection{Design verification}
+
+\subsection{Estimation of cost function}
+
+\begin{table}[H]
+\begin{tabular}{lccccc}
+\hline
+Load         & EL  & DC         & DW         & LL   & WS  \\ \hline
+Strength-I   & 1.0 & 1.25 / 0.9 & 1.5 / 0.65 & 1.75 & -   \\
+Strength-III & 1.0 & 1.25 / 0.9 & 1.5 / 0.65 & -    & 1.4 \\ \hline
+\end{tabular}
+\end{table}
+
+
+
+\begin{table}[H] 
+\caption{The effects of wind loading per region}
+\centering
+\begin{tabular}{lccc}
+\hline
+Region & Normal force & Moment-y & Moment-z \\
+ & [kN]   & [kNm] & [kNm] \\ \hline
+Arch 1 & -8175 & 668 & 13851\\
+Arch 2 & -7793 & -670 & 10749\\
+Arch 3 & -4066 & -533 & 2591\\
+Arch 4 & -3852 & 117 & 111\\
+Tie 1 & 5369 & -2327 & 9653\\
+Tie 2 & 7002 & -1109 & 5880\\
+Tie 3 & 6152 & 404 & 434\\
+Tie 4 & 5275 & 702 & 788\\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H] 
+\caption{The cross-sectional resistances per region}
+\centering
+\begin{tabular}{lccc}
+\hline
+Region & Normal force & Moment-y & Moment-z \\
+ & [kN]   & [kNm] & [kNm] \\ \hline
+Arch 1 & \SI{130000}{} & \SI{78708}{} & \SI{79115}{}\\
+Arch 2 & \SI{108768}{} & \SI{71458}{} & \SI{63445}{}\\
+Arch 3-4 & \SI{82309}{} & \SI{50017}{} & \SI{42729}{}\\
+Tie 1 & \SI{153228}{} & \SI{100810}{} & \SI{76190}{}\\
+Tie 2 & \SI{117134}{} & \SI{82766}{} & \SI{56610}{}\\
+Tie 3-4 & \SI{100574}{} & \SI{76175}{} & \SI{45792}{}\\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H] 
+\caption{The design verifications}
+\centering
+\begin{tabular}{llcccc}
+\hline
+Region & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\
+ & & [kN]   & [kNm] & [kNm] & [-] \\ \hline
+\multirow{3}{*}{Arch 1} & Strength-I & 63781 & 6773 & 0 & 0.57\\
+ & Strength-III & 65054 & 5245 & 19391 & 0.78\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Arch 2} & Strength-I & 63670 & 10381 & 0 & 0.71\\
+ & Strength-III & 64408 & 5026 & 15049 & 0.87\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Arch 3} & Strength-I & 63774 & 9228 & 0 & 0.94\\
+ & Strength-III & 59298 & 4697 & 3627 & 0.88\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Arch 4} & Strength-I & 63662 & 10380 & 0 & 0.96\\
+ & Strength-III & 58887 & 6147 & 155 & 0.83\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Tie 1} & Strength-I & 50729 & 6773 & 0 & 0.39\\
+ & Strength-III & 50153 & 7568 & 13514 & 0.55\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Tie 2} & Strength-I & 50860 & 10289 & 0 & 0.54\\
+ & Strength-III & 52454 & 2782 & 8232 & 0.61\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Tie 3} & Strength-I & 50860 & 8226 & 0 & 0.60\\
+ & Strength-III & 51264 & 3646 & 608 & 0.56\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\multirow{3}{*}{Tie 4} & Strength-I & 50857 & 10264 & 0 & 0.63\\
+ & Strength-III & 50035 & 5296 & 1103 & 0.58\\
+ & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+\end{tabular}
+\end{table}
+
+\begin{table}[H] 
+\caption{The design verifications (from design drawings)}
+\centering
+\begin{tabular}{llcccc}
+\hline
+Region                  & Limit state  & Normal force & Moment-y & Moment-z & Demand/Capacity \\
+                        &              &              &          &          &                 \\ \hline
+\multirow{2}{*}{Arch 1} & Strength-III & -70913       & 6360     & 30119    & 0.96            \\
+                        & Cable loss   & -56981       & 39583    & 4457     & 1.00            \\ \hline
+\multirow{2}{*}{Arch 2} & Strength-III & -70789       & 3831     & 22546    & 1.00            \\
+                        & Cable loss   & 56879        & -22025   & -462     & 0.85            \\ \hline
+\multirow{2}{*}{Arch 3} & Strength-IV  & -68502       & 8085     & -891     & 0.99            \\
+                        & Cable loss   & -53138       & 22706    & 396      & 1.00            \\ \hline
+\multirow{2}{*}{Arch 4} & Strength-IV  & -60189       & 5190     & 203      & 0.83            \\
+                        & Cable loss   & -48410       & -23510   & 229      & 0.97            \\ \hline
+\multirow{2}{*}{Tie 1}  & Strength-III & 55358        & -8760    & -17944   & 0.65            \\
+                        & Cable loss   & 50354        & -6058    & -4208    & 0.60            \\ \hline
+\multirow{2}{*}{Tie 2}  & Strength-III & 57057        & -3451    & -10469   & 0.69            \\
+                        & Cable loss   & 50580        & 2026     & -2225    & 0.61            \\ \hline
+\multirow{2}{*}{Tie 3}  & Strength-I   & 51443        & 13565    & -355     & 0.68            \\
+                        & Cable loss   & 47511        & 10585    & -315     & 0.88            \\ \hline
+\multirow{2}{*}{Tie 4}  & Strength-I   & 54268        & 6565     & 857      & 0.63            \\
+                        & Cable loss   & 49624        & 5022     & 384      & 0.76            \\ \hline 
+\end{tabular}
+\end{table}

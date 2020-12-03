@@ -1,0 +1,13 @@
+\begin{tabular}{cccccl}
+\hline
+Segment & \multicolumn{4}{c}{Demand / Capacity} & \\
+ & Strength-I & Strength-III & Strength-IV & Base case & \\ \hline
+Arch 1 & 0.86 & \textbf{1.01} & 0.72 & \textbf{1.01} & () \\
+Arch 2 & \textbf{1.18} & 1.13 & 1.00 & \textbf{1.18} & () \\
+Arch 3 & \textbf{0.89} & 0.82 & 0.74 & \textbf{0.89} & () \\
+Tie 1 & 0.44 & \textbf{0.55} & 0.32 & \textbf{0.55} & () \\
+Tie 2 & \textbf{0.51} & 0.47 & 0.37 & \textbf{0.51} & () \\
+Tie 3 & \textbf{0.50} & 0.47 & 0.37 & \textbf{0.50} & () \\
+Hanger & \textbf{0.98} & 0.83 & 0.63 & \textbf{0.98} & () \\
+\hline
+\end{tabular}

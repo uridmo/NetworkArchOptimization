@@ -43,7 +43,8 @@ axs[2].plot(hanger_x, hanger_forces, label='Design drawings', c=colors[1])
 adjust_small_plots(fig)
 save_plot(fig, 'base case', 'Live load')
 
-bridge_ref.cross_section_table(slice(0, 4), slice(0, 4), 'ULS Overview Tables', 'Final Design')
+bridge_ref.internal_forces_table(slice(0, 4), slice(0, 4), 'base case', 'design forces')
+# bridge_ref.dc_ratio_table(slice(1, 4), slice(1, 4), 'base case', 'degrees of compliance')
 
 # Save the demand over capacity ratios of the reference case
 dc = []
@@ -58,7 +59,7 @@ pickle.dump(dc, f)
 f.close()
 
 # Evaluate the cost function
-a = bridge_ref.cost_function()
+a = bridge_ref.cost_function(slice(1, 4), slice(1, 4))
 print('Costs: $', round(a/1000)/1000, 'Mio.')
 
 

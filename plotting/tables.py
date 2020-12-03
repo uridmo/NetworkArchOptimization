@@ -1,37 +1,92 @@
 import os
 
 
-def table_from_cross_sections(directory, name, cross_sections):
+def uls_forces_table(directory, name, cross_sections, all_uls=False):
     if not os.path.isdir(directory):
         os.makedirs(directory)
 
     text = open(directory+"/"+name+".txt", 'w')
-    text.write(r"\begin{table}[H] "+"\n")
     text.write(r"\begin{tabular}{llcccc}"+"\n")
     text.write(r"\hline"+"\n")
-    text.write(r"Region & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\"+"\n")
+    text.write(r"Segment & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\"+"\n")
     text.write(r" & & [MN]   & [MNm] & [MNm] & [-] \\ \hline"+"\n")
     for cs in cross_sections:
         name = cs.name
-        p_i = cs.effects['Strength-I']['Normal Force'][2]
-        mz_i = cs.effects['Strength-I']['Moment'][2]
-        my_i = cs.effects['Strength-I']['Moment y'][2]
-        p_iii = cs.effects['Strength-III']['Normal Force'][2]
-        mz_iii = cs.effects['Strength-III']['Moment'][2]
-        my_iii = cs.effects['Strength-III']['Moment y'][2]
+        length = len(cs.effects)
+        if all_uls:
+            text.write(r"\multirow{"+str(length+1)+"}{*}{"+name+"}")
+        else:
+            text.write(r"\multirow{2}{*}{"+name+"}")
+
+        dc_max = 0
+        uls_max = ''
+        for uls_type in cs.effects:
+            p = cs.effects[uls_type]['Normal Force'][2]/1000
+            mz = cs.effects[uls_type]['Moment'][2]/1000 if 'Moment' in cs.effects[uls_type] else 0
+            my = cs.effects[uls_type]['Moment y'][2]/1000 if 'Moment y' in cs.effects[uls_type] else 0
+            d_c = cs.degree_of_compliance[uls_type]
+            if d_c > dc_max:
+                dc_max = d_c
+                uls_max = uls_type
+            if all_uls:
+                text.write(" & " + uls_type + f" & {p:.1f} & {mz:.1f} & {my:.1f} & " + f"{d_c:.2f}" + r"\\" + "\n")
+
+        if not all_uls:
+            p = cs.effects[uls_max]['Normal Force'][2] / 1000
+            mz = cs.effects[uls_max]['Moment'][2] / 1000 if 'Moment' in cs.effects[uls_type] else 0
+            my = cs.effects[uls_max]['Moment y'][2] / 1000 if 'Moment y' in cs.effects[uls_type] else 0
+            d_c = cs.degree_of_compliance[uls_max]
+            text.write(" & " + uls_max + f" & {p:.1f} & {mz:.1f} & {my:.1f} & " + f"{d_c:.2f}" + r"\\" + "\n")
+
         p_cl = 0
         mz_cl = 0
         my_cl = 0
-
-        d_c_i = cs.degree_of_compliance['Strength-I']
-        d_c_iii = cs.degree_of_compliance['Strength-III']
         d_c_cl = 0
 
-        text.write(r"\multirow{3}{*}{"+name+"}"+f" & Strength-I & {p_i:.0f} & {mz_i:.0f} & {my_i:.0f} & "+f"{d_c_i:.2f}"+r"\\"+"\n")
-        text.write(f" & Strength-III & {p_iii:.0f} & {mz_iii:.0f} & {my_iii:.0f} & "+f"{d_c_iii:.2f}"+r"\\"+"\n")
-        text.write(f" & Cable loss & {p_cl:.0f} & {mz_cl:.0f} & {my_cl:.0f} & "+f"{d_c_cl:.2f}"+r"\\ \hline"+"\n")
+        text.write(f" & Cable loss & {p_cl:.1f} & {mz_cl:.1f} & {my_cl:.1f} & "+f"{d_c_cl:.2f}"+r"\\ \hline"+"\n")
     text.write(r"\end{tabular}" + "\n")
-    text.write(r"\end{table}" + "\n")
 
     text.close()
+    return
+
+
+def dc_table(directory, name, cross_sections, uls_types=""):
+    if not os.path.isdir(directory):
+        os.makedirs(directory)
+    if not uls_types:
+        uls_types = list(cross_sections[0].degree_of_compliance.keys())
+
+    n = len(uls_types)
+    text = open(directory + "/" + name + ".txt", 'w')
+    text.write(r"\begin{tabular}{c"+"c"*(n+1)+"l}" + "\n")
+    text.write(r"\hline" + "\n")
+    text.write(r"Segment & \multicolumn{"+str(n+1)+r"}{c}{Demand / Capacity} & \\" + "\n")
+
+    for uls_type in uls_types:
+        text.write(" & "+uls_type)
+    text.write(r" & Base case & \\ \hline"+"\n")
+
+    for cs in cross_sections:
+        text.write(cs.name)
+        dcs = []
+        for uls_type in uls_types:
+            if uls_type not in cs.degree_of_compliance:
+                dc = 0
+            else:
+                dc = cs.degree_of_compliance[uls_type]
+            dcs.append(dc)
+        for dc in dcs:
+            if dc == max(dcs):
+                text.write(r" & \textbf{"+f"{dc:.2f}"+r"}")
+            else:
+                text.write(f" & {dc:.2f}")
+        text.write(r" & \textbf{"+f"{cs.dc_ref:.2f}"+r"} & (" + cs.load_ref + r") \\" + "\n")
+
+    text.write(r"\hline" + "\n")
+    text.write(r"\end{tabular}" + "\n")
+    text.close()
+    return
+
+def cost_table(directory, name, cross_sections):
+
     return

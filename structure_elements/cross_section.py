@@ -2,11 +2,19 @@ import numpy as np
 
 
 class CrossSection:
-    def __init__(self, name, g, stiffness, resistance, wind_effects={}):
+    def __init__(self, name, g, stiffness, resistance, wind_effects={},
+                 unit_cost=0, unit_weight=0, dc_ref=0, load_ref=""):
         self.name = name
         self.weight = g
         self.stiffness = stiffness
+
+        self.unit_cost = unit_cost
+        self.unit_weight = unit_weight
+        self.dc_ref = dc_ref
+        self.dc_max = 0
+        self.load_ref = load_ref
         self.length = 0
+        self.cost = 0
 
         self.effects = {}
         self.degree_of_compliance = {}
@@ -70,3 +78,9 @@ class CrossSection:
         for name in self.degree_of_compliance:
             doc_max = max(doc_max, self.degree_of_compliance[name])
         return doc_max
+
+    def calculate_cost(self):
+        self.weight = 2 * self.length * self.unit_weight
+        self.dc_max = self.max_doc()
+        self.cost = self.weight * self.unit_cost * self.dc_max / self.dc_ref
+        return self.cost

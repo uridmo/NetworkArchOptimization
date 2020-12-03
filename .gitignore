@@ -1,7 +1,3 @@
-# Plots and other figures
-*.png
-*.pgf
-
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

@@ -10,7 +10,7 @@ class BlennerhassettBridge(Bridge):
     def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=115.3, g_utilities=35.1, n_hangers=13,
                  hanger_arrangement='Parallel', hanger_params=(1.0646,), qd_live_load=27, qc_live_load=325,
                  arch_shape='Parabolic', arch_optimisation=False, self_stress_state='Overall-optimisation',
-                 self_stress_state_params=((0.75, 1.4),), exact_cross_sections=False, knuckles=True):
+                 self_stress_state_params=(), exact_cross_sections=False, knuckles=True):
 
         resistance_arch_1 = [130000, 78708, 79115]
         resistance_arch_2 = [108768, 71458, 63445]
@@ -94,35 +94,32 @@ class BlennerhassettBridge(Bridge):
         unit_price_hanger = 22
         unit_price_anchorages = 9
 
-        f = open('Base case/store.pckl', 'rb')
+        f = open('base case/dc_ratios.pckl', 'rb')
         dc = pickle.load(f)
+        
         dc_arch_1_ref, dc_arch_2_ref, dc_arch_3_ref = dc[0], dc[1], dc[2]
         dc_tie_1_ref, dc_tie_2_ref, dc_tie_3_ref, dc_hangers_ref = dc[3], dc[4], dc[5], dc[6]
 
         arch_cs = self.arch_cross_sections
-        arch_cs_1, arch_cs_2, arch_cs_3 = arch_cs[1], arch_cs[2], arch_cs[3]
-
         tie_cs = self.tie_cross_sections
-        tie_cs_1, tie_cs_2, tie_cs_3 = tie_cs[1], tie_cs[2], tie_cs[3]
-
         hanger_cs = self.hangers_cross_section
 
-        weight_arch_1 = 2*arch_cs_1.length * unit_weight_arch_1
-        weight_arch_2 = 2*arch_cs_2.length * unit_weight_arch_2
-        weight_arch_3 = 2*arch_cs_3.length * unit_weight_arch_3
-        weight_tie_1 = 2*tie_cs_1.length * unit_weight_tie_1
-        weight_tie_2 = 2*tie_cs_2.length * unit_weight_tie_2
-        weight_tie_3 = 2*tie_cs_3.length * unit_weight_tie_3
+        weight_arch_1 = 2*arch_cs[1].length * unit_weight_arch_1
+        weight_arch_2 = 2*arch_cs[2].length * unit_weight_arch_2
+        weight_arch_3 = 2*arch_cs[3].length * unit_weight_arch_3
+        weight_tie_1 = 2*tie_cs[1].length * unit_weight_tie_1
+        weight_tie_2 = 2*tie_cs[2].length * unit_weight_tie_2
+        weight_tie_3 = 2*tie_cs[3].length * unit_weight_tie_3
         weight_hanger = 2*hanger_cs.length * unit_weight_hanger
         weight_anchorages = 2 * self.hangers_amount * unit_weight_anchorages
 
-        cost_arch_1 = weight_arch_1 * unit_price_arch * arch_cs_1.max_doc() / dc_arch_1_ref
-        cost_arch_2 = weight_arch_2 * unit_price_arch * arch_cs_2.max_doc() / dc_arch_2_ref
-        cost_arch_3 = weight_arch_3 * unit_price_arch * arch_cs_3.max_doc() / dc_arch_3_ref
+        cost_arch_1 = weight_arch_1 * unit_price_arch * arch_cs[1].max_doc() / dc_arch_1_ref
+        cost_arch_2 = weight_arch_2 * unit_price_arch * arch_cs[2].max_doc() / dc_arch_2_ref
+        cost_arch_3 = weight_arch_3 * unit_price_arch * arch_cs[3].max_doc() / dc_arch_3_ref
 
-        cost_tie_1 = weight_tie_1 * unit_price_tie * tie_cs_1.max_doc() / dc_tie_1_ref
-        cost_tie_2 = weight_tie_2 * unit_price_tie * tie_cs_2.max_doc() / dc_tie_2_ref
-        cost_tie_3 = weight_tie_3 * unit_price_tie * tie_cs_3.max_doc() / dc_tie_3_ref
+        cost_tie_1 = weight_tie_1 * unit_price_tie * tie_cs[1].max_doc() / dc_tie_1_ref
+        cost_tie_2 = weight_tie_2 * unit_price_tie * tie_cs[2].max_doc() / dc_tie_2_ref
+        cost_tie_3 = weight_tie_3 * unit_price_tie * tie_cs[3].max_doc() / dc_tie_3_ref
 
         cost_hanger = weight_hanger * unit_price_hanger * hanger_cs.max_doc() / dc_hangers_ref
         cost_anchorages = weight_anchorages * unit_price_anchorages * hanger_cs.max_doc() / dc_hangers_ref

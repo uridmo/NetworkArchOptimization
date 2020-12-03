@@ -1,11 +1,12 @@
 import numpy as np
 from scipy import optimize
 
-from self_equilibrium.static_analysis import zero_displacement
 
+def optimize_self_stresses(arch, tie, nodes, hangers, hanger_range=(0.75, 1.4),
+                           factors=(1, 1.5),
+                           n_range=(-np.inf, np.inf)):
 
-def optimize_self_stresses(arch, tie, nodes, hangers, hanger_range=(0.7, 1.3), n_range=(-np.inf, np.inf)):
-    a, b = get_self_stress_matrix(nodes, hangers, arch=arch, tie=tie, factors=(1, 1.5))
+    a, b = get_self_stress_matrix(nodes, hangers, arch=arch, tie=tie, factors=factors)
     ones = np.ones_like(np.expand_dims(b, axis=1))
     a_ub = np.vstack((np.hstack((-ones, -a)), np.hstack((-ones, a))))
     b_ub = np.array(list(b) + list(-b))
@@ -29,7 +30,7 @@ def optimize_self_stresses(arch, tie, nodes, hangers, hanger_range=(0.7, 1.3), n
     return n_0, m_z0
 
 
-def optimize_self_stresses_tie(tie, nodes, hangers, hanger_range=(0.7, 1.3)):
+def optimize_self_stresses_tie(tie, nodes, hangers, hanger_range=(0.75, 1.4)):
     a, b = get_self_stress_matrix(nodes, hangers, tie=tie)
     ones = np.ones_like(np.expand_dims(b, axis=1))
     a = np.delete(a, 0, 1)

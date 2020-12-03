@@ -74,7 +74,7 @@ class Hangers(Element):
             else:
                 effects_i = np.array([effects for i in range(len(self))]).transpose()
         else:
-            raise Exception('Problem with input.')
+            raise Exception('Unknown input format.')
 
         self.effects[name] = {'Normal Force': effects_i}
         for i, hanger in enumerate(self):

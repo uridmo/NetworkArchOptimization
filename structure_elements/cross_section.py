@@ -66,7 +66,7 @@ class CrossSection:
         return
 
     def max_doc(self):
-        doc_max = 1
+        doc_max = 0.01
         for name in self.degree_of_compliance:
             doc_max = max(doc_max, self.degree_of_compliance[name])
         return doc_max

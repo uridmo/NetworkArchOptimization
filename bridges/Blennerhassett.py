@@ -57,7 +57,7 @@ class BlennerhassettBridge(Bridge):
 
             cs_hangers = CrossSection('Hanger', 0, stiffness_hanger, resistance_hanger, wind_effects=wind_load_hangers)
         else:
-            print('Not defined yet!')
+            raise Exception('Not defined yet.')
 
         cs_tie = cs_tie + cs_tie[-2::-1]
         cs_tie_x = cs_tie_x + [-x for x in cs_tie_x[::-1]]
@@ -79,15 +79,15 @@ class BlennerhassettBridge(Bridge):
 
     def cost_function(self):
 
-        weight_arch_1 = 2467.05
-        weight_arch_2 = 2310.68
-        weight_arch_3 = 2310.68
-        weight_tie_1 = 2334.10
-        weight_tie_2 = 2008.71
-        weight_tie_3 = 2008.71
+        unit_weight_arch_1 = 2467.05
+        unit_weight_arch_2 = 2310.68
+        unit_weight_arch_3 = 2310.68
+        unit_weight_tie_1 = 2334.10
+        unit_weight_tie_2 = 2008.71
+        unit_weight_tie_3 = 2008.71
 
-        weight_hanger = 31.9
-        weight_anchorages = 5000
+        unit_weight_hanger = 31.9 * 13 / self.hangers_amount
+        unit_weight_anchorages = 2322.82 * 13 / self.hangers_amount
 
         unit_price_arch = 4
         unit_price_tie = 3.5
@@ -105,9 +105,30 @@ class BlennerhassettBridge(Bridge):
         tie_cs = self.tie_cross_sections
         tie_cs_1, tie_cs_2, tie_cs_3 = tie_cs[1], tie_cs[2], tie_cs[3]
 
-        cost_arch_1 = arch_cs_1.length * weight_arch_1 * unit_price_arch * arch_cs_1.max_doc() / dc_arch_1_ref
-        cost_arch_2 = arch_cs_2.length * weight_arch_2 * unit_price_arch * arch_cs_2.max_doc() / dc_arch_2_ref
-        cost_arch_3 = arch_cs_3.length * weight_arch_3 * unit_price_arch * arch_cs_3.max_doc() / dc_arch_3_ref
+        hanger_cs = self.hangers_cross_section
 
-        cost = cost_arch_1 + cost_arch_2 + cost_arch_3
+        weight_arch_1 = 2*arch_cs_1.length * unit_weight_arch_1
+        weight_arch_2 = 2*arch_cs_2.length * unit_weight_arch_2
+        weight_arch_3 = 2*arch_cs_3.length * unit_weight_arch_3
+        weight_tie_1 = 2*tie_cs_1.length * unit_weight_tie_1
+        weight_tie_2 = 2*tie_cs_2.length * unit_weight_tie_2
+        weight_tie_3 = 2*tie_cs_3.length * unit_weight_tie_3
+        weight_hanger = 2*hanger_cs.length * unit_weight_hanger
+        weight_anchorages = 2 * self.hangers_amount * unit_weight_anchorages
+
+        cost_arch_1 = weight_arch_1 * unit_price_arch * arch_cs_1.max_doc() / dc_arch_1_ref
+        cost_arch_2 = weight_arch_2 * unit_price_arch * arch_cs_2.max_doc() / dc_arch_2_ref
+        cost_arch_3 = weight_arch_3 * unit_price_arch * arch_cs_3.max_doc() / dc_arch_3_ref
+
+        cost_tie_1 = weight_tie_1 * unit_price_tie * tie_cs_1.max_doc() / dc_tie_1_ref
+        cost_tie_2 = weight_tie_2 * unit_price_tie * tie_cs_2.max_doc() / dc_tie_2_ref
+        cost_tie_3 = weight_tie_3 * unit_price_tie * tie_cs_3.max_doc() / dc_tie_3_ref
+
+        cost_hanger = weight_hanger * unit_price_hanger * hanger_cs.max_doc() / dc_hangers_ref
+        cost_anchorages = weight_anchorages * unit_price_anchorages * hanger_cs.max_doc() / dc_hangers_ref
+
+        weights = [weight_arch_1, weight_arch_2, weight_arch_3, weight_tie_1, weight_tie_2, weight_tie_3, weight_hanger, weight_anchorages]
+        weight = sum(weights)
+        costs = [cost_arch_1, cost_arch_2, cost_arch_3, cost_tie_1, cost_tie_2, cost_tie_3, cost_hanger, cost_anchorages]
+        cost = sum(costs) + 50000
         return cost

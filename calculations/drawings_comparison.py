@@ -1,3 +1,4 @@
+import pickle
 import tracemalloc
 
 from bridges.Blennerhassett import BlennerhassettBridge
@@ -44,6 +45,18 @@ adjust_small_plots(fig)
 save_plot(fig, 'Drawings comparison', 'Live load')
 
 bridge_ref.cross_section_table(slice(0, 4), slice(0, 4), 'ULS Overview Tables', 'Final Design')
+
+# Save the reference case
+dc = []
+arch_cs = bridge_ref.arch_cross_sections[1:4]
+tie_cs = bridge_ref.tie_cross_sections[1:4]
+hanger_cs = [bridge_ref.hangers_cross_section]
+cross_sections = arch_cs + tie_cs + hanger_cs
+for cs in cross_sections:
+    dc.append(cs.max_doc())
+f = open('Base case/store.pckl', 'wb')
+pickle.dump(dc, f)
+f.close()
 
 a = bridge_ref.cost_function()
 print(round(a/1000)/1000, 'Mio. $')

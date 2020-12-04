@@ -2,7 +2,7 @@ import numpy as np
 from scipy import optimize
 
 
-def optimize_self_stresses(arch, tie, nodes, hangers, hanger_range=(0.8, 1.4),
+def optimize_self_stresses(arch, tie, nodes, hangers, hanger_range=(0.25/0.65, 0.45/0.65),
                            factors=(1, 1.5),
                            n_range=(-np.inf, np.inf)):
 
@@ -12,11 +12,7 @@ def optimize_self_stresses(arch, tie, nodes, hangers, hanger_range=(0.8, 1.4),
     b_ub = np.array(list(b) + list(-b))
     c = np.array([1] + [0 for i in range(a.shape[1])])
 
-    weight = tie.weight()
-    sine_sum = 0
-    for hanger in hangers:
-        sine_sum += np.sin(hanger.inclination)
-    force = weight / sine_sum
+    force = hangers.hanger_sets[0].hangers[0].cross_section.normal_force_resistance
     n = len(hangers.hanger_sets[0].hangers)
     force_range = (hanger_range[0]*force, hanger_range[1]*force)
 
@@ -30,7 +26,60 @@ def optimize_self_stresses(arch, tie, nodes, hangers, hanger_range=(0.8, 1.4),
     return n_0, m_z0
 
 
-def optimize_self_stresses_tie(tie, nodes, hangers, hanger_range=(0.8, 1.4)):
+def optimize_self_stresses_tie_1(tie, nodes, hangers, hanger_range=(0.25/0.65, 0.4/0.65)):
+    x = [0] * (len(hangers)+2)
+    b_0 = moment_distribution(nodes, hangers, x, tie=tie)
+    b_1 = np.expand_dims(b_0, axis=1)
+    a = np.ones_like(b_1)
+    x_coord = tie.get_coordinates()[:, 0]
+    x_hangers, nodes = hangers.get_connection_points()
+    for x_hanger in x_hangers:
+        m = (tie.span - x_hanger) * x_hanger / tie.span
+        m_i = np.interp(x_coord, [0, x_hanger, tie.span], [0, -m, 0])
+        a = np.hstack((a, np.expand_dims(m_i, axis=1)))
+
+    ones = np.ones_like(b_1)
+    a_ub = np.vstack((np.hstack((-ones, -a)), np.hstack((-ones, a))))
+    c = np.array([1] + [0 for i in range(a.shape[1])])
+    b_ub = np.array(list(b_0) + list(-b_0))
+
+    forces = hangers.get_max_connection_forces()
+    inf_range = (-np.inf, np.inf)
+    forces_range = [(hanger_range[0] * force, hanger_range[1] * force) for force in forces]
+    bounds = [inf_range] * 2 + forces_range
+    sol = optimize.linprog(c, A_ub=a_ub, b_ub=b_ub, bounds=bounds, method='revised simplex')
+    x = sol.x
+
+    mz_0 = float(x[1])
+    forces = [float(force) for force in x[2:]]
+    hangers.set_prestressing_force_from_nodes(nodes, forces)
+    hangers.assign_permanent_effects()
+
+    return mz_0
+
+
+def optimize_self_stresses_tie_2(tie, nodes, hangers):
+    x = [0] * (len(hangers)+2)
+    b = moment_distribution(nodes, hangers, x, tie=tie)
+    b = np.expand_dims(b, axis=1)
+    a = np.ones_like(b)
+    x_coord = tie.get_coordinates()[:, 0]
+    x_hangers, nodes = hangers.get_connection_points()
+    for x_hanger in x_hangers:
+        m = (tie.span - x_hanger) * x_hanger / tie.span
+        m_i = np.interp(x_coord, [0, x_hanger, tie.span], [0, -m, 0])
+        a = np.hstack((a, np.expand_dims(m_i, axis=1)))
+    a_t = a.transpose()
+    x = np.linalg.solve(a_t @ a, a_t @ -b)
+
+    mz_0 = float(x[0])
+    forces = [float(force) for force in x[1:]]
+    hangers.set_prestressing_force_from_nodes(nodes, forces)
+    hangers.assign_permanent_effects()
+    return mz_0
+
+
+def optimize_self_stresses_tie(tie, nodes, hangers, hanger_range=(0.25/0.65, 0.4/0.65)):
     a, b = get_self_stress_matrix(nodes, hangers, tie=tie)
     ones = np.ones_like(np.expand_dims(b, axis=1))
     a = np.delete(a, 0, 1)
@@ -38,11 +87,7 @@ def optimize_self_stresses_tie(tie, nodes, hangers, hanger_range=(0.8, 1.4)):
     c = np.array([1] + [0 for i in range(a.shape[1])])
     b_ub = np.array(list(b) + list(-b))
 
-    weight = tie.weight()
-    sine_sum = 0
-    for hanger in hangers:
-        sine_sum += np.sin(hanger.inclination)
-    force = weight / sine_sum
+    force = hangers.hanger_sets[0].hangers[0].cross_section.normal_force_resistance
     n = len(hangers.hanger_sets[0].hangers)
     inf_range = (-np.inf, np.inf)
     force_range = (hanger_range[0]*force, hanger_range[1]*force)

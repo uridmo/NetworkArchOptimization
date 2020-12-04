@@ -34,7 +34,7 @@ class Hangers(Element):
         else:
             raise StopIteration
 
-    def define_cross_section(self, cross_section):
+    def assign_cross_section(self, cross_section):
         for hanger in self:
             hanger.cross_section = cross_section
         return
@@ -59,6 +59,36 @@ class Hangers(Element):
             beams_stiffness.append(hanger.get_beam())
         beams_releases = [[i, 1, 1] for i in indices]
         return beams_nodes, beams_stiffness, beams_releases
+
+    def get_connection_points(self):
+        nodes_all = [hanger.tie_node for hanger in self]
+        nodes = []
+        for node in nodes_all:
+            if node not in nodes:
+                nodes.append(node)
+        x_coord = [node.x for node in nodes]
+        return x_coord, nodes
+
+    def get_max_connection_forces(self):
+        nodes = self.get_connection_points()[1]
+        forces = [0] * len(nodes)
+        for hanger in self:
+            for i in range(len(nodes)):
+                if nodes[i] == hanger.tie_node:
+                    forces[i] += np.sin(hanger.inclination) * hanger.cross_section.normal_force_resistance
+        return forces
+
+    def set_prestressing_force_from_nodes(self, nodes, forces):
+        for i in range(len(forces)):
+            sine_sum = 0
+            for hanger in self:
+                if hanger.tie_node == nodes[i]:
+                    sine_sum += np.sin(hanger.inclination)
+            hanger_force = forces[i] / sine_sum
+            for hanger in self:
+                if hanger.tie_node == nodes[i]:
+                    hanger.prestressing_force = hanger_force
+        return
 
     def set_effects(self, effects, name, key=None):
         if type(effects) is dict:
@@ -114,14 +144,14 @@ class Hangers(Element):
         knuckle = HangerSet()
         knuckle.add_hanger(nodes, knuckle_x, knuckle_inclination)
         force = mz_0 / knuckle_x / np.sin(knuckle_inclination)
-        dn = force * np.cos(knuckle_inclination)
+        dn_0 = force * np.cos(knuckle_inclination)
         knuckle.hangers[0].prestressing_force = -force
         knuckle.hangers[0].cross_section = cs_knuckle
         knuckles = Hangers(nodes, knuckle, span)
         tie.assign_hangers(knuckles)
         arch.arch_connection_nodes(nodes, knuckles)
         self.hanger_sets.extend(knuckles.hanger_sets)
-        return knuckles, dn
+        return knuckles, dn_0
 
     def plot_elements(self, ax):
         for hanger in self:

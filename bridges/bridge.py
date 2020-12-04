@@ -2,7 +2,8 @@ from matplotlib import pyplot
 
 from plotting.tables import uls_forces_table, dc_table
 from self_equilibrium.embedded_beam import embedded_beam
-from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_stresses_tie
+from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_stresses_tie, \
+    optimize_self_stresses_tie_2, optimize_self_stresses_tie_1
 from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
 from structure_elements.arch.circular_arch import CircularArch
 from structure_elements.arch.continuous_arch import ContinuousArch
@@ -47,7 +48,7 @@ class Bridge:
         self.ultimate_limit_states = {'Strength-I': 'LL'}
 
         # Initialize nodes and create hanger set
-        nodes = Nodes(accuracy=0.001)
+        nodes = Nodes(accuracy=0.01)
 
         # Define the first hanger set
         if hanger_arrangement == 'Parallel':
@@ -80,7 +81,7 @@ class Bridge:
         # Define cross-sections
         arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
         tie.define_cross_sections(nodes, cs_tie_x, cs_tie)
-        hangers.define_cross_section(cs_hangers)
+        hangers.assign_cross_section(cs_hangers)
 
         # Determine the self equilibrium stress-state
         if self_stress_state == 'Zero-displacement':
@@ -94,8 +95,8 @@ class Bridge:
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Tie-optimisation':
-            peak_moment = self_stress_state_params[0]
-            mz_0 = optimize_self_stresses_tie(tie, nodes, hangers, *self_stress_state_params[1:2])
+            peak_moment = self_stress_state_params[0:1]
+            mz_0 = optimize_self_stresses_tie_1(tie, nodes, hangers, *self_stress_state_params[1:2])
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Overall-optimisation':

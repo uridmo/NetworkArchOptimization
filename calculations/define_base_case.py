@@ -8,7 +8,7 @@ from plotting.save import save_plot
 
 tracemalloc.start()
 
-bridge_ref = BlennerhassettBridge(exact_cross_sections=True, self_stress_state='Zero-displacement')
+bridge_ref = BlennerhassettBridge(exact_stiffness=True, self_stress_state='Zero-displacement')
 bridge_ref.plot_elements()
 
 fig = bridge_ref.plot_all_effects('Permanent', label='Reference calculation', c=colors[0])

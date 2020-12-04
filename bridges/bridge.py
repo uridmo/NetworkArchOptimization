@@ -127,8 +127,7 @@ class Bridge:
         network_arch = NetworkArch(arch, tie, hangers)
 
         # Calculate the load cases
-        network_arch.calculate_dead_load(nodes)
-        network_arch.calculate_live_load(nodes, qd_live_load, qc_live_load)
+        network_arch.calculate_load_cases(nodes, qd_live_load, qc_live_load)
         network_arch.assign_wind_effects()
         network_arch.calculate_ultimate_limit_states()
 

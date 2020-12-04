@@ -60,57 +60,46 @@ class NetworkArch:
         self.arch.add_key(name, key, value)
         return
 
-    def calculate_dead_load(self, nodes):
-        n_tie = len(self.tie)
+    def calculate_load_cases(self, nodes, q_d, q_c):
         model = self.create_model(nodes)
+
+        n_tie = len(self.tie)
         loads_tie = self.tie.self_weight()
         loads_arch = self.arch.self_weight(first_index=n_tie)
-        loads_dc = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed'], 'Nodal': loads_tie['Nodal']}]
-        loads_dw = self.tie.load_group_utilities()
-        model['Loads'] = [loads_dc] + [loads_dw]
+        loads_dc = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed'], 'Nodal':loads_tie['Nodal']}]
+        model['Loads'] = [loads_dc]
+        for node in self.tie.cross_girders_nodes:
+            model['Loads'].append({'Nodal': [[node.index, 0, -1, 0]]})
 
         d, i_f, rd, sp = structure_analysis(model)
         self.set_effects(i_f[0], 'DC')
-        self.set_effects(i_f[1], 'DW')
-        self.set_range('Permanent + -1 DC + -1 DW', 'EL')
-        return
 
-    def calculate_live_load(self, nodes, q_d, q_c):
+        added = '0'
+        inclusive = '0'
+        exclusive = '0'
+        for i in range(len(self.tie.cross_girders_nodes)):
+            name = 'F'+str(i+1)
+            self.set_effects(i_f[i+1], name)
+            added += ' + ' + name
+            inclusive += ', 0/' + name
+            exclusive += '/' + name
+
+        self.set_range(added, 'Added')
+        self.set_range(inclusive, 'Inclusive')
+        self.set_range(exclusive, 'Exclusive')
+
         span = self.tie.span
         n = self.tie.cross_girders_amount
-        f_d = -span * q_d / (n+1)
-        f_c = -q_c
+        f_d = span * q_d / (n+1)
+        f_c = q_c
+        g_c = self.tie.utilities
 
-        # Define the model
-        model = self.create_model(nodes)
-        loads = model['Loads']
-        for f in [f_d, f_c]:
-            loads.append({'Nodal': [[self.tie.nodes[0].index, 0, f / 2, 0]]})
-            for i in range(n):
-                loads.append({'Nodal': [[self.tie.cross_girders_nodes[i].index, 0, f, 0]]})
-            loads.append({'Nodal': [[self.tie.nodes[-1].index, 0, f / 2, 0]]})
+        self.set_range(str(g_c)+' Added', 'DW')
+        self.set_range(str(f_d)+' Inclusive', 'LLd')
+        self.set_range(str(f_c)+' Exclusive', 'LLc')
 
-        d, i_f, rd, sp = structure_analysis(model)
-
-        # Save distributed effects and calculate inclusive range
-        range_name = ''
-        for i in range(n+2):
-            name = 'LLd'+str(i+1)
-            self.set_effects(i_f[i], name)
-            range_name += '0/' + name + ', '
-        range_name = range_name[0:-2]
-        self.set_range(range_name, 'LLd')
-
-        # Save concentrated effects and calculate exclusive range
-        range_name = '0/'
-        for i in range(n+2):
-            name = 'LLc'+str(i+1)
-            self.set_effects(i_f[n+2+i], name)
-            range_name += name + '/'
-        range_name = range_name[0:-1]
-        self.set_range(range_name, 'LLc')
-
-        # Merge the two ranges
+        self.set_range('DC + DW', 'DL')
+        self.set_range('Permanent - DL', 'EL')
         self.set_range('LLc, LLd', 'LL')
         return
 

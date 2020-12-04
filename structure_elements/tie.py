@@ -11,6 +11,9 @@ class Tie(LineElement):
         self.weight_deck = g_deck
         self.weight_wearing_utilities = g_wearing
 
+        self.concentrated_weight = self.weight_deck * self.span / (self.cross_girders_amount+1)
+        self.utilities = self.weight_wearing_utilities * self.span / (self.cross_girders_amount+1)
+
     def assign_hangers(self, hangers):
         for hanger in hangers:
             if hanger.tie_node not in self.nodes:

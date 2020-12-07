@@ -48,14 +48,14 @@ class BlennerhassettBridge(Bridge):
         stiffness_tie_3 = [61814 * 10 ** 3, 28113 * 10 ** 3]
         stiffness_hanger = [13/n_hangers*643.5 * 10 ** 3, 10 ** 6]
 
-        wind_load_arch_1 = {'Normal Force': [-8175], 'Moment': [668], 'Moment y': [13851]}
-        wind_load_arch_2 = {'Normal Force': [-7793], 'Moment': [-670], 'Moment y': [10749]}
-        wind_load_arch_3 = {'Normal Force': [-4066], 'Moment': [-533], 'Moment y': [2591]}
-        wind_load_arch_4 = {'Normal Force': [-3852], 'Moment': [117], 'Moment y': [111]}
-        wind_load_tie_1 = {'Normal Force': [5369], 'Moment': [-2327], 'Moment y': [9653]}
-        wind_load_tie_2 = {'Normal Force': [7002], 'Moment': [-1109], 'Moment y': [5880]}
-        wind_load_tie_3 = {'Normal Force': [6152], 'Moment': [404], 'Moment y': [434]}
-        wind_load_tie_4 = {'Normal Force': [5275], 'Moment': [702], 'Moment y': [788]}
+        wind_load_arch_1 = {'Normal Force': [-8175], 'Moment': [668], 'Moment y': [13851, -13851]}
+        wind_load_arch_2 = {'Normal Force': [-7793], 'Moment': [-670], 'Moment y': [10749, -10749]}
+        wind_load_arch_3 = {'Normal Force': [-4066], 'Moment': [-533], 'Moment y': [2591, -2591]}
+        wind_load_arch_4 = {'Normal Force': [-3852], 'Moment': [117], 'Moment y': [111, -111]}
+        wind_load_tie_1 = {'Normal Force': [5369], 'Moment': [-2327], 'Moment y': [9653, -9653]}
+        wind_load_tie_2 = {'Normal Force': [7002], 'Moment': [-1109], 'Moment y': [5880, -5880]}
+        wind_load_tie_3 = {'Normal Force': [6152], 'Moment': [404], 'Moment y': [434, -434]}
+        wind_load_tie_4 = {'Normal Force': [5275], 'Moment': [702], 'Moment y': [788, -788]}
         wind_load_hangers = {'Normal Force': [480]}
 
         if not exact_stiffness:

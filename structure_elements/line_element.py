@@ -152,17 +152,13 @@ class LineElement(Element):
             resistances_mz = np.array([cs.moment_z_resistance for cs in cs_i])
             dc_1 += 8/9 * self.effects[name]['Moment'] / resistances_mz
             dc_2 -= 8/9 * self.effects[name]['Moment'] / resistances_mz
-        if 'Moment y' in self.effects[name]:
-            resistances_my = np.array([cs.moment_y_resistance for cs in cs_i])
-            dc_1 += 8/9 * self.effects[name]['Moment y'] / resistances_my
-            dc_2 += 8/9 * self.effects[name]['Moment y'] / resistances_my
         self.set_effects(dc_1, name, 'D/C_1')
         self.set_effects(dc_2, name, 'D/C_2')
         return
 
     def set_effects(self, effects, name, key=None):
         super().set_effects(effects, name, key=key)
-        if not key:
+        if not key and 'D/C_1' not in effects:
             self.calculate_doc(name)
         return
 

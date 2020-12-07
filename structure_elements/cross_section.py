@@ -54,16 +54,19 @@ class CrossSection:
         self.effects[name][key][3] = e_max if e_max > -e_min else e_min
         return
 
-    def calculate_doc_max(self, name, is_hanger=False):
+    def calculate_doc_max(self, name, is_hanger=False, exact_maximum=True):
         if not is_hanger:
-            n_max = self.effects[name]['Normal Force'][2]
-            mz_max = self.effects[name]['Moment'][2]
-            my_max = self.effects[name]['Moment y'][2]
-            n_rd = self.normal_force_resistance
-            mz_rd = self.moment_z_resistance
-            my_rd = self.moment_y_resistance
-            d_o_c = n_max / n_rd + 8 / 9 * (mz_max / mz_rd + my_max / my_rd)
-            self.degree_of_compliance[name] = d_o_c
+            if exact_maximum:
+                self.degree_of_compliance[name] = max(self.effects[name]['D/C_1'][2], self.effects[name]['D/C_2'][2])
+            else:
+                n_max = self.effects[name]['Normal Force'][2]
+                mz_max = self.effects[name]['Moment'][2]
+                my_max = self.effects[name]['Moment y'][2]
+                n_rd = self.normal_force_resistance
+                mz_rd = self.moment_z_resistance
+                my_rd = self.moment_y_resistance
+                d_o_c = n_max / n_rd + 8 / 9 * (mz_max / mz_rd + my_max / my_rd)
+                self.degree_of_compliance[name] = d_o_c
         else:
             n_max = self.effects[name]['Normal Force'][2]
             n_rd = self.normal_force_resistance

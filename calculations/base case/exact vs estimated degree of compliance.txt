@@ -4,12 +4,12 @@ Segment & \multicolumn{4}{c}{Demand / Capacity} & \\
  & Strength-I & Strength-III & Strength-IV & Base case & \\ \hline
 Arch 0 & 0.57 & \textbf{0.78} & 0.54 & \textbf{0.00} & () \\
 Arch 1 & 0.71 & \textbf{0.88} & 0.68 & \textbf{0.88} & () \\
-Arch 2 & \textbf{0.90} & 0.86 & 0.85 & \textbf{0.90} & () \\
-Arch 3 & \textbf{0.82} & 0.75 & 0.79 & \textbf{0.82} & () \\
+Arch 2 & \textbf{0.90} & 0.86 & 0.85 & \textbf{0.93} & () \\
+Arch 3 & \textbf{0.82} & 0.75 & 0.79 & \textbf{0.83} & () \\
 Tie 0 & 0.38 & \textbf{0.55} & 0.36 & \textbf{0.00} & () \\
 Tie 1 & 0.53 & \textbf{0.62} & 0.50 & \textbf{0.62} & () \\
-Tie 2 & \textbf{0.61} & 0.59 & 0.57 & \textbf{0.61} & () \\
-Tie 3 & 0.56 & \textbf{0.57} & 0.53 & \textbf{0.57} & () \\
+Tie 2 & \textbf{0.61} & 0.59 & 0.57 & \textbf{0.63} & () \\
+Tie 3 & 0.56 & \textbf{0.57} & 0.53 & \textbf{0.60} & () \\
 Hangers & \textbf{1.00} & 0.72 & 0.82 & \textbf{1.00} & () \\
 \hline
 \end{tabular}

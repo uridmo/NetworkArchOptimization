@@ -127,9 +127,9 @@ class NetworkArch:
         self.set_range('EL, 1.25 DC/0.9 DC, 1.5 DW/0.65 DW, 0/1.75 LL', 'Strength-I')
         self.add_key('Strength-I', 'Moment y', 0)
 
-        self.set_range('EL, 1.25 DC/0.9 DC, 1.5 DW/0.65 DW', 'Strength-III')
-        self.add_key('Strength-III', 'Moment y', 0)
-        self.set_range('Strength-III, 1.4 WS', 'Strength-III')
+        self.set_range('EL, 1.25 DC/0.9 DC, 1.5 DW/0.65 DW', 'Strength-III_temp')
+        self.add_key('Strength-III_temp', 'Moment y', 0)
+        self.set_range('Strength-III_temp, 1.4 WS', 'Strength-III')
 
         self.set_range('EL, 1.5 DC, 1.5 DW', 'Strength-IV')
         self.add_key('Strength-IV', 'Moment y', 0)

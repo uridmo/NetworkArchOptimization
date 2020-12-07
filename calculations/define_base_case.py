@@ -46,7 +46,8 @@ save_plot(fig, 'base case', 'Live load')
 
 # Create table of internal forces and demand/capacity ratios
 bridge_ref.internal_forces_table(slice(0, 4), slice(0, 4), 'base case', 'design forces')
-bridge_ref.dc_ratio_table(slice(1, 4), slice(1, 4), 'base case', 'degrees of compliance')
+bridge_ref.internal_forces_table(slice(0, 4), slice(0, 4), 'base case', 'design forces 2', all_uls=True)
+bridge_ref.dc_ratio_table(slice(0, 4), slice(0, 4), 'base case', 'degrees of compliance')
 
 # Save the demand over capacity ratios of the reference case
 dc = []

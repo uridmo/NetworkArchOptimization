@@ -170,7 +170,7 @@ class LineElement(Element):
         return
 
     def plot_effects(self, ax, name, key, label='', c='black', lw=1.0, ls='-'):
-        effects = self.get_effects(name)[key]
+        effects = self.get_range(name)[key]
         xy_coord = self.get_coordinates()
         if effects.ndim == 1:
             ax.plot(xy_coord[:, 0], effects / 1000, label=label, c=c, lw=lw, ls=ls)

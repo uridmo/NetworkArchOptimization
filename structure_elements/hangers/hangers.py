@@ -162,7 +162,7 @@ class Hangers(Element):
 
     def plot_effects(self, ax, name, label='', c='black', lw=1.0, ls='-'):
         n = len(self.hanger_sets[0])
-        effects = self.get_effects(name)['Normal Force']
+        effects = self.get_range(name)['Normal Force']
         if effects.ndim == 1:
             values = effects[0:n]
         else:

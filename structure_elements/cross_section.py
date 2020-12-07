@@ -1,4 +1,5 @@
 import numpy as np
+from math import inf
 
 
 class CrossSection:
@@ -18,11 +19,13 @@ class CrossSection:
 
         self.effects = {}
         self.degree_of_compliance = {}
-        self.wind_effects = wind_effects
 
         self.normal_force_resistance = resistance[0]
         self.moment_z_resistance = resistance[1]
         self.moment_y_resistance = resistance[2]
+
+        self.wind_effects = None
+        self.assign_wind_effects(wind_effects, resistance)
         return
 
     def __repr__(self):
@@ -41,7 +44,7 @@ class CrossSection:
             self.effects[name] = {}
             self.effects[name] = {}
         if key not in self.effects[name]:
-            self.effects[name][key] = [0, 0, 0, 0]
+            self.effects[name][key] = [-inf, inf, 0, 0]
         e_max = max(self.effects[name][key][0], np.max(effects))
         e_min = min(self.effects[name][key][1], np.min(effects))
         e_amax = max(e_max, -e_min)
@@ -51,7 +54,7 @@ class CrossSection:
         self.effects[name][key][3] = e_max if e_max > -e_min else e_min
         return
 
-    def calculate_doc(self, name, is_hanger=False):
+    def calculate_doc_max(self, name, is_hanger=False):
         if not is_hanger:
             n_max = self.effects[name]['Normal Force'][2]
             mz_max = self.effects[name]['Moment'][2]
@@ -84,3 +87,26 @@ class CrossSection:
         self.dc_max = self.max_doc()
         self.cost = self.weight * self.unit_cost * self.dc_max / self.dc_ref
         return self.cost
+
+    def assign_wind_effects(self, wind_effects, resistance):
+        dc_1 = [0, 0]
+        dc_2 = [0, 0]
+        if 'Normal Force' in wind_effects:
+            dc_1[0] += wind_effects['Normal Force'][0]/resistance[0]
+            dc_1[1] += wind_effects['Normal Force'][-1]/resistance[0]
+            dc_2[0] += wind_effects['Normal Force'][0]/resistance[0]
+            dc_2[1] += wind_effects['Normal Force'][-1]/resistance[0]
+        if 'Moment' in wind_effects:
+            dc_1[0] += 8/9 * wind_effects['Moment'][0]/resistance[1]
+            dc_1[1] += 8/9 * wind_effects['Moment'][-1]/resistance[1]
+            dc_2[0] -= 8/9 * wind_effects['Moment'][0]/resistance[1]
+            dc_2[1] -= 8/9 * wind_effects['Moment'][-1]/resistance[1]
+        if 'Moment y' in wind_effects:
+            dc_1[0] += 8/9 * wind_effects['Moment y'][0]/resistance[2]
+            dc_1[1] -= 8/9 * wind_effects['Moment y'][0]/resistance[2]
+            dc_2[0] += 8/9 * wind_effects['Moment y'][0]/resistance[2]
+            dc_2[1] -= 8/9 * wind_effects['Moment y'][0]/resistance[2]
+        wind_effects['D/C_1'] = dc_1
+        wind_effects['D/C_2'] = dc_2
+        self.wind_effects = wind_effects
+        return

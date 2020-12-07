@@ -22,6 +22,10 @@ class Element:
                 self.effects[name][key] = effects
         return
 
+    def adapt_doc(self):
+
+        return
+
     def get_effects(self, name, key=''):
         name = name.replace(' - ', ' + -1 ')
         if name in self.effects:

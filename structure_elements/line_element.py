@@ -116,7 +116,7 @@ class LineElement(Element):
                     cs.assign_extrema(effects[key][mask], name, key)
                 else:
                     cs.assign_extrema(effects[key][:, mask], name, key)
-            cs.calculate_doc(name)
+            cs.calculate_doc_max(name)
         return
 
     def get_coordinates(self):
@@ -139,6 +139,32 @@ class LineElement(Element):
             cs_i.extend([self.cross_sections[i] for j in range(int(np.ceil(length)) + 1)])
         cs_i = np.array(cs_i)
         return cs_i
+
+    def calculate_doc(self, name):
+        cs_i = self.get_cross_sections()
+        dc_1 = np.zeros_like(self.effects[name]['Normal Force'])
+        dc_2 = np.zeros_like(self.effects[name]['Normal Force'])
+        if 'Normal Force' in self.effects[name]:
+            resistances_n = np.array([cs.normal_force_resistance for cs in cs_i])
+            dc_1 += self.effects[name]['Normal Force'] / resistances_n
+            dc_2 += self.effects[name]['Normal Force'] / resistances_n
+        if 'Moment' in self.effects[name]:
+            resistances_mz = np.array([cs.moment_z_resistance for cs in cs_i])
+            dc_1 += 8/9 * self.effects[name]['Moment'] / resistances_mz
+            dc_2 -= 8/9 * self.effects[name]['Moment'] / resistances_mz
+        if 'Moment y' in self.effects[name]:
+            resistances_my = np.array([cs.moment_y_resistance for cs in cs_i])
+            dc_1 += 8/9 * self.effects[name]['Moment y'] / resistances_my
+            dc_2 += 8/9 * self.effects[name]['Moment y'] / resistances_my
+        self.set_effects(dc_1, name, 'D/C_1')
+        self.set_effects(dc_2, name, 'D/C_2')
+        return
+
+    def set_effects(self, effects, name, key=None):
+        super().set_effects(effects, name, key=key)
+        if not key:
+            self.calculate_doc(name)
+        return
 
     def plot_elements(self, ax):
         for i in range(len(self.nodes) - 1):

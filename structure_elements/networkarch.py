@@ -6,7 +6,6 @@ class NetworkArch:
         self.arch = arch
         self.tie = tie
         self.hangers = hangers
-        self.support_reaction = {}
         return
 
     def get_beams(self):
@@ -38,7 +37,9 @@ class NetworkArch:
         i_arch = i_tie + len(self.arch)
         for key in effects:
             self.tie.set_effects(effects[key][:i_tie], name, key=key)
+            self.tie.calculate_doc(name)
             self.arch.set_effects(effects[key][i_tie:i_arch], name, key=key)
+            self.arch.calculate_doc(name)
         self.hangers.set_effects(effects['Normal Force'][i_arch:], name)
         return
 
@@ -67,7 +68,7 @@ class NetworkArch:
         loads_tie = self.tie.self_weight()
         loads_arch = self.arch.self_weight(first_index=n_tie)
         loads_dc = [{'Distributed': loads_tie['Distributed'] + loads_arch['Distributed'], 'Nodal':loads_tie['Nodal']}]
-        model['Loads'] = [loads_dc]
+        model['Loads'] = loads_dc
         for node in self.tie.cross_girders_nodes:
             model['Loads'].append({'Nodal': [[node.index, 0, -1, 0]]})
 
@@ -113,6 +114,7 @@ class NetworkArch:
                 for effect in cs.wind_effects:
                     element.effects['WS'][effect][0, mask] = cs.wind_effects[effect][0]
                     element.effects['WS'][effect][1, mask] = cs.wind_effects[effect][-1]
+
         # Get the first hanger
         hanger = self.hangers.hanger_sets[0].hangers[0]
         cs = hanger.cross_section

@@ -47,7 +47,7 @@ class Hangers(Element):
     def assign_range_to_sections(self, name):
         for i, hanger in enumerate(self):
             hanger.cross_section.assign_extrema(hanger.effects_N[name], name, 'Normal Force')
-            hanger.cross_section.calculate_doc(name, is_hanger=True)
+            hanger.cross_section.calculate_doc_max(name, is_hanger=True)
         return
 
     def get_beams(self, indices):

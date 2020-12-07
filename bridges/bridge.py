@@ -134,6 +134,7 @@ class Bridge:
         self.nodes = nodes
         self.network_arch = network_arch
         self.cost = 0
+        self.cost_function(slice(1, 4), slice(1, 4))
         return
 
     def plot_elements(self, ax=None):

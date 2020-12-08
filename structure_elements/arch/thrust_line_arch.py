@@ -5,11 +5,12 @@ from .arch import Arch
 
 
 class ThrustLineArch(Arch):
-    def __init__(self, nodes, span, rise, g_arch, hanger_sets, n=30):
+    def __init__(self, nodes, span, rise, g_arch, hanger_sets):
         super().__init__(nodes, span, rise)
-        x, y = get_arch_thrust_line(span, rise, g_arch, hanger_sets)
+        x, y, n_0 = get_arch_thrust_line(span, rise, g_arch, hanger_sets)
         x_arch = [span - i for i in x[-1:0:-1]] + x
         y_arch = y[-1:0:-1]+y
+        self.n_0 = n_0
 
         for i in range(len(x_arch)):
             self.insert_node(nodes, x_arch[i], y_arch[i])
@@ -21,8 +22,8 @@ def get_arch_thrust_line(span, rise, g_arch, hanger_sets):
     for hanger in hanger_sets:
         hangers.append(hanger)
     n = fsolve(lambda n: thrust_line_by_n(span, rise, hangers, g_arch, n)[0], 50000)
-    x0, x, y = thrust_line_by_n(span, rise, hangers, g_arch, n)
-    return x, y
+    x0, x, y, n_0 = thrust_line_by_n(span, rise, hangers, g_arch, n)
+    return x, y, n_0
 
 
 def thrust_line_by_n(span, rise, hangers, g_arch, n):
@@ -73,7 +74,8 @@ def thrust_line_by_n(span, rise, hangers, g_arch, n):
         dy = v/h
         dl = (v**2 + h**2)**0.5/h
     y_end = y[-1]
-    return y_end, x, y
+    h_end = h
+    return y_end, x, y, h_end
 
 
 def intersect_hanger_with_parabola(y_arch, x_arch, dl, g, v, h, hanger):

@@ -6,8 +6,8 @@ from plotting.adjustments import adjust_overview_plots, adjust_small_plots
 from plotting.colors import colors
 from plotting.save import save_plot
 
+# Monitor memory usage
 tracemalloc.start()
-
 
 # Calculate the base case
 folder = 'base case'
@@ -28,7 +28,6 @@ axs[4].axhline(2.7, c=colors[1], lw=1)
 axs[4].plot([0, 270], [-3.17, -3.17], label='Design drawings', c=colors[1], lw=1)
 adjust_overview_plots(fig)
 save_plot(fig, folder, 'Permanent state')
-
 
 # Plot live loading range and compare to design drawings
 fig = bridge_ref.plot_effects('LL', 'Moment', label='Reference calculation range', c=colors[0])
@@ -60,12 +59,12 @@ f = open('base case/dc_ratios.pckl', 'wb')
 pickle.dump(dc, f)
 f.close()
 
-
 # Evaluate the cost function
 a = bridge_ref.cost_function(slice(1, 4), slice(1, 4))
 print('Costs: $', round(a/1000)/1000, 'Mio.')
 bridge_ref.cost_table(folder)
 
+# Save the bridge file
 f = open('base case/bridge.pckl', 'wb')
 pickle.dump(bridge_ref, f)
 f.close()

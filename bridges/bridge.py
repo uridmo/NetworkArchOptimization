@@ -115,6 +115,7 @@ class Bridge:
             nodes.pop_nodes(arch.nodes[1:-1])
             g_arch = cs_arch[0].weight  # TODO: non-constant weights
             arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)
+            # n_0 = arch.n_0
             arch.arch_connection_nodes(nodes, hangers)
             arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0)

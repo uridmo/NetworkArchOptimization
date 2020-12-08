@@ -4,7 +4,7 @@ from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.plots import make_plots
 
 bridge_parallel = BlennerhassettBridge()
-hanger_params = (np.radians(90), np.radians(60))
+hanger_params = (np.radians(80), np.radians(55))
 bridge_change = BlennerhassettBridge(hanger_arrangement='Constant Change', hanger_params=hanger_params)
 hanger_params = (np.radians(25),)
 self_stress_state_params = (0, (0.25/0.65, 0.4/0.65))

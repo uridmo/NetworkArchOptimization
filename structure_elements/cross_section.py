@@ -86,9 +86,9 @@ class CrossSection:
         return doc_max
 
     def calculate_cost(self):
-        self.weight = 2 * self.length * self.unit_weight
+        weight = 2 * self.length * self.unit_weight
         self.dc_max = self.max_doc()
-        self.cost = self.weight * self.unit_cost * self.dc_max / self.dc_ref
+        self.cost = weight * self.unit_cost * self.dc_max / self.dc_ref
         return self.cost
 
     def assign_wind_effects(self, wind_effects, resistance):

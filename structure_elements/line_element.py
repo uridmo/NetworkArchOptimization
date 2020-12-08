@@ -2,7 +2,7 @@ import numpy as np
 
 from plotting.model import plot_model
 from plotting.save import save_plot
-from structure_analysis import structure_analysis
+from structure_analysis import structure_analysis, verify_input
 from structure_elements.effects import multiply_effect
 from structure_elements.element import Element
 
@@ -239,7 +239,7 @@ class LineElement(Element):
     #     #     ax.legend(frameon=False, loc='center left', bbox_to_anchor=(1, 0.5))
     #     return
 
-    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element', weight=True):
+    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
         beams_nodes, beams_stiffness = self.get_beams()
@@ -279,10 +279,11 @@ class LineElement(Element):
 
         # Create the plots if needed
         if plots:
+            model = verify_input(model)
             fig, ax = plot_model(model, self)
-            save_plot(fig, 'Models', name)
+            save_plot(fig, 'optimisation methods', 'tie permanent loads')
 
-            fig, ax = plot_model(model, self, i=None, show=False)
-            # self.plot_effects_on_arch(ax, nodes, 'Permanent', 'Moment')
-            save_plot(fig, 'Effects', name)
+            # fig, ax = plot_model(model, self, i=None, show=False)
+            # # self.plot_effects_on_arch(ax, nodes, 'Permanent', 'Moment')
+            # save_plot(fig, 'optimisation methods', 'tie permanent loads')
         return

@@ -66,8 +66,8 @@ def plot_loads_old(model, load_group, title, save_plot=False):
     max_nodal = max([max(abs(nodalload[1]), abs(nodalload[2])) for nodalload in nodalLoads] + [0])
     max_point = max([max(abs(pointload[2]), abs(pointload[3])) for pointload in pointLoads] + [0])
     max_force = max(max_point, max_nodal, 0.0001)
-    max_length = length / 6
-    min_length = length / 24
+    max_length = length / 18
+    min_length = length / 100
 
     max_distributed = max([max(abs(lineload[3]), abs(lineload[6]),
                                abs(lineload[4]), abs(lineload[7]),
@@ -106,7 +106,7 @@ def plot_loads_old(model, load_group, title, save_plot=False):
         if (abs(Fx) + abs(Fy)) > 0:
             targetX = nodes[nodalLoads[i][0]][0]
             targetY = nodes[nodalLoads[i][0]][1]
-            arrow = FancyArrow(targetX - Fx, targetY - Fy, Fx, Fy, length_includes_head=True,
+            arrow = FancyArrow(targetX, targetY, Fx, Fy, length_includes_head=True,
                                head_width=3, linewidth=2, color=forceColor, zorder=10)
             ax.add_patch(arrow)
         if Mz != 0:
@@ -321,7 +321,7 @@ def plot_loads_old(model, load_group, title, save_plot=False):
 
     #plotLegend(ax)
     adjustPlot(ax)
-    # plt.show()
+    plt.show()
 
     if save_plot:
         if not os.path.isdir('Plots ' + title):

@@ -9,7 +9,7 @@ bridge_26 = BlennerhassettBridge(hanger_params=adapted_params, n_hangers=26)
 bridge_26.plot_elements()
 
 bridges_dict = {'13 Hangers': bridge_13, '27 Hangers': bridge_27, '26 Hangers': bridge_26}
-load_groups = {'permanent state': 'Permanent', 'live loading': 'LL'}
+load_groups = {'permanent state': 'Permanent', 'dead load': 'DL', 'live loading': 'LL'}
 folder = 'hanger amount comparison'
 make_plots(bridges_dict, load_groups, folder, big_plots=True)
 

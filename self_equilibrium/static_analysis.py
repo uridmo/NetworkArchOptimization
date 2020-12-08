@@ -40,14 +40,15 @@ def zero_displacement(tie, nodes, hangers, dof_rz=True, plot=False):
         # Adapt loads to have a nice plot
         load_distributed = load_group['Distributed'][0]
         load_distributed[2] = tie.span
-        load_group = {'Distributed': [load_distributed]}
+        load_group['Distributed'] = [load_distributed]
         loads = [load_group]
         model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': loads,
                  'Boundary Conditions': boundary_conditions}
 
         fig, ax = plot_model(model, tie)
-        save_plot(fig, 'Models', 'Hanger Forces')
-    return mz_0
+        return fig
+    else:
+        return mz_0
 
 # def sine_proportional(nodes_x, nodes_forces, hangers):
 #     for i in range(len(nodes_forces)):

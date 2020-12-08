@@ -27,7 +27,7 @@ class BlennerhassettBridge(Bridge):
         unit_price_anchorages = 9
 
         # Load the demand / capacity ratios from the base case
-        f = open('base case/dc_ratios.pckl', 'rb')
+        f = open('../calculations/base case/dc_ratios.pckl', 'rb')
         dc = pickle.load(f)
         dc_arch_1_ref, dc_arch_2_ref, dc_arch_3_ref = dc[0], dc[1], dc[2]
         dc_tie_1_ref, dc_tie_2_ref, dc_tie_3_ref, dc_hanger_ref = dc[3], dc[4], dc[5], dc[6]

@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib.patches import Arc, FancyArrow
 
 
-def plot_loads(model, i, ax):
+def plot_loads(model, i, ax, arrows_amount=1):
     """
     Takes the structure and load dictionary.
 
@@ -38,39 +38,40 @@ def plot_loads(model, i, ax):
     max_point = max([max(abs(load_point[2]), abs(load_point[3])) for load_point in loads_point] + [0])
     max_force = max(max_point, max_nodal, 0.0001)
     max_length = length / 6
-    min_length = length / 24
+    min_length = length / 18
 
     max_distributed = max([max(abs(load_line[3]), abs(load_line[6]),
                                abs(load_line[4]), abs(load_line[7]),
                                abs(load_line[5]), abs(load_line[8])) for load_line in loads_line] + [0])
 
-    scale_distributed_forces = length / 8 / max(max_distributed, 0.0001)
+    scale_distributed_forces = length / 12 / max(max_distributed, 0.0001)
 
     # Plot nodal Forces
     for i in range(len(loads_nodal)):
-        f_x = np.sign(loads_nodal[i][1]) * max(abs(loads_nodal[i][1]) / max_force * max_length, min_length)
-        f_y = np.sign(loads_nodal[i][2]) * max(abs(loads_nodal[i][2]) / max_force * max_length, min_length)
+        force = max((loads_nodal[i][1]**2 + loads_nodal[i][2]**2)**0.5, 1)
+        f_x = loads_nodal[i][1]/force * max(force / max_force * max_length, min_length)
+        f_y = loads_nodal[i][2]/force * max(force / max_force * max_length, min_length)
         m_z = loads_nodal[i][3]
 
         target_x = nodes[loads_nodal[i][0]][0]
         target_y = nodes[loads_nodal[i][0]][1]
 
         if (abs(f_x) + abs(f_y)) > 0:
-            arrow = FancyArrow(target_x - f_x, target_y - f_y, f_x, f_y, length_includes_head=True,
+            arrow = FancyArrow(target_x, target_y, f_x, f_y, length_includes_head=True,
                                head_width=3, linewidth=2, color=force_color, zorder=10)
             ax.add_patch(arrow)
         if m_z != 0:
-            ax.plot(target_x, target_y, marker='o', markersize=4, alpha=1, color=moment_color)
+            # ax.plot(target_x, target_y, marker='o', markersize=4, alpha=1, color=moment_color)
             if m_z > 0:
-                arc = Arc((target_x, target_y), 1, 1, 0, 240, 110, linewidth=2, color=moment_color, zorder=5)
+                arc = Arc((target_x, target_y), 30, 30, 0, 180, 45, linewidth=2, color=moment_color, zorder=5)
                 ax.add_patch(arc)
-                arrow = FancyArrow(target_x - 0.35255, target_y + 0.35405, -0.01, -0.005, length_includes_head=True,
-                                   head_width=3, linewidth=0.5, color=moment_color, zorder=5)
+                arrow = FancyArrow(target_x + 0.35255*30, target_y + 0.35305*30, -0.007*30, +0.01*30, length_includes_head=True,
+                                   head_width=3, linewidth=2, color=moment_color, zorder=5)
             else:
-                arc = Arc((target_x, target_y), 1, 1, 0, 70, 300, linewidth=2, color=moment_color, zorder=5)
+                arc = Arc((target_x, target_y), 30, 30, 0, 135, 0, linewidth=2, color=moment_color, zorder=5)
                 ax.add_patch(arc)
-                arrow = FancyArrow(target_x + 0.35255, target_y + 0.35405, +0.01, -0.005, length_includes_head=True,
-                                   head_width=3, linewidth=0.5, color=moment_color, zorder=5)
+                arrow = FancyArrow(target_x - 0.35255*30, target_y + 0.35305*30, +0.007*30, +0.01*30, length_includes_head=True,
+                                   head_width=3, linewidth=2, color=moment_color, zorder=5)
             ax.add_patch(arrow)
 
     # Plot point forces
@@ -89,7 +90,7 @@ def plot_loads(model, i, ax):
         m_z = loads_point[i][4]
 
         if (abs(f_x) + abs(f_y)) > 0:
-            arrow = FancyArrow(target_x - f_x, target_y - f_y, f_x, f_y, length_includes_head=True,
+            arrow = FancyArrow(target_x, target_y, -f_x, -f_y, length_includes_head=True,
                                head_width=3, linewidth=2, color=force_color, zorder=10)
             ax.add_patch(arrow)
         if m_z != 0:
@@ -133,7 +134,7 @@ def plot_loads(model, i, ax):
             ax.plot(x, y, color=force_color, linewidth=1.3)
 
             # draw Arrows
-            amount = int((l_end - l_start) / (length / 20) + 2)
+            amount = int((l_end - l_start) / (length / arrows_amount) + 2)
             for k in range(amount):
                 loc = l_start + (l_end - l_start) * k / (amount - 1)
                 x = nodes[elements[i][0]][0] + element_vector[0] * loc

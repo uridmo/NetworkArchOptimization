@@ -95,9 +95,8 @@ class Bridge:
             n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Tie-optimisation':
-            peak_moment = self_stress_state_params[0:1]
             mz_0 = optimize_self_stresses_tie_1(tie, nodes, hangers, *self_stress_state_params[1:2])
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
+            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, *self_stress_state_params[0:1])
 
         elif self_stress_state == 'Overall-optimisation':
             n_0, mz_0 = optimize_self_stresses(arch, tie, nodes, hangers, *self_stress_state_params)
@@ -122,8 +121,8 @@ class Bridge:
 
         hangers.assign_length_to_cross_section()
         hangers.assign_permanent_effects()
-        arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0, plots=False, name='Arch Permanent Moment')
-        tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0, plots=False, name='Tie Permanent Moment')
+        arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0)
+        tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0)
 
         # Define the entire network arch structure
         network_arch = NetworkArch(arch, tie, hangers)

@@ -5,11 +5,11 @@ from plotting.plots import make_plots
 
 tracemalloc.start()
 
-bridge_13 = BlennerhassettBridge(self_stress_state='Zero-displacement', arch_optimisation=True)
-bridge_20 = BlennerhassettBridge(n_hangers=20, self_stress_state='Tie-optimisation', arch_optimisation=True)
+bridge_13 = BlennerhassettBridge()
+bridge_20 = BlennerhassettBridge(n_hangers=20)
 
 adapted_params = (1.0646, False, 267.8/(4*14))
-bridge_27 = BlennerhassettBridge(hanger_params=adapted_params, n_hangers=26, self_stress_state='Tie-optimisation', arch_optimisation=True)
+bridge_27 = BlennerhassettBridge(hanger_params=adapted_params, n_hangers=26)
 
 bridge_27.plot_elements()
 

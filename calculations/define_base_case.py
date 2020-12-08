@@ -10,7 +10,7 @@ tracemalloc.start()
 
 
 # Calculate the base case
-bridge_ref = BlennerhassettBridge()
+bridge_ref = BlennerhassettBridge(arch_optimisation=False, self_stress_state='Overall-optimisation')
 
 
 # Plot permanent state and compare to design drawings

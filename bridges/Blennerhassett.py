@@ -8,7 +8,7 @@ from structure_elements.cross_section import CrossSection
 class BlennerhassettBridge(Bridge):
     def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=115.3, g_utilities=35.1, n_hangers=13,
                  hanger_arrangement='Parallel', hanger_params=(1.0646,), qd_live_load=27, qc_live_load=325,
-                 arch_shape='Parabolic', arch_optimisation=False, self_stress_state='Overall-optimisation',
+                 arch_shape='Parabolic', arch_optimisation=True, self_stress_state='Tie-optimisation',
                  self_stress_state_params=(), exact_stiffness=True, knuckles=True):
 
         unit_weight_arch_1 = 2467.05

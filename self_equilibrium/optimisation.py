@@ -43,18 +43,35 @@ def optimize_self_stresses_tie_1(tie, nodes, hangers, hanger_range=(0.25/0.65, 0
     c = np.array([1] + [0 for i in range(a.shape[1])])
     b_ub = np.array(list(b_0) + list(-b_0))
 
+    # Assure symmetric forces
+    b = []
+    a_eq = np.empty((0, a_ub.shape[1]))
+    for i, x_hanger in enumerate(x_hangers):
+        if tie.span - x_hanger in x_hangers[i+1:]:
+            j = i+x_hangers[i+1:].index(tie.span - x_hanger)
+            a_eq_i = np.zeros((1, a_ub.shape[1]))
+            a_eq_i[0, i+2] = 1
+            a_eq_i[0, j+3] = -1
+            a_eq = np.vstack((a_eq, a_eq_i))
+            b += [0]
+    if b:
+        b_eq = np.array(b)
+    else:
+        a_eq = None
+        b_eq = None
+
     forces = hangers.get_max_connection_forces()
     inf_range = (-np.inf, np.inf)
     forces_range = [(hanger_range[0] * force, hanger_range[1] * force) for force in forces]
     bounds = [inf_range] * 2 + forces_range
-    sol = optimize.linprog(c, A_ub=a_ub, b_ub=b_ub, bounds=bounds, method='revised simplex')
+    sol = optimize.linprog(c, A_ub=a_ub, b_ub=b_ub, A_eq=a_eq, b_eq=b_eq, bounds=bounds, method='revised simplex')
     x = sol.x
 
     mz_0 = float(x[1])
     forces = [float(force) for force in x[2:]]
+
     hangers.set_prestressing_force_from_nodes(nodes, forces)
     hangers.assign_permanent_effects()
-
     return mz_0
 
 

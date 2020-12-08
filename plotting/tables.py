@@ -87,6 +87,36 @@ def dc_table(directory, name, cross_sections, uls_types=""):
     text.close()
     return
 
-def cost_table(directory, name, cross_sections):
 
+def cost_table(directory, name, cross_sections, anchorages):
+    if not os.path.isdir(directory):
+        os.makedirs(directory)
+
+    text = open(directory + "/" + name + ".txt", 'w')
+    text.write(r"\begin{tabular}{lcccccc}" + "\n")
+    text.write(r"\hline" + "\n")
+    text.write(r"Segment & Length & Weight & Unit cost & D/C$_{max}$ & D/C$_{ref}$ & Cost \\" + "\n")
+    text.write(r" & [m] & [kg/m] & [\$/kg] & [-] & [-] & [\$ Mio.] \\ \hline" + "\n")
+
+    costs = 50000
+    for cs in cross_sections:
+        name = cs.name
+        length = cs.length
+        unit_cost = cs.unit_cost
+        unit_weight = cs.unit_weight
+        dc_ref = cs.dc_ref
+        dc_max = cs.dc_max
+        cost = cs.cost
+        costs += cost
+        text.write(name+' & '+f"{length:.0f}"+' & '+f"{unit_weight:.0f}"+' & '+f"{unit_cost:.1f}")
+        text.write(' & '+f"{dc_max:.2f}"+' & '+f"{dc_ref:.2f}"+' & '+f"{cost/10**6:.2f}"+r" \\" + "\n")
+
+    text.write(r"\arrayrulecolor{gray} \hline" + "\n")
+    text.write("- Anchorages & "+str(anchorages[0])+" ea & "+f"{anchorages[1]:.0f}"+' kg/ea & '+f"{anchorages[2]:.1f}")
+    text.write(r" \$/kg & "+f"{dc_max:.2f}"+' & '+f"{dc_ref:.2f}"+' & '+f"{anchorages[3]/10**6:.2f}"+r" \\" + "\n")
+    text.write(r"- Testing & - & - & 50000 \$ & - & - & 0.05 \\ \hline" + "\n")
+    costs += anchorages[3]
+    text.write("& & & & & & "+f"{costs/10**6:.2f}"+r" \\ \hhline{~~~~~~ =}"+"\n")
+    text.write(r"\end{tabular}" + "\n")
+    text.close()
     return

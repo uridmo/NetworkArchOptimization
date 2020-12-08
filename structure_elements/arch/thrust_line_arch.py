@@ -6,14 +6,13 @@ from .arch import Arch
 
 class ThrustLineArch(Arch):
     def __init__(self, nodes, span, rise, g_arch, hanger_sets, n=30):
-        super().__init__(span, rise)
+        super().__init__(nodes, span, rise)
         x, y = get_arch_thrust_line(span, rise, g_arch, hanger_sets)
         x_arch = [span - i for i in x[-1:0:-1]] + x
         y_arch = y[-1:0:-1]+y
 
         for i in range(len(x_arch)):
-            node = nodes.add_node(x_arch[i], y_arch[i])
-            self.nodes.append(node)
+            self.insert_node(nodes, x_arch[i], y_arch[i])
         return
 
 

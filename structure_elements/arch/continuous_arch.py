@@ -66,7 +66,7 @@ def arch_opt(n, x, r, s, l0, q, fun_angle, fun_height_2):
 
 class ContinuousArch(Arch):
     def __init__(self, nodes, hanger_set, span, rise, n=30):
-        super().__init__(span, rise)
+        super().__init__(nodes, span, rise)
 
         a_x = [hanger.tie_node.x for hanger in hanger_set.hangers]
         angles = [hanger.inclination for hanger in hanger_set.hangers]

@@ -2,9 +2,9 @@ from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.plots import make_plots
 
 
-bridge_basic = BlennerhassettBridge(self_stress_state='Zero-displacement', knuckles=False, exact_stiffness=False)
-bridge_stiffness = BlennerhassettBridge(self_stress_state='Zero-displacement', knuckles=False, exact_stiffness=True)
-bridge_knuckle = BlennerhassettBridge(self_stress_state='Zero-displacement', knuckles=True, exact_stiffness=False)
+bridge_basic = BlennerhassettBridge(arch_optimisation=False, knuckles=False, exact_stiffness=False)
+bridge_stiffness = BlennerhassettBridge(arch_optimisation=False, knuckles=False, exact_stiffness=True)
+bridge_knuckle = BlennerhassettBridge(arch_optimisation=False, knuckles=True, exact_stiffness=False)
 
 bridges_dict = {'Basic model': bridge_basic, 'Accurate stiffness': bridge_stiffness, 'Accurate Knuckles': bridge_knuckle}
 load_groups = {'live loading': 'LL'}

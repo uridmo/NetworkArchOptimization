@@ -1,6 +1,6 @@
 from matplotlib import pyplot
 
-from plotting.tables import uls_forces_table, dc_table
+from plotting.tables import uls_forces_table, dc_table, cost_table
 from self_equilibrium.embedded_beam import embedded_beam
 from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_stresses_tie, \
     optimize_self_stresses_tie_2, optimize_self_stresses_tie_1
@@ -112,6 +112,7 @@ class Bridge:
 
         # Optimize the arch shape if specified
         if arch_optimisation:
+            nodes.pop_nodes(arch.nodes[1:-1])
             g_arch = cs_arch[0].weight  # TODO: non-constant weights
             arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)
             arch.arch_connection_nodes(nodes, hangers)
@@ -134,6 +135,7 @@ class Bridge:
         self.nodes = nodes
         self.network_arch = network_arch
         self.cost = 0
+        self.cost_anchorages = 0
         self.cost_function(slice(1, 4), slice(1, 4))
         return
 
@@ -168,19 +170,27 @@ class Bridge:
 
         return fig
 
-    def internal_forces_table(self, slice_arch, slice_tie, folder, name, all_uls=False):
+    def internal_forces_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='design forces', all_uls=False):
         cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]\
                          + [self.hangers_cross_section]
         uls_forces_table(folder, name, cross_sections, all_uls=all_uls)
         return
 
-    def dc_ratio_table(self, slice_arch, slice_tie, folder, name, uls_types=""):
+    def dc_ratio_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='dc ratios', uls_types=""):
         cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]\
                          + [self.hangers_cross_section]
         dc_table(folder, name, cross_sections, uls_types=uls_types)
         return
 
-    def cost_function(self, slice_arch, slice_tie, table=False):
+    def cost_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='cost table'):
+        cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie] \
+                         + [self.hangers_cross_section]
+        anchorages = (2 * self.hangers_amount, self.unit_weight_anchorages,
+                      self.unit_price_anchorages, self.cost_anchorages)
+        cost_table(folder, name, cross_sections, anchorages)
+        return
+
+    def cost_function(self, slice_arch, slice_tie):
         costs = []
         for cross_section in self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]\
                              + [self.hangers_cross_section]:
@@ -188,8 +198,8 @@ class Bridge:
 
         hanger_cs = self.hangers_cross_section
         weight_anchorages = 2 * self.hangers_amount * self.unit_weight_anchorages
-        cost_anchorages = weight_anchorages * self.unit_price_anchorages * hanger_cs.dc_max / hanger_cs.dc_ref
-        costs.append(cost_anchorages)
+        self.cost_anchorages = weight_anchorages * self.unit_price_anchorages * hanger_cs.dc_max / hanger_cs.dc_ref
+        costs.append(self.cost_anchorages)
         cost = sum(costs) + 50000
         self.cost = cost
         return cost

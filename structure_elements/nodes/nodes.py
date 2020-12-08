@@ -43,6 +43,14 @@ class Nodes:
             self.nodes[i].index = i
         return
 
+    def pop_nodes(self, nodes):
+        for node in nodes:
+            node.index = None
+            self.nodes.remove(node)
+            self.amount -= 1
+        self.order_nodes()
+        return
+
     def structural_nodes(self):
         nodes_location = [[node.x, node.y] for node in self.nodes]
         structural_nodes = {'Location': nodes_location}

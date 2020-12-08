@@ -4,10 +4,11 @@ from structure_elements.line_element import LineElement
 
 
 class Arch(LineElement):
-    def __init__(self, span, rise):
+    def __init__(self, nodes, span, rise):
         super().__init__()
         self.span = span
         self.rise = rise
+        self.nodes = [nodes.add_node(0, 0), nodes.add_node(span, 0)]
         return
 
     def arch_connection_nodes(self, nodes, hangers):

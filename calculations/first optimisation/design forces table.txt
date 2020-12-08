@@ -2,18 +2,18 @@
 \hline
 Segment & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\
  & & [MN]   & [MNm] & [MNm] & [-] \\ \hline
-\multirow{2}{*}{Arch 1} & Strength-III & 66.0 & 5.2 & 15.0 & 0.88\\
+\multirow{2}{*}{Arch 1} & Strength-III & 65.3 & 2.1 & 15.0 & 0.83\\
  & Cable loss & 0.0 & 0.0 & 0.0 & 0.00\\ \hline
-\multirow{2}{*}{Arch 2} & Strength-I & 64.0 & 8.3 & 0.0 & 0.90\\
+\multirow{2}{*}{Arch 2} & Strength-I & 63.1 & 4.8 & 0.0 & 0.82\\
  & Cable loss & 0.0 & 0.0 & 0.0 & 0.00\\ \hline
-\multirow{2}{*}{Arch 3} & Strength-I & 57.4 & 7.5 & 0.0 & 0.82\\
+\multirow{2}{*}{Arch 3} & Strength-I & 57.1 & 2.1 & 0.0 & 0.71\\
  & Cable loss & 0.0 & 0.0 & 0.0 & 0.00\\ \hline
-\multirow{2}{*}{Tie 1} & Strength-III & 53.9 & 3.1 & 8.2 & 0.62\\
+\multirow{2}{*}{Tie 1} & Strength-III & 52.7 & 3.1 & 8.2 & 0.60\\
  & Cable loss & 0.0 & 0.0 & 0.0 & 0.00\\ \hline
-\multirow{2}{*}{Tie 2} & Strength-I & 52.3 & 9.4 & 0.0 & 0.61\\
+\multirow{2}{*}{Tie 2} & Strength-I & 51.0 & 6.9 & 0.0 & 0.56\\
  & Cable loss & 0.0 & 0.0 & 0.0 & 0.00\\ \hline
-\multirow{2}{*}{Tie 3} & Strength-III & 50.6 & 3.7 & 1.1 & 0.57\\
+\multirow{2}{*}{Tie 3} & Strength-I & 51.0 & 5.7 & 0.0 & 0.55\\
  & Cable loss & 0.0 & 0.0 & 0.0 & 0.00\\ \hline
-\multirow{2}{*}{Hangers} & Strength-I & 4.2 & 0.0 & 0.0 & 1.00\\
+\multirow{2}{*}{Hangers} & Strength-I & 3.6 & 0.0 & 0.0 & 0.87\\
  & Cable loss & 0.0 & 0.0 & 0.0 & 0.00\\ \hline
 \end{tabular}

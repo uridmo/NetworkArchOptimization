@@ -11,6 +11,8 @@ self_stress_state_params = (0, (0.25/0.65, 0.4/0.65))
 bridge_radial = BlennerhassettBridge(hanger_arrangement='Radial', hanger_params=hanger_params,
                                      self_stress_state_params=self_stress_state_params)
 
+bridge_change.plot_elements()
+
 bridges_dict = {'Parallel': bridge_parallel, 'Constant change': bridge_change, 'Radial': bridge_radial}
 load_groups = {'permanent': 'Permanent', 'live loading': 'LL', 'strength-I': 'Strength-I'}
 folder = 'hanger arrangement comparison'

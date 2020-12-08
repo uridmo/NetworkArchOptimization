@@ -10,8 +10,8 @@ tracemalloc.start()
 
 
 # Calculate the base case
+folder = 'base case'
 bridge_ref = BlennerhassettBridge(arch_optimisation=False, self_stress_state='Overall-optimisation')
-
 
 # Plot permanent state and compare to design drawings
 fig = bridge_ref.plot_all_effects('Permanent', label='Reference calculation', c=colors[0])
@@ -27,7 +27,7 @@ axs[3].axhline(-3.69, c=colors[1], lw=1)
 axs[4].axhline(2.7, c=colors[1], lw=1)
 axs[4].plot([0, 270], [-3.17, -3.17], label='Design drawings', c=colors[1], lw=1)
 adjust_overview_plots(fig)
-save_plot(fig, 'base case', 'Permanent state')
+save_plot(fig, folder, 'Permanent state')
 
 
 # Plot live loading range and compare to design drawings
@@ -41,13 +41,12 @@ axs[0].plot([0, 270], [0.744, 0.744], label='Design drawings', c=colors[1], lw=1
 axs[1].plot([0, 270], [4.73, 4.73], label='Design drawings', c=colors[1], lw=1)
 axs[2].plot(hanger_x, hanger_forces, label='Design drawings', c=colors[1])
 adjust_small_plots(fig)
-save_plot(fig, 'base case', 'Live load')
-
+save_plot(fig, folder, 'Live load')
 
 # Create table of internal forces and demand/capacity ratios
-bridge_ref.internal_forces_table(slice(0, 4), slice(0, 4), 'base case', 'design forces')
-bridge_ref.internal_forces_table(slice(0, 4), slice(0, 4), 'base case', 'design forces 2', all_uls=True)
-bridge_ref.dc_ratio_table(slice(0, 4), slice(0, 4), 'base case', 'degrees of compliance')
+bridge_ref.internal_forces_table(folder)
+bridge_ref.internal_forces_table(folder, name='design forces 2', all_uls=True)
+bridge_ref.dc_ratio_table(folder)
 
 # Save the demand over capacity ratios of the reference case
 dc = []
@@ -65,7 +64,11 @@ f.close()
 # Evaluate the cost function
 a = bridge_ref.cost_function(slice(1, 4), slice(1, 4))
 print('Costs: $', round(a/1000)/1000, 'Mio.')
+bridge_ref.cost_table(folder)
 
+f = open('base case/bridge.pckl', 'wb')
+pickle.dump(bridge_ref, f)
+f.close()
 
 # Show memory usage
 current, peak = tracemalloc.get_traced_memory()

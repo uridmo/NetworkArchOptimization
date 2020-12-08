@@ -170,13 +170,13 @@ class Bridge:
 
         return fig
 
-    def internal_forces_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='design forces', all_uls=False):
+    def internal_forces_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='design forces table', all_uls=False):
         cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]\
                          + [self.hangers_cross_section]
         uls_forces_table(folder, name, cross_sections, all_uls=all_uls)
         return
 
-    def dc_ratio_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='dc ratios', uls_types=""):
+    def dc_ratio_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='dc table', uls_types=""):
         cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]\
                          + [self.hangers_cross_section]
         dc_table(folder, name, cross_sections, uls_types=uls_types)
@@ -188,6 +188,7 @@ class Bridge:
         anchorages = (2 * self.hangers_amount, self.unit_weight_anchorages,
                       self.unit_price_anchorages, self.cost_anchorages)
         cost_table(folder, name, cross_sections, anchorages)
+        print('Costs: $', round(self.cost/1000)/1000, 'Mio.')
         return
 
     def cost_function(self, slice_arch, slice_tie):

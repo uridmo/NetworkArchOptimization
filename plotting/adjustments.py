@@ -28,7 +28,7 @@ def adjust_overview_plots(fig):
     return
 
 
-def adjust_small_plots(fig):
+def adjust_effects_plots(fig):
     axs = fig.get_axes()
 
     axs[0].set_title('Arch')

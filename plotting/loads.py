@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib.patches import Arc, FancyArrow
 
 
-def plot_loads(model, i, ax, arrows_amount=1):
+def plot_loads(model, i, ax, arrows_amount=30):
     """
     Takes the structure and load dictionary.
 
@@ -37,14 +37,14 @@ def plot_loads(model, i, ax, arrows_amount=1):
     max_nodal = max([max(abs(load_nodal[1]), abs(load_nodal[2])) for load_nodal in loads_nodal] + [0])
     max_point = max([max(abs(load_point[2]), abs(load_point[3])) for load_point in loads_point] + [0])
     max_force = max(max_point, max_nodal, 0.0001)
-    max_length = length / 6
+    max_length = length / 10
     min_length = length / 18
 
     max_distributed = max([max(abs(load_line[3]), abs(load_line[6]),
                                abs(load_line[4]), abs(load_line[7]),
                                abs(load_line[5]), abs(load_line[8])) for load_line in loads_line] + [0])
 
-    scale_distributed_forces = length / 12 / max(max_distributed, 0.0001)
+    scale_distributed_forces = length / 24 / max(max_distributed, 0.0001)
 
     # Plot nodal Forces
     for i in range(len(loads_nodal)):
@@ -57,20 +57,24 @@ def plot_loads(model, i, ax, arrows_amount=1):
         target_y = nodes[loads_nodal[i][0]][1]
 
         if (abs(f_x) + abs(f_y)) > 0:
-            arrow = FancyArrow(target_x, target_y, f_x, f_y, length_includes_head=True,
-                               head_width=3, linewidth=2, color=force_color, zorder=10)
+            if loads_nodal[i][-1]==[]:
+                arrow = FancyArrow(target_x, target_y, f_x, f_y, length_includes_head=True,
+                                   head_width=3, linewidth=2, color=force_color, zorder=10)
+            else:
+                arrow = FancyArrow(target_x-f_x, target_y-f_y, f_x, f_y, length_includes_head=True,
+                                   head_width=3, linewidth=2, color=force_color, zorder=10)
             ax.add_patch(arrow)
         if m_z != 0:
             # ax.plot(target_x, target_y, marker='o', markersize=4, alpha=1, color=moment_color)
             if m_z > 0:
-                arc = Arc((target_x, target_y), 30, 30, 0, 180, 45, linewidth=2, color=moment_color, zorder=5)
+                arc = Arc((target_x, target_y), 20, 20, 0, 180, 45, linewidth=2, color=moment_color, zorder=5)
                 ax.add_patch(arc)
-                arrow = FancyArrow(target_x + 0.35255*30, target_y + 0.35305*30, -0.007*30, +0.01*30, length_includes_head=True,
+                arrow = FancyArrow(target_x + 0.35255*20, target_y + 0.35305*20, -0.007*30, +0.01*30, length_includes_head=True,
                                    head_width=3, linewidth=2, color=moment_color, zorder=5)
             else:
-                arc = Arc((target_x, target_y), 30, 30, 0, 135, 0, linewidth=2, color=moment_color, zorder=5)
+                arc = Arc((target_x, target_y), 20, 20, 0, 135, 0, linewidth=2, color=moment_color, zorder=5)
                 ax.add_patch(arc)
-                arrow = FancyArrow(target_x - 0.35255*30, target_y + 0.35305*30, +0.007*30, +0.01*30, length_includes_head=True,
+                arrow = FancyArrow(target_x - 0.35255*20, target_y + 0.35305*20, +0.007*30, +0.01*30, length_includes_head=True,
                                    head_width=3, linewidth=2, color=moment_color, zorder=5)
             ax.add_patch(arrow)
 
@@ -90,7 +94,7 @@ def plot_loads(model, i, ax, arrows_amount=1):
         m_z = loads_point[i][4]
 
         if (abs(f_x) + abs(f_y)) > 0:
-            arrow = FancyArrow(target_x, target_y, -f_x, -f_y, length_includes_head=True,
+            arrow = FancyArrow(target_x-f_x, target_y-f_y, f_x, f_y, length_includes_head=True,
                                head_width=3, linewidth=2, color=force_color, zorder=10)
             ax.add_patch(arrow)
         if m_z != 0:

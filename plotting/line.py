@@ -75,28 +75,3 @@ def get_value_location(xy_coord, normal_vec, values, scale):
     return xy_values
 
 
-def get_scaling(nodes, reactions, reactions_2, reaction_abs_max=None):
-    x_min = min([node.x for node in nodes])
-    x_max = max([node.x for node in nodes])
-    z_min = min([node.y for node in nodes])
-    z_max = max([node.y for node in nodes])
-    diag_length = (((x_max - x_min) ** 2 + (z_max - z_min) ** 2) ** 0.5)
-
-    if not reaction_abs_max:
-        reaction_max = max([max(sublist) for sublist in reactions])
-        reaction_min = min([min(sublist) for sublist in reactions_2])
-        reaction_abs_max = max(reaction_max, -reaction_min)
-
-    if reaction_abs_max > 1e-6:
-        scale = diag_length / 12 / reaction_abs_max
-    else:
-        scale = 0
-    return scale
-
-
-def plot_effect():
-    return
-
-
-def plot_range():
-    return

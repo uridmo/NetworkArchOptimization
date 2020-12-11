@@ -9,6 +9,7 @@ class Arch(LineElement):
         self.span = span
         self.rise = rise
         self.nodes = [nodes.add_node(0, 0), nodes.add_node(span, 0)]
+        self.n_0 = None
         return
 
     def arch_connection_nodes(self, nodes, hangers):

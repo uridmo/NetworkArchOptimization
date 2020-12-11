@@ -120,3 +120,51 @@ def cost_table(directory, name, cross_sections, anchorages):
     text.write(r"\end{tabular}" + "\n")
     text.close()
     return
+
+
+def small_cost_overview_table(directory, name, bridges):
+    if not os.path.isdir(directory):
+        os.makedirs(directory)
+
+    text = open(directory + "/" + name + ".txt", 'w')
+    text.write(r"\begin{tabular}{lcccc}" + "\n")
+    text.write(r"\hline" + "\n")
+    text.write(r"Model & Arch cost & Tie cost & Hanger cost & Total cost \\" + "\n")
+    text.write(r" & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline" + "\n")
+
+    for name in bridges:
+        bridge = bridges[name]
+        costs = bridge.costs
+        text.write(name + " & " + f"{sum(costs[0:3])/10**6:.2f}" + " & " + f"{sum(costs[3:6])/10**6:.2f}")
+        text.write(" & " + f"{sum(costs[6:9])/10**6:.2f}" + " & " + f"{bridge.cost/10**6:.2f}"+r" \\ "+"\n")
+    text.write(r"\hline" + "\n")
+    text.write(r"\end{tabular}" + "\n")
+    text.close()
+
+    return
+
+def big_cost_overview_table(directory, name, bridges):
+    if not os.path.isdir(directory):
+        os.makedirs(directory)
+
+    text = open(directory + "/" + name + ".txt", 'w')
+    text.write(r"\begin{tabular}{lcccccccccc}" + "\n")
+    text.write(r"\hline" + "\n")
+    text.write(r"Model & Arch 1 & Arch 2 & Arch 3")
+    text.write("& Tie 1 & Tie 2 & Tie 3")
+    text.write(r"& Hangers & Anchorages & Testing & Total \\" + "\n")
+    text.write(r" & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline" + "\n")
+
+    for name in bridges:
+        bridge = bridges[name]
+        costs = bridge.costs
+        text.write(name)
+        for i in range(9):
+            text.write(" & " + f"{costs[i]/10**6:.2f}")
+        text.write(" & " + f"{bridge.cost/10**6:.2f}"+r" \\ "+"\n")
+    text.write(r"\hline" + "\n")
+    text.write(r"\end{tabular}" + "\n")
+    text.close()
+
+    return
+

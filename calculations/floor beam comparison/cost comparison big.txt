@@ -1,0 +1,10 @@
+\begin{tabular}{lcccccccccc}
+\hline
+Model & Arch 1 & Arch 2 & Arch 3& Tie 1 & Tie 2 & Tie 3& Hangers & Anchorages & Testing & Total \\
+ & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline
+7 Floor beams & 1.11 & 2.03 & 1.70 & 0.90 & 1.52 & 1.20 & 1.36 & 0.44 & 0.05 & 10.32 \\ 
+13 Floor beams & 1.15 & 2.05 & 1.62 & 0.90 & 1.49 & 1.15 & 1.40 & 0.47 & 0.05 & 10.28 \\ 
+27 Floor beams & 1.16 & 2.04 & 1.62 & 0.91 & 1.51 & 1.13 & 1.41 & 0.49 & 0.05 & 10.32 \\ 
+40 Floor beams & 1.17 & 2.03 & 1.63 & 0.91 & 1.51 & 1.14 & 1.41 & 0.50 & 0.05 & 10.34 \\ 
+\hline
+\end{tabular}

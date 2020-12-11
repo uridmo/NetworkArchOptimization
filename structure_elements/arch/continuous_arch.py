@@ -20,13 +20,8 @@ def displacement(d, q, s, nx, ny, x, y, dx, l1, l2, fun_angle, fun_height_2):
     nx2 = nx - f1 * np.cos(a1) + f2 * np.cos(a2)
     ny2 = ny + f1 * np.sin(a1) + f2 * np.sin(a2)
 
-    x3 = (dx / 2 * (ny / nx + ny2 / nx2) - dy) * 100
+    x3 = (dx / 2 * (ny / nx + ny2 / nx2) - dy)
     return x3, nx2, ny2, dl1, dl2
-
-
-def displacement_opt(d, q, s, nx, ny, x, y, dx, l1, l2, fun_angle, fun_height_2):
-    x, nx2, ny2, dl1, dl2 = displacement(d, q, s, nx, ny, x, y, dx, l1, l2, fun_angle, fun_height_2)
-    return x
 
 
 def arch(N, X, r, s, l0, q, fun_angle, fun_height_2):
@@ -44,8 +39,8 @@ def arch(N, X, r, s, l0, q, fun_angle, fun_height_2):
     d = [0.1]
 
     for i in range(len(X) - 1):
-        def displacement_d(d): return displacement_opt(d, q, s, nx_arr[i], ny_arr[i], X[i], y[i], dx[i], l1[i], l2[i],
-                                                       fun_angle, fun_height_2)
+        def displacement_d(d): return displacement(d, q, s, nx_arr[i], ny_arr[i], X[i], y[i], dx[i], l1[i], l2[i],
+                                                   fun_angle, fun_height_2)[0]
 
         d = fsolve(displacement_d, d, factor=0.1)
         [a, nx, ny, dl1, dl2] = displacement(d, q, s, nx_arr[i], ny_arr[i], X[i], y[i], dx[i], l1[i], l2[i], fun_angle,
@@ -57,11 +52,6 @@ def arch(N, X, r, s, l0, q, fun_angle, fun_height_2):
         ny_arr[i + 1] = ny
     dy = y[-1]
     return dy, y, nx_arr, ny_arr, l1, l2
-
-
-def arch_opt(n, x, r, s, l0, q, fun_angle, fun_height_2):
-    [dy, y, nx_arr, ny_arr, l1, l2] = arch(n, x, r, s, l0, q, fun_angle, fun_height_2)
-    return dy
 
 
 class ContinuousArch(Arch):
@@ -81,15 +71,15 @@ class ContinuousArch(Arch):
         # Find hangers that reach the top of the arch
         l0 = fsolve(lambda l: (fun_height_2(l, rise) - span / 2), 0)
 
-        f_n = fsolve(lambda n_x: arch_opt(n_x, x_arch, rise, span, l0, g, fun_angle, fun_height_2), f_n)
+        f_n = fsolve(lambda n_x: arch(n_x, x_arch, rise, span, l0, g, fun_angle, fun_height_2)[0], f_n)
         [dy, y_arch, nx, ny, l1, l2] = arch(f_n, x_arch, rise, span, l0, g, fun_angle, fun_height_2)
 
         # Mirror the obtained shape
-        x_arch = np.linspace(0, span, 2 * n + 1).tolist()
+        x_arch = list(np.linspace(0, span, 2 * n + 1))
         y_arch = y_arch.tolist()
         y_arch = y_arch[-1:0:-1] + y_arch
 
+        self.n_0 = f_n
         for i in range(len(x_arch)):
-            node = nodes.add_node(x_arch[i], y_arch[i])
-            self.nodes.append(node)
+            self.insert_node(nodes, x_arch[i], y_arch[i])
         return

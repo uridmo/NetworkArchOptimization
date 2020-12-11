@@ -2,8 +2,8 @@ import pickle
 import tracemalloc
 
 from bridges.Blennerhassett import BlennerhassettBridge
-from plotting.adjustments import adjust_overview_plots, adjust_small_plots
-from plotting.colors import colors
+from plotting.adjustments import adjust_overview_plots, adjust_effects_plots
+from plotting.general import colors
 from plotting.save import save_plot
 
 # Monitor memory usage
@@ -39,7 +39,7 @@ hanger_x = [267.8*(i+1)/14 for i in range(13)]
 axs[0].plot([0, 270], [0.744, 0.744], label='Design drawings', c=colors[1], lw=1)
 axs[1].plot([0, 270], [4.73, 4.73], label='Design drawings', c=colors[1], lw=1)
 axs[2].plot(hanger_x, hanger_forces, label='Design drawings', c=colors[1])
-adjust_small_plots(fig)
+adjust_effects_plots(fig)
 save_plot(fig, folder, 'Live load')
 
 # Create table of internal forces and demand/capacity ratios

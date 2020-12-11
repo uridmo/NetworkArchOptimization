@@ -1,5 +1,6 @@
 from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.plots import make_plots
+from plotting.tables import small_cost_overview_table
 
 bridge_13 = BlennerhassettBridge()
 bridge_27 = BlennerhassettBridge(n_hangers=27)
@@ -8,11 +9,9 @@ adapted_params = (1.0646, False, 267.8/(4*14))
 bridge_26 = BlennerhassettBridge(hanger_params=adapted_params, n_hangers=26)
 bridge_26.plot_elements()
 
-bridges_dict = {'13 Hangers': bridge_13, '27 Hangers': bridge_27, '26 Hangers': bridge_26}
+bridges_dict = {'13 Hangers': bridge_13, '26 Hangers': bridge_26, '27 Hangers': bridge_27}
 load_groups = {'permanent state': 'Permanent', 'dead load': 'DL', 'live loading': 'LL'}
 folder = 'hanger amount comparison'
-make_plots(bridges_dict, load_groups, folder, big_plots=True)
+make_plots(bridges_dict, load_groups, folder)
 
-bridge_13.cost_table(folder, name='cost table 13 hangers')
-bridge_27.cost_table(folder, name='cost table 27 hangers')
-bridge_26.cost_table(folder, name='cost table 26 hangers')
+small_cost_overview_table(folder, 'cost comparison', bridges_dict)

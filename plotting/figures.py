@@ -6,8 +6,3 @@ def initialize_plot_structure(fig_size=(4, 1.5), dpi=240):
     ax = fig.add_subplot(111)
     return fig, ax
 
-
-def initialize_plot_internal_force():
-    return
-
-

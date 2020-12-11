@@ -1,5 +1,6 @@
 from matplotlib import pyplot
 
+from plotting.supports import plot_supports_new
 from plotting.tables import uls_forces_table, dc_table, cost_table
 from self_equilibrium.embedded_beam import embedded_beam
 from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_stresses_tie, \
@@ -135,19 +136,32 @@ class Bridge:
         self.nodes = nodes
         self.network_arch = network_arch
         self.cost = 0
+        self.costs = 0
         self.cost_anchorages = 0
         self.cost_function(slice(1, 4), slice(1, 4))
         return
 
     def plot_elements(self, ax=None):
         if not ax:
-            fig, ax = pyplot.subplots(1, 1, figsize=(4, 1.5), dpi=240)
+            fig, ax = pyplot.subplots(1, 1, figsize=(4, 1.5), dpi=720)
+        model = {'Nodes': {'Location': [[0, 0], [self.span, 0]]},
+                 'Boundary Conditions': {'Restricted Degrees': [[0, 1, 1, 0, 0], [1, 0, 1, 0, 0]]}}
+        plot_supports_new(model, ax, factor=0.03)
         self.network_arch.tie.plot_elements(ax)
         self.network_arch.arch.plot_elements(ax)
         self.network_arch.hangers.plot_elements(ax)
         ax.set_aspect('equal', adjustable='box')
-        pyplot.show()
-        return fig
+        ax.axis('off')
+        return fig, ax
+
+    def plot_effects_on_structure(self, ax, name, key):
+        tie_max, tie_min = self.network_arch.tie.get_min_and_max(name, key)
+        arch_max, arch_min = self.network_arch.arch.get_min_and_max(name, key)
+        effect_amax = max(tie_max, -tie_min, arch_max, arch_min)
+        self.network_arch.arch.plot_effects_on_structure(ax, name, key, reaction_amax=effect_amax)
+        self.network_arch.tie.plot_effects_on_structure(ax, name, key, reaction_amax=effect_amax)
+        self.network_arch.hangers.plot_elements(ax)
+        return
 
     def plot_effects(self, name, key, fig=None, label='', c='black', lw=1.0, ls='-'):
         if not fig:
@@ -201,6 +215,8 @@ class Bridge:
         weight_anchorages = 2 * self.hangers_amount * self.unit_weight_anchorages
         self.cost_anchorages = weight_anchorages * self.unit_price_anchorages * hanger_cs.dc_max / hanger_cs.dc_ref
         costs.append(self.cost_anchorages)
-        cost = sum(costs) + 50000
+        costs.append(50000)
+        cost = sum(costs)
+        self.costs = costs
         self.cost = cost
         return cost

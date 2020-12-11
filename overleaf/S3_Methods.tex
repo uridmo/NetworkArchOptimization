@@ -13,14 +13,7 @@
 
 \subsection{Estimation of cost function}
 
-\begin{table}[H]
-\begin{tabular}{lccccc}
-\hline
-Load         & EL  & DC         & DW         & LL   & WS  \\ \hline
-Strength-I   & 1.0 & 1.25 / 0.9 & 1.5 / 0.65 & 1.75 & -   \\
-Strength-III & 1.0 & 1.25 / 0.9 & 1.5 / 0.65 & -    & 1.4 \\ \hline
-\end{tabular}
-\end{table}
+\input{overleaf/Tables/ULS load combinations}
 
 
 
@@ -61,36 +54,22 @@ Tie 3-4 & \SI{100574}{} & \SI{76175}{} & \SI{45792}{}\\ \hline
 \begin{table}[H] 
 \caption{The design verifications}
 \centering
-\begin{tabular}{llcccc}
+\begin{tabular}{cccccl}
 \hline
-Region & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\
- & & [kN]   & [kNm] & [kNm] & [-] \\ \hline
-\multirow{3}{*}{Arch 1} & Strength-I & 63781 & 6773 & 0 & 0.57\\
- & Strength-III & 65054 & 5245 & 19391 & 0.78\\
- & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Arch 2} & Strength-I & 63670 & 10381 & 0 & 0.71\\
- & Strength-III & 64408 & 5026 & 15049 & 0.87\\
- & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Arch 3} & Strength-I & 63774 & 9228 & 0 & 0.94\\
- & Strength-III & 59298 & 4697 & 3627 & 0.88\\
- & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Arch 4} & Strength-I & 63662 & 10380 & 0 & 0.96\\
- & Strength-III & 58887 & 6147 & 155 & 0.83\\
- & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Tie 1} & Strength-I & 50729 & 6773 & 0 & 0.39\\
- & Strength-III & 50153 & 7568 & 13514 & 0.55\\
- & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Tie 2} & Strength-I & 50860 & 10289 & 0 & 0.54\\
- & Strength-III & 52454 & 2782 & 8232 & 0.61\\
- & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Tie 3} & Strength-I & 50860 & 8226 & 0 & 0.60\\
- & Strength-III & 51264 & 3646 & 608 & 0.56\\
- & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
-\multirow{3}{*}{Tie 4} & Strength-I & 50857 & 10264 & 0 & 0.63\\
- & Strength-III & 50035 & 5296 & 1103 & 0.58\\
- & Cable loss & 0 & 0 & 0 & 0.00\\ \hline
+Segment & \multicolumn{4}{c}{Demand / Capacity} & \\
+ & Strength-I & Strength-III & Strength-IV & Base case & \\ \hline
+Arch 1 & 0.86 & \textbf{1.01} & 0.72 & \textbf{1.01} & () \\
+Arch 2 & \textbf{1.18} & 1.13 & 1.00 & \textbf{1.18} & () \\
+Arch 3 & \textbf{0.89} & 0.82 & 0.74 & \textbf{0.89} & () \\
+Tie 1 & 0.44 & \textbf{0.55} & 0.32 & \textbf{0.55} & () \\
+Tie 2 & \textbf{0.51} & 0.47 & 0.37 & \textbf{0.51} & () \\
+Tie 3 & \textbf{0.50} & 0.47 & 0.37 & \textbf{0.50} & () \\
+Hanger & \textbf{0.98} & 0.83 & 0.63 & \textbf{0.98} & () \\
+\hline
 \end{tabular}
+
 \end{table}
+
 
 \begin{table}[H] 
 \caption{The design verifications (from design drawings)}

@@ -1,6 +1,3 @@
-from structure_elements.nodes.node import Node
-
-
 class Nodes:
     def __init__(self, accuracy=0.01):
         self.nodes = []
@@ -55,3 +52,23 @@ class Nodes:
         nodes_location = [[node.x, node.y] for node in self.nodes]
         structural_nodes = {'Location': nodes_location}
         return structural_nodes
+
+
+class Node:
+    def __init__(self, i, x, y):
+        self.index = i
+        self.x = x
+        self.y = y
+
+    def __repr__(self):
+        string = f'i:' + str(self.index)
+        string += ',(' + str(round(self.x, 3))
+        string += ',' + str(round(self.y, 3)) + ')'
+        return string
+
+    def __eq__(self, other):
+        return self.index == other.index
+
+    def coordinates(self):
+        node = [self.x, self.y]
+        return node

@@ -1,5 +1,6 @@
-import numpy as np
 from math import inf
+
+import numpy as np
 
 
 class CrossSection:

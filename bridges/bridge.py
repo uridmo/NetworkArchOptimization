@@ -3,9 +3,7 @@ from matplotlib import pyplot
 from plotting.supports import plot_supports_new
 from plotting.tables import uls_forces_table, dc_table, cost_table
 from self_equilibrium.embedded_beam import embedded_beam
-from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_stresses_tie, \
-    optimize_self_stresses_tie_2, optimize_self_stresses_tie_1
-from self_equilibrium.static_analysis import zero_displacement, define_by_peak_moment
+from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_stresses_tie_1
 from structure_elements.arch.circular_arch import CircularArch
 from structure_elements.arch.continuous_arch import ContinuousArch
 from structure_elements.arch.parabolic_arch import ParabolicArch
@@ -15,7 +13,7 @@ from structure_elements.hangers.hangers import Hangers
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
 from structure_elements.hangers.radial_hangers import RadialHangerSet
 from structure_elements.networkarch import NetworkArch
-from structure_elements.nodes.nodes import Nodes
+from structure_elements.nodes import Nodes
 from structure_elements.tie import Tie
 
 
@@ -23,7 +21,7 @@ class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load,
                  arch_shape, arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch,
                  cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
-                 unit_weight_anchorages, unit_price_anchorages):
+                 cost_cross_sections, unit_weight_anchorages, unit_price_anchorages):
 
         self.span = span
         self.rise = rise
@@ -43,9 +41,9 @@ class Bridge:
         self.hangers_arrangement = hanger_arrangement
         self.hangers_parameters = hanger_params
         self.hangers_cross_section = cs_hangers
+        self.cost_cross_sections = cost_cross_sections
         self.unit_weight_anchorages = unit_weight_anchorages
         self.unit_price_anchorages = unit_price_anchorages
-
         self.ultimate_limit_states = {'Strength-I': 'LL'}
 
         # Initialize nodes and create hanger set
@@ -86,18 +84,18 @@ class Bridge:
 
         # Determine the self equilibrium stress-state
         if self_stress_state == 'Zero-displacement':
-            mz_0 = zero_displacement(tie, nodes, hangers, *self_stress_state_params[0:1])
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, *self_stress_state_params[1:])
+            mz_0 = tie.zero_displacement(nodes, hangers, *self_stress_state_params[0:1])
+            n_0 = arch.define_by_peak_moment(nodes, hangers, mz_0, *self_stress_state_params[1:])
 
         elif self_stress_state == 'Embedded-beam':
             k_y = self_stress_state_params[0]
             peak_moment = self_stress_state_params[1]
             mz_0 = embedded_beam(tie, nodes, hangers, k_y)
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, peak_moment=peak_moment)
+            n_0 = arch.define_by_peak_moment(nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Tie-optimisation':
             mz_0 = optimize_self_stresses_tie_1(tie, nodes, hangers, *self_stress_state_params[1:2])
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0, *self_stress_state_params[0:1])
+            n_0 = arch.define_by_peak_moment(nodes, hangers, mz_0, *self_stress_state_params[0:1])
 
         elif self_stress_state == 'Overall-optimisation':
             n_0, mz_0 = optimize_self_stresses(arch, tie, nodes, hangers, *self_stress_state_params)
@@ -105,7 +103,7 @@ class Bridge:
         else:
             raise Exception('Self-stress state "' + self_stress_state + '" is not defined')
 
-        if knuckle:
+        if knuckle or arch_optimisation:
             knuckles, dn = hangers.define_knuckles(nodes, span, tie, arch, mz_0, *knuckle)
             mz_0 = 0
             n_0 -= dn
@@ -113,12 +111,11 @@ class Bridge:
         # Optimize the arch shape if specified
         if arch_optimisation:
             nodes.pop_nodes(arch.nodes[1:-1])
-            g_arch = cs_arch[0].weight  # TODO: non-constant weights
+            g_arch = cs_arch[0].weight
             arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)
-            # n_0 = arch.n_0
             arch.arch_connection_nodes(nodes, hangers)
             arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
-            n_0 = define_by_peak_moment(arch, nodes, hangers, mz_0)
+            n_0 = arch.n_0
 
         hangers.assign_length_to_cross_section()
         hangers.assign_permanent_effects()
@@ -138,7 +135,7 @@ class Bridge:
         self.cost = 0
         self.costs = 0
         self.cost_anchorages = 0
-        self.cost_function(slice(1, 4), slice(1, 4))
+        self.cost_function()
         return
 
     def plot_elements(self, ax=None):
@@ -184,33 +181,25 @@ class Bridge:
 
         return fig
 
-    def internal_forces_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='design forces table', all_uls=False):
-        cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]\
-                         + [self.hangers_cross_section]
-        uls_forces_table(folder, name, cross_sections, all_uls=all_uls)
+    def internal_forces_table(self, name='design forces table', all_uls=False):
+        uls_forces_table(name, self.cost_cross_sections, all_uls=all_uls)
         return
 
-    def dc_ratio_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='dc table', uls_types=""):
-        cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]\
-                         + [self.hangers_cross_section]
-        dc_table(folder, name, cross_sections, uls_types=uls_types)
+    def dc_ratio_table(self, name='dc table', uls_types=""):
+        dc_table(name, self.cost_cross_sections, uls_types=uls_types)
         return
 
-    def cost_table(self, folder, slice_arch=slice(1, 4), slice_tie=slice(1, 4), name='cost table'):
-        cross_sections = self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie] \
-                         + [self.hangers_cross_section]
+    def cost_table(self, name='cost table'):
         anchorages = (2 * self.hangers_amount, self.unit_weight_anchorages,
                       self.unit_price_anchorages, self.cost_anchorages)
-        cost_table(folder, name, cross_sections, anchorages)
-        print('Costs: $', round(self.cost/1000)/1000, 'Mio.')
+        cost_table(name, self.cost_cross_sections, anchorages)
+        print('Costs: $', round(self.cost / 1000) / 1000, 'Mio.')
         return
 
-    def cost_function(self, slice_arch, slice_tie):
+    def cost_function(self):
         costs = []
-        for cross_section in self.arch_cross_sections[slice_arch] + self.tie_cross_sections[slice_tie]\
-                             + [self.hangers_cross_section]:
+        for cross_section in self.cost_cross_sections:
             costs.append(cross_section.calculate_cost())
-
         hanger_cs = self.hangers_cross_section
         weight_anchorages = 2 * self.hangers_amount * self.unit_weight_anchorages
         self.cost_anchorages = weight_anchorages * self.unit_price_anchorages * hanger_cs.dc_max / hanger_cs.dc_ref

@@ -1,3 +1,4 @@
+from structure_analysis import structure_analysis
 from structure_elements.line_element import LineElement
 
 
@@ -33,8 +34,8 @@ class Tie(LineElement):
         load_group['Nodal'] = [[node.index, 0, f_y, 0] for node in self.cross_girders_nodes[1:-1]]
         load_group['Nodal'].append([self.cross_girders_nodes[0].index, 0, 1.0*f_y, 0])
         load_group['Nodal'].append([self.cross_girders_nodes[-1].index, 0, 1.0*f_y, 0])
-        # load_group['Nodal'].append([self.nodes[0].index, 0, 0.5*f_y, 0])
-        # load_group['Nodal'].append([self.nodes[-1].index, 0, 0.5*f_y, 0])
+        load_group['Nodal'].append([self.nodes[0].index, 0, 0.5*f_y, 0])
+        load_group['Nodal'].append([self.nodes[-1].index, 0, 0.5*f_y, 0])
         return load_group
 
     def load_group_utilities(self):
@@ -52,3 +53,28 @@ class Tie(LineElement):
             g = cross_section.weight
             weight += dx * g
         return weight
+
+    def zero_displacement(self, nodes, hangers, dof_rz=True, plot=False):
+        structural_nodes = nodes.structural_nodes()
+        beams_nodes, beams_stiffness = self.get_beams()
+        beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness}
+        load_group = self.permanent_loads()
+
+        restricted_degrees = [[self.nodes[0].index, 1, 1, int(dof_rz), 0]]
+        restricted_degrees += [[self.nodes[-1].index, 1, 1, int(dof_rz), 0]]
+        x_coord, nodes = hangers.get_connection_points()
+        for node in nodes:
+            restricted_degrees += [[node.index, 0, 1, 0, 0]]
+
+        boundary_conditions = {'Restricted Degrees': restricted_degrees}
+        model = {'Nodes': structural_nodes, 'Beams': beams, 'Loads': [load_group],
+                 'Boundary Conditions': boundary_conditions}
+
+        d_tie, if_tie, rd_tie, sp_tie = structure_analysis(model)
+        mz_0 = if_tie[0]['Moment'][0][0] if dof_rz else 0
+
+        # Assign the reaction forces to the hangers
+        forces = [rd[2] for rd in rd_tie[0][2:]]
+        hangers.set_prestressing_force_from_nodes(nodes, forces)
+
+        return mz_0

@@ -4,7 +4,6 @@ import tracemalloc
 from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.adjustments import adjust_overview_plots, adjust_effects_plots
 from plotting.general import colors
-from plotting.save import save_plot
 
 # Monitor memory usage
 tracemalloc.start()
@@ -27,7 +26,7 @@ axs[3].axhline(-3.69, c=colors[1], lw=1)
 axs[4].axhline(2.7, c=colors[1], lw=1)
 axs[4].plot([0, 270], [-3.17, -3.17], label='Design drawings', c=colors[1], lw=1)
 adjust_overview_plots(fig)
-save_plot(fig, folder, 'Permanent state')
+fig.savefig('Permanent state.png')
 
 # Plot live loading range and compare to design drawings
 fig = bridge_ref.plot_effects('LL', 'Moment', label='Reference calculation range', c=colors[0])
@@ -40,32 +39,28 @@ axs[0].plot([0, 270], [0.744, 0.744], label='Design drawings', c=colors[1], lw=1
 axs[1].plot([0, 270], [4.73, 4.73], label='Design drawings', c=colors[1], lw=1)
 axs[2].plot(hanger_x, hanger_forces, label='Design drawings', c=colors[1])
 adjust_effects_plots(fig)
-save_plot(fig, folder, 'Live load')
+fig.savefig('Live load.png')
 
 # Create table of internal forces and demand/capacity ratios
-bridge_ref.internal_forces_table(folder)
-bridge_ref.internal_forces_table(folder, name='design forces 2', all_uls=True)
-bridge_ref.dc_ratio_table(folder)
+bridge_ref.internal_forces_table()
+bridge_ref.internal_forces_table(name='design forces 2', all_uls=True)
+bridge_ref.dc_ratio_table()
 
 # Save the demand over capacity ratios of the reference case
 dc = []
-arch_cs = bridge_ref.arch_cross_sections[1:4]
-tie_cs = bridge_ref.tie_cross_sections[1:4]
-hanger_cs = [bridge_ref.hangers_cross_section]
-cross_sections = arch_cs + tie_cs + hanger_cs
-for cs in cross_sections:
+for cs in bridge_ref.cost_cross_sections:
     dc.append(cs.max_doc())
-f = open('base case/dc_ratios.pckl', 'wb')
+f = open('dc_ratios.pckl', 'wb')
 pickle.dump(dc, f)
 f.close()
 
 # Evaluate the cost function
-a = bridge_ref.cost_function(slice(1, 4), slice(1, 4))
+a = bridge_ref.cost_function()
 print('Costs: $', round(a/1000)/1000, 'Mio.')
-bridge_ref.cost_table(folder)
+bridge_ref.cost_table()
 
 # Save the bridge file
-f = open('base case/bridge.pckl', 'wb')
+f = open('bridge.pckl', 'wb')
 pickle.dump(bridge_ref, f)
 f.close()
 

@@ -1,10 +1,6 @@
 import numpy as np
 
 from bridges.Blennerhassett import BlennerhassettBridge
-from plotting.model import plot_model
-from plotting.save import save_plot
-from self_equilibrium.static_analysis import zero_displacement
-
 # Plot model for zero-displacement method
 from structure_analysis import structure_analysis
 from structure_analysis.plotting import plot_loads_old, plot_internal_forces

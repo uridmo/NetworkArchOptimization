@@ -1,8 +1,8 @@
 import numpy as np
 from matplotlib import pyplot
-from plotting.general import colors
 
 from bridges.Blennerhassett import BlennerhassettBridge
+from plotting.general import colors
 from plotting.plots import make_plots
 from plotting.tables import small_cost_overview_table, big_cost_overview_table
 

@@ -9,7 +9,7 @@ class Arch(LineElement):
         self.span = span
         self.rise = rise
         self.nodes = [nodes.add_node(0, 0), nodes.add_node(span, 0)]
-        self.n_0 = None
+        self.tie_tension = None
         return
 
     def arch_connection_nodes(self, nodes, hangers):
@@ -42,3 +42,11 @@ class Arch(LineElement):
                         hanger.arch_node = node
                         break
         return
+
+    def define_by_peak_moment(self, nodes, hangers, mz_0, peak_moment=0):
+        self.assign_permanent_effects(nodes, hangers, 0, -mz_0)
+        moments_arch = self.effects['Permanent']['Moment']
+        moment_max = max(moments_arch)
+        n_0 = (moment_max - peak_moment) / self.rise
+        self.tie_tension = n_0
+        return n_0

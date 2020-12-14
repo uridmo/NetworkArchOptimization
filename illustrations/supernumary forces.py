@@ -3,11 +3,7 @@ from matplotlib import pyplot
 
 from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.loads import plot_loads
-from plotting.save import save_plot
 from plotting.supports import plot_supports_new
-from structure_analysis import verify_input
-from structure_elements.arch.parabolic_arch import ParabolicArch
-from structure_elements.cross_section import CrossSection
 
 hanger_params = (np.radians(63),)
 bridge_parallel = BlennerhassettBridge(knuckles=False, hanger_params=hanger_params, arch_optimisation=False)

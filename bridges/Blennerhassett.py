@@ -1,4 +1,5 @@
 import pickle
+
 import numpy as np
 
 from bridges.bridge import Bridge
@@ -7,7 +8,7 @@ from structure_elements.cross_section import CrossSection
 
 class BlennerhassettBridge(Bridge):
     def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=115.3, g_utilities=35.1, n_hangers=13,
-                 hanger_arrangement='Parallel', hanger_params=(1.0646,), qd_live_load=27, qc_live_load=325,
+                 hanger_arrangement='Parallel', hanger_params=(1.117,), qd_live_load=27, qc_live_load=325,
                  arch_shape='Parabolic', arch_optimisation=True, self_stress_state='Tie-optimisation',
                  self_stress_state_params=(), exact_stiffness=True, knuckles=True):
 
@@ -27,8 +28,12 @@ class BlennerhassettBridge(Bridge):
         unit_price_anchorages = 9
 
         # Load the demand / capacity ratios from the base case
-        f = open('../calculations/base case/dc_ratios.pckl', 'rb')
-        dc = pickle.load(f)
+        try:
+            f = open('../base case/dc_ratios.pckl', 'rb')
+            dc = pickle.load(f)
+        except FileNotFoundError:
+            dc = [1] * 7
+
         dc_arch_1_ref, dc_arch_2_ref, dc_arch_3_ref = dc[0], dc[1], dc[2]
         dc_tie_1_ref, dc_tie_2_ref, dc_tie_3_ref, dc_hanger_ref = dc[3], dc[4], dc[5], dc[6]
 
@@ -38,7 +43,7 @@ class BlennerhassettBridge(Bridge):
         resistance_tie_1 = [153228, 100810, 76190]
         resistance_tie_2 = [117134, 82766, 56610]
         resistance_tie_3 = [100574, 76175, 45792]
-        resistance_hanger = [13/n_hangers*4190, 1, 1]
+        resistance_hanger = [13 / n_hangers * 4190, 1, 1]
 
         stiffness_arch_1 = [77429 * 10 ** 3, 31473 * 10 ** 3]
         stiffness_arch_2 = [65997 * 10 ** 3, 28673 * 10 ** 3]
@@ -46,7 +51,7 @@ class BlennerhassettBridge(Bridge):
         stiffness_tie_1 = [77429 * 10 ** 3, 31473 * 10 ** 3]
         stiffness_tie_2 = [65997 * 10 ** 3, 28673 * 10 ** 3]
         stiffness_tie_3 = [61814 * 10 ** 3, 28113 * 10 ** 3]
-        stiffness_hanger = [13/n_hangers*643.5 * 10 ** 3, 10 ** 6]
+        stiffness_hanger = [13 / n_hangers * 643.5 * 10 ** 3, 10 ** 6]
 
         wind_load_arch_1 = {'Normal Force': [-8175], 'Moment': [668], 'Moment y': [13851, -13851]}
         wind_load_arch_2 = {'Normal Force': [-7793], 'Moment': [-670], 'Moment y': [10749, -10749]}
@@ -90,6 +95,7 @@ class BlennerhassettBridge(Bridge):
                                   unit_cost=unit_price_hanger, unit_weight=unit_weight_hanger, dc_ref=dc_hanger_ref)
 
         # Mirror the cross-sections
+        cost_cross_sections = cs_arch[1:] + cs_tie[1:] + [cs_hangers]
         cs_tie = cs_tie + cs_tie[-2::-1]
         cs_tie_x = cs_tie_x + [-x for x in cs_tie_x[::-1]]
         cs_arch = cs_arch + cs_arch[-2::-1]
@@ -106,5 +112,5 @@ class BlennerhassettBridge(Bridge):
         super().__init__(span, rise, n_cross_girders, g_deck, g_utilities, qd_live_load, qc_live_load, arch_shape,
                          arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch, cs_tie_x,
                          cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
-                         unit_weight_anchorages, unit_price_anchorages)
+                         cost_cross_sections, unit_weight_anchorages, unit_price_anchorages)
         return

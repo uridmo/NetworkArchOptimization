@@ -1,8 +1,7 @@
 import numpy as np
 
 from .hanger_set import HangerSet
-from ..effects import multiply_effect
-from ..element import Element
+from ..element import Element, multiply_effect
 
 
 class Hangers(Element):

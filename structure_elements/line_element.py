@@ -4,8 +4,7 @@ from matplotlib.patches import Polygon
 from plotting.model import plot_model
 from plotting.save import save_plot
 from structure_analysis import structure_analysis, verify_input
-from structure_elements.effects import multiply_effect
-from structure_elements.element import Element
+from structure_elements.element import Element, multiply_effect
 
 
 class LineElement(Element):

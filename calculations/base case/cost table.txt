@@ -1,0 +1,16 @@
+\begin{tabular}{lcccccc}
+\hline
+Segment & Length & Weight & Unit cost & D/C$_{max}$ & D/C$_{ref}$ & Cost \\
+ & [m] & [kg/m] & [\$/kg] & [-] & [-] & [\$ Mio.] \\ \hline
+Arch 1 & 61 & 2467 & 4.0 & 0.87 & 0.87 & 1.21 \\
+Arch 2 & 122 & 2311 & 4.0 & 0.93 & 0.93 & 2.25 \\
+Arch 3 & 101 & 2311 & 4.0 & 0.76 & 0.76 & 1.88 \\
+Tie 1 & 57 & 2334 & 3.5 & 0.62 & 0.62 & 0.93 \\
+Tie 2 & 115 & 2009 & 3.5 & 0.59 & 0.59 & 1.61 \\
+Tie 3 & 84 & 2009 & 3.5 & 0.58 & 0.58 & 1.17 \\
+Hangers & 1104 & 32 & 22.0 & 0.96 & 0.96 & 1.55 \\
+\arrayrulecolor{gray} \hline
+- Anchorages & 26 ea & 2323 kg/ea & 9.0 \$/kg & 0.96 & 0.96 & 0.54 \\
+- Testing & - & - & 50000 \$ & - & - & 0.05 \\ \hline
+& & & & & & 11.20 \\ \hhline{~~~~~~ =}
+\end{tabular}

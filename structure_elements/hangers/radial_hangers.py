@@ -25,7 +25,7 @@ class RadialHangerSet(HangerSet):
         # Check whether the hangers do not cross each other
         checks = [pos_tie_x[i] > pos_tie_x[i + 1] for i in range(n - 1)]
         if any(checks):
-            warn("Some hangers cross each other")
+            warn("Some hangers of the same set cross each other")
 
         # Check whether all hangers lie on the tie
         kicks = 0

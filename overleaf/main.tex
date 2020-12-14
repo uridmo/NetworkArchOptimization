@@ -47,7 +47,7 @@
 \pgfplotsset{compat=newest}  
 \pgfplotsset{plot coordinates/math parser=false}
 
-\graphicspath{ {Figures/} } 
+%\graphicspath{ {Figures/} } 
 \setlength{\headheight}{14pt} 
 \setlength{\parindent}{0pt}
 \setcounter{secnumdepth}{4}
@@ -90,19 +90,21 @@
 
 \begin{document}
 
-\input{Frontpage}
+\input{overleaf/Frontpage}
 \newpage
 \myemptypage{}
 
 \pagenumbering{roman}
-\input{Summary}
+\input{overleaf/Summary}
 \newpage
 \myemptypage{}
 
 
-\input{Foreword}
+\input{overleaf/Foreword}
 \newpage
 
+\setcounter{tocdepth}{2}
+%\setcounter{secnumdepth}{3}
 \tableofcontents
 \newpage
 
@@ -139,13 +141,12 @@
 %\newpage
 %\input{Section9}
 
-%\clearpage
-%\appendix
-%\section*{Appendix}\addcontentsline{toc}{section}{Appendix}
-%\cleardoublepage
-%\input{Appendix}
+\clearpage
+\appendix
+\section*{Appendix}\addcontentsline{toc}{section}{Appendix}
+\cleardoublepage
+\input{overleaf/Appendix/appendix}
 
 \newpage
 \printbibliography
-
 \end{document}

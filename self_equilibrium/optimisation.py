@@ -160,26 +160,3 @@ def moment_distribution_tie(x, nodes, hangers, tie, factor=1):
     moment_tie = tie.effects['Permanent']['Moment']
     moment_tie *= factor
     return moment_tie
-
-
-def blennerhassett_forces(arch, tie, nodes, hangers):
-    forces = np.array([2420, 2015, 2126, 2051, 1766, 1931, 1877, 1784, 1757, 1646, 1601, 2371, 1842])
-
-    a, b = get_self_stress_matrix(arch, tie, nodes, hangers)
-    mod = np.zeros((a.shape[1], 3))
-    mod[0, 0] = 1
-    mod[1, 1] = 1
-    mod[2:, 2] = forces
-    ones = np.ones_like(np.expand_dims(b, axis=1))
-    a_ub = np.vstack((np.hstack((-ones, -a @ mod)), np.hstack((-ones, a @ mod))))
-    b_ub = np.array(list(b) + list(-b))
-    c = np.array([1] + [0 for i in range(3)])
-    bounds = [(-np.inf, np.inf) for i in range(3)] + [(0.8, 1.2)]
-    sol = optimize.linprog(c, A_ub=a_ub, b_ub=b_ub, bounds=bounds, method='revised simplex')  # , x0=x0)
-    x = sol.x
-
-    hangers.set_prestressing_forces(list(x[3] * forces))
-    hangers.assign_permanent_effects()
-    arch.assign_permanent_effects(nodes, hangers, x[1], -x[2])
-    tie.assign_permanent_effects(nodes, hangers, -x[1], x[2])
-    return

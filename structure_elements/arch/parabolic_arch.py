@@ -4,7 +4,7 @@ from .arch import Arch
 
 
 class ParabolicArch(Arch):
-    def __init__(self, nodes, span, rise, n=30):
+    def __init__(self, nodes, span, rise, n=100):
         super().__init__(nodes, span, rise)
 
         x_arch = list(np.linspace(0, span, 2 * n + 1))

@@ -4,7 +4,7 @@ from structure_elements.arch.arch import Arch
 
 
 class CircularArch(Arch):
-    def __init__(self, nodes, span, rise, n=30):
+    def __init__(self, nodes, span, rise, n=100):
         super().__init__(nodes, span, rise)
 
         radius = (rise ** 2 + (span / 2) ** 2) / (2 * rise)

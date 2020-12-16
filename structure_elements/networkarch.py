@@ -93,7 +93,7 @@ class NetworkArch:
         n = self.tie.cross_girders_amount
         f_d = span * q_d / (n+1)
         f_c = q_c
-        g_c = self.tie.utilities
+        g_c = self.tie.force_utilities
 
         self.set_range(str(g_c)+' Added', 'DW')
         self.set_range(str(f_d)+' Inclusive', 'LLd')
@@ -135,5 +135,9 @@ class NetworkArch:
         self.add_key('Strength-IV', 'Moment y', 0)
 
         self.assign_range_to_sections(['Strength-I', 'Strength-III', 'Strength-IV'])
+        return
 
+    def calculate_tie_fracture_max(self):
+        self.set_range('EL, 1.25 DC, 1.5 DW, 1.3 LL', 'Tie Fracture')
+        self.tie.assign_fracture_stress('Tie Fracture')
         return

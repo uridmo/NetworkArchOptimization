@@ -44,7 +44,6 @@ class Bridge:
         self.cost_cross_sections = cost_cross_sections
         self.unit_weight_anchorages = unit_weight_anchorages
         self.unit_price_anchorages = unit_price_anchorages
-        self.ultimate_limit_states = {'Strength-I': 'LL'}
 
         # Initialize nodes and create hanger set
         nodes = Nodes(accuracy=0.01)
@@ -63,13 +62,15 @@ class Bridge:
         tie = Tie(nodes, span, n_cross_girders, g_deck, g_wearing)
         hangers = Hangers(nodes, hanger_set, span)
 
-        # Define the arch shape (arch shape is optimised later)
+        # Define the arch shape (thrust line is obtained later)
         if arch_shape == 'Parabolic':
             arch = ParabolicArch(nodes, span, rise)
         elif arch_shape == 'Circular':
             arch = CircularArch(nodes, span, rise)
         elif arch_shape == 'Continuous optimisation':
-            arch = ContinuousArch(nodes, hanger_set, span, rise)
+            g_arch = cs_arch[1].weight
+            g_tie = g_deck + g_wearing + cs_tie[1].weight
+            arch = ContinuousArch(nodes, hanger_set, g_arch, g_tie, span, rise)
         else:
             raise Exception('Arch shape "' + arch_shape + '" is not defined.')
 
@@ -82,20 +83,23 @@ class Bridge:
         tie.define_cross_sections(nodes, cs_tie_x, cs_tie)
         hangers.assign_cross_section(cs_hangers)
 
+        # Define the entire network arch structure
+        network_arch = NetworkArch(arch, tie, hangers)
+
         # Determine the self equilibrium stress-state
         if self_stress_state == 'Zero-displacement':
             mz_0 = tie.zero_displacement(nodes, hangers, *self_stress_state_params[0:1])
-            n_0 = arch.define_by_peak_moment(nodes, hangers, mz_0, *self_stress_state_params[1:])
+            n_0 = arch.define_n_by_peak_moment(nodes, hangers, mz_0, *self_stress_state_params[1:])
 
         elif self_stress_state == 'Embedded-beam':
             k_y = self_stress_state_params[0]
             peak_moment = self_stress_state_params[1]
             mz_0 = embedded_beam(tie, nodes, hangers, k_y)
-            n_0 = arch.define_by_peak_moment(nodes, hangers, mz_0, peak_moment=peak_moment)
+            n_0 = arch.define_n_by_peak_moment(nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Tie-optimisation':
             mz_0 = optimize_self_stresses_tie_1(tie, nodes, hangers, *self_stress_state_params[1:2])
-            n_0 = arch.define_by_peak_moment(nodes, hangers, mz_0, *self_stress_state_params[0:1])
+            n_0 = arch.define_n_by_least_squares(nodes, hangers, mz_0)
 
         elif self_stress_state == 'Overall-optimisation':
             n_0, mz_0 = optimize_self_stresses(arch, tie, nodes, hangers, *self_stress_state_params)
@@ -115,20 +119,21 @@ class Bridge:
             arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)
             arch.arch_connection_nodes(nodes, hangers)
             arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
-            n_0 = arch.n_0
+            n_0 = arch.define_n_by_least_squares(nodes, hangers, mz_0)
+            network_arch.arch = arch
 
+        # Assign the permanent effects to the cross sections
         hangers.assign_length_to_cross_section()
         hangers.assign_permanent_effects()
         arch.assign_permanent_effects(nodes, hangers, n_0, -mz_0)
         tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0)
 
-        # Define the entire network arch structure
-        network_arch = NetworkArch(arch, tie, hangers)
-
         # Calculate the load cases
         network_arch.calculate_load_cases(nodes, qd_live_load, qc_live_load)
         network_arch.assign_wind_effects()
         network_arch.calculate_ultimate_limit_states()
+
+        network_arch.calculate_tie_fracture_max()
 
         self.nodes = nodes
         self.network_arch = network_arch
@@ -141,6 +146,8 @@ class Bridge:
     def plot_elements(self, ax=None):
         if not ax:
             fig, ax = pyplot.subplots(1, 1, figsize=(4, 1.5), dpi=720)
+        else:
+            fig = ax.get_figure()
         model = {'Nodes': {'Location': [[0, 0], [self.span, 0]]},
                  'Boundary Conditions': {'Restricted Degrees': [[0, 1, 1, 0, 0], [1, 0, 1, 0, 0]]}}
         plot_supports_new(model, ax, factor=0.03)
@@ -178,7 +185,6 @@ class Bridge:
         self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls)
         self.network_arch.arch.plot_effects(axs[3], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[4], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
-
         return fig
 
     def internal_forces_table(self, name='design forces table', all_uls=False):

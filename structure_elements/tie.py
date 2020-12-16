@@ -1,3 +1,5 @@
+import numpy as np
+
 from structure_analysis import structure_analysis
 from structure_elements.line_element import LineElement
 
@@ -10,10 +12,10 @@ class Tie(LineElement):
         self.cross_girders_nodes = [nodes.add_node(span*(i+1)/(n+1), 0) for i in range(n)]
         self.nodes = [nodes.add_node(0, 0)] + self.cross_girders_nodes + [nodes.add_node(span, 0)]
         self.weight_deck = g_deck
-        self.weight_wearing_utilities = g_wearing
+        self.weight_utilities = g_wearing
 
-        self.concentrated_weight = self.weight_deck * self.span / (self.cross_girders_amount+1)
-        self.utilities = self.weight_wearing_utilities * self.span / (self.cross_girders_amount+1)
+        self.force_deck = self.weight_deck * self.span / (self.cross_girders_amount + 1)
+        self.force_utilities = self.weight_utilities * self.span / (self.cross_girders_amount + 1)
 
     def assign_hangers(self, hangers):
         for hanger in hangers:
@@ -40,7 +42,7 @@ class Tie(LineElement):
 
     def load_group_utilities(self):
         load_group = {}
-        f_y = -self.weight_wearing_utilities * self.span / (self.cross_girders_amount+1)
+        f_y = -self.weight_utilities * self.span / (self.cross_girders_amount + 1)
         load_group['Nodal'] = [[node.index, 0, f_y, 0] for node in self.cross_girders_nodes[1:-1]]
         load_group['Nodal'].append([self.cross_girders_nodes[0].index, 0, 1.0*f_y, 0])
         load_group['Nodal'].append([self.cross_girders_nodes[-1].index, 0, 1.0*f_y, 0])
@@ -76,5 +78,17 @@ class Tie(LineElement):
         # Assign the reaction forces to the hangers
         forces = [rd[2] for rd in rd_tie[0][2:]]
         hangers.set_prestressing_force_from_nodes(nodes, forces)
-
         return mz_0
+
+    def assign_fracture_stress(self, range_name):
+        cs_i = self.get_cross_sections()
+        effect_range = self.get_effects(range_name)
+        for cs in set(cs_i):
+            mask = cs == cs_i
+            for tie_fracture in cs.tie_fractures:
+                name = tie_fracture.name
+                if name not in effect_range:
+                    effect_range[name] = np.zeros_like(effect_range['Normal Force'])
+                stresses = tie_fracture.calculate_stress(effect_range, mask)
+                effect_range[name][:, mask] = stresses
+        return

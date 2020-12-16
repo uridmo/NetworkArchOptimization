@@ -3,7 +3,7 @@ import pickle
 import numpy as np
 
 from bridges.bridge import Bridge
-from structure_elements.cross_section import CrossSection
+from structure_elements.cross_section import CrossSection, TieFracture
 
 
 class BlennerhassettBridge(Bridge):
@@ -63,19 +63,43 @@ class BlennerhassettBridge(Bridge):
         wind_load_tie_4 = {'Normal Force': [5275], 'Moment': [702], 'Moment y': [788, -788]}
         wind_load_hangers = {'Normal Force': [480]}
 
+        tie_fracture_1_web = TieFracture('Web', 0.369, 0.150, 0, 0.1089, 0.0267, -0.8826, 0.8826)
+        tie_fracture_2_web = TieFracture('Web', 0.314, 0.137, 0, 0.0817, 0.0200, -0.8826, 0.8826)
+        tie_fracture_3_web = TieFracture('Web', 0.294, 0.134, 0, 0.0762, 0.0187, -0.8826, 0.8826)
+        tie_fracture_1_top = TieFracture('Top', 0.369, 0.150, 0.857, 0.0619, 0, -0.8826, 0.8573)
+        tie_fracture_2_top = TieFracture('Top', 0.314, 0.137, 0.857, 0.0619, 0, -0.8826, 0.8573)
+        tie_fracture_3_top = TieFracture('Top', 0.294, 0.134, 0.857, 0.0619, 0, -0.8826, 0.8573)
+        tie_fracture_1_bottom = TieFracture('Bottom', 0.369, 0.150, -0.857, 0.0619, 0, -0.8573, 0.8826)
+        tie_fracture_2_bottom = TieFracture('Bottom', 0.314, 0.137, -0.857, 0.0619, 0, -0.8573, 0.8826)
+        tie_fracture_3_bottom = TieFracture('Bottom', 0.294, 0.134, -0.857, 0.0619, 0, -0.8573, 0.8826)
+
         if not exact_stiffness:
             stiffness_tie_1 = stiffness_tie_3
             stiffness_tie_2 = stiffness_tie_3
             stiffness_arch_1 = stiffness_arch_3
             stiffness_arch_2 = stiffness_arch_3
+            tie_fracture_1_web = tie_fracture_3_web
+            tie_fracture_2_web = tie_fracture_3_web
+            tie_fracture_1_top = tie_fracture_3_top
+            tie_fracture_2_top = tie_fracture_3_top
+            tie_fracture_1_bottom = tie_fracture_3_bottom
+            tie_fracture_2_bottom = tie_fracture_3_bottom
 
-        cs_tie_0 = CrossSection('Tie 0', 26.4, stiffness_tie_1, resistance_tie_1, wind_effects=wind_load_tie_1)
+        tie_fractures_1 = [tie_fracture_1_web, tie_fracture_1_top, tie_fracture_1_bottom]
+        tie_fractures_2 = [tie_fracture_2_web, tie_fracture_2_top, tie_fracture_2_bottom]
+        tie_fractures_3 = [tie_fracture_3_web, tie_fracture_3_top, tie_fracture_3_bottom]
+
+        cs_tie_0 = CrossSection('Tie 0', 26.4, stiffness_tie_1, resistance_tie_1, wind_effects=wind_load_tie_1,
+                                tie_fractures=tie_fractures_1)
         cs_tie_1 = CrossSection('Tie 1', 26.4, stiffness_tie_2, resistance_tie_2, wind_effects=wind_load_tie_2,
-                                unit_cost=unit_price_tie, unit_weight=unit_weight_tie_1, dc_ref=dc_tie_1_ref)
+                                unit_cost=unit_price_tie, unit_weight=unit_weight_tie_1, dc_ref=dc_tie_1_ref,
+                                tie_fractures=tie_fractures_2)
         cs_tie_2 = CrossSection('Tie 2', 26.4, stiffness_tie_3, resistance_tie_3, wind_effects=wind_load_tie_3,
-                                unit_cost=unit_price_tie, unit_weight=unit_weight_tie_2, dc_ref=dc_tie_2_ref)
+                                unit_cost=unit_price_tie, unit_weight=unit_weight_tie_2, dc_ref=dc_tie_2_ref,
+                                tie_fractures=tie_fractures_3)
         cs_tie_3 = CrossSection('Tie 3', 26.4, stiffness_tie_3, resistance_tie_3, wind_effects=wind_load_tie_4,
-                                unit_cost=unit_price_tie, unit_weight=unit_weight_tie_3, dc_ref=dc_tie_3_ref)
+                                unit_cost=unit_price_tie, unit_weight=unit_weight_tie_3, dc_ref=dc_tie_3_ref,
+                                tie_fractures=tie_fractures_3)
 
         cs_tie = [cs_tie_0, cs_tie_1, cs_tie_2, cs_tie_3]
         cs_tie_x = [6.2, 34.8, 92.13]

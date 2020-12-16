@@ -72,7 +72,7 @@ def dc_table(name, cross_sections, uls_types=""):
                 text.write(r" & \textbf{" + f"{dc:.2f}" + r"}")
             else:
                 text.write(f" & {dc:.2f}")
-        text.write(r" & \textbf{" + f"{cs.dc_ref:.2f}" + r"} & (" + cs.load_ref + r") \\" + "\n")
+        text.write(r" & \textbf{" + f"{cs.dc_ref:.2f}" + r"} & (" + r") \\" + "\n")
 
     text.write(r"\hline" + "\n")
     text.write(r"\end{tabular}" + "\n")

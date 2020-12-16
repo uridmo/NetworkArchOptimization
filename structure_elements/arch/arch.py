@@ -9,7 +9,7 @@ class Arch(LineElement):
         self.span = span
         self.rise = rise
         self.nodes = [nodes.add_node(0, 0), nodes.add_node(span, 0)]
-        self.tie_tension = None
+        self.tie_tension = 0
         return
 
     def arch_connection_nodes(self, nodes, hangers):
@@ -43,10 +43,23 @@ class Arch(LineElement):
                         break
         return
 
-    def define_by_peak_moment(self, nodes, hangers, mz_0, peak_moment=0):
-        self.assign_permanent_effects(nodes, hangers, 0, -mz_0)
-        moments_arch = self.effects['Permanent']['Moment']
-        moment_max = max(moments_arch)
-        n_0 = (moment_max - peak_moment) / self.rise
+    def define_n_by_peak_moment(self, nodes, hangers, mz_0, peak_moment=0):
+        n_0 = self.tie_tension
+        self.assign_permanent_effects(nodes, hangers, n_0, -mz_0)
+        moments_arch = self.get_effects('Permanent', 'Moment')
+        moment = moments_arch[len(moments_arch)/2]
+        n_0 += (moment - peak_moment) / self.rise
+        self.tie_tension = n_0
+        return n_0
+
+    def define_n_by_least_squares(self, nodes, hangers, mz_0):
+        n_0 = self.tie_tension
+        self.assign_permanent_effects(nodes, hangers, n_0, -mz_0)
+        moments_arch = self.get_effects('Permanent', 'Moment')
+        xy_coord = self.get_coordinates()
+        moments_n = xy_coord[:, 1]
+        a = sum(moments_n * moments_n)
+        b = sum(moments_n * moments_arch)
+        n_0 += b/a
         self.tie_tension = n_0
         return n_0

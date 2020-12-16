@@ -2,10 +2,9 @@ from matplotlib import pyplot
 
 from plotting.adjustments import adjust_overview_plots, adjust_effects_plots
 from plotting.general import colors
-from plotting.save import save_plot
 
 
-def make_plots(bridges_dict, load_groups, folder, big_plots=False, show=True):
+def make_plots(bridges_dict, load_groups, big_plots=False, show=True):
 
     for name in load_groups:
         load_group = load_groups[name]
@@ -23,7 +22,7 @@ def make_plots(bridges_dict, load_groups, folder, big_plots=False, show=True):
         else:
             adjust_effects_plots(fig)
 
-        save_plot(fig, folder, name)
+        fig.savefig(name + ".png")
 
         if show:
             pyplot.show()

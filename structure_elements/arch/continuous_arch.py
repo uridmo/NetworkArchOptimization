@@ -1,51 +1,68 @@
 import numpy as np
 from scipy.optimize import fsolve
-
 from structure_elements.arch.arch import Arch
 
 
-def displacement(d, q, s, nx, ny, x, y, dx, l1, l2, fun_angle, fun_height_2):
-    dy = d[0]
-    dl1 = fsolve(lambda dl: fun_height_2(l1 + dl, y - dy) - (x + dx), 0)[0]
-    dl2 = fsolve(lambda dl: fun_height_2(l2 - dl, y - dy) - (s - x - dx), 0)[0]
+class ContinuousArch(Arch):
+    def __init__(self, nodes, hanger_set, g_arch, g_tie, span, rise, n=100):
+        super().__init__(nodes, span, rise)
 
-    a1 = fun_angle(l1 + dl1 / 2)
-    b1 = fun_angle(s - (l1 + dl1 / 2))
-    a2 = fun_angle(l2 - dl2 / 2)
-    b2 = fun_angle(s - (l2 - dl2 / 2))
+        a_x = [hanger.tie_node.x for hanger in hanger_set.hangers]
+        angles = [hanger.inclination for hanger in hanger_set.hangers]
 
-    f1 = q * dl1 / (np.sin(a1) + np.cos(a1) * np.tan(b1))
-    f2 = q * dl2 / (np.sin(a2) + np.cos(a2) * np.tan(b2))
+        # a_x = [a_x[0]/2-0.1] + [a_x[0]/2] + a_x + [span/2 + a_x[-1]/2] + [span/2 + a_x[-1]/2 + 0.1]
+        # angles = [np.pi-0.001] + [angles[0]] + angles + [angles[-1]] + [0.001]
 
-    nx2 = nx - f1 * np.cos(a1) + f2 * np.cos(a2)
-    ny2 = ny + f1 * np.sin(a1) + f2 * np.sin(a2)
+        n_peak_0 = (g_arch + g_tie) * span ** 2 / 8 / rise
+        x_arch = np.linspace(span / 2, span, n + 1)
 
-    x3 = (dx / 2 * (ny / nx + ny2 / nx2) - dy)
-    return x3, nx2, ny2, dl1, dl2
+        # Function giving the interpolated angle of the first hanger-set at x
+        def fun_angle(x): return np.interp(x, a_x, angles)
+
+        def fun_height(x, angle, h): return x + h / np.tan(angle)
+
+        def fun_height_2(x, h): return fun_height(x, fun_angle(x), h)
+
+        # Find hangers that reach the crown of the arch
+        l0 = fsolve(lambda l: (fun_height_2(l, rise) - span / 2), np.array([0]))
+
+        sol = fsolve(lambda x: thrust_line_by_n_peak(x, x_arch, rise, span, l0, g_tie, g_arch,
+                                                     fun_angle, fun_height_2)[0], n_peak_0)
+        n_peak = sol[0]
+        [y_arch, nx] = thrust_line_by_n_peak(n_peak, x_arch, rise, span, l0, g_tie, g_arch,
+                                             fun_angle, fun_height_2)[1:3]
+
+        # Mirror the obtained shape
+        x_arch = list(np.linspace(0, span, 2 * n + 1))
+        y_arch = y_arch.tolist()
+        y_arch = y_arch[-1:0:-1] + y_arch
+
+        self.tie_tension = nx[-1]
+        for i in range(len(x_arch)):
+            self.insert_node(nodes, x_arch[i], y_arch[i])
+        return
 
 
-def arch(N, X, r, s, l0, q, fun_angle, fun_height_2):
-    nx_arr = np.zeros(len(X))
-    ny_arr = np.zeros(len(X))
-    y = np.zeros(len(X))
-    l1 = np.zeros(len(X))
-    l2 = np.zeros(len(X))
-    dx = np.diff(X)
+def thrust_line_by_n_peak(n_peak, x_arch, rise, span, l0, g_tie, g_arch, fun_angle, fun_height_2):
+    nx_arr = np.zeros(len(x_arch))
+    ny_arr = np.zeros(len(x_arch))
+    y = np.zeros(len(x_arch))
+    l1 = np.zeros(len(x_arch))
+    l2 = np.zeros(len(x_arch))
+    dx = np.diff(x_arch)
 
-    nx_arr[0] = N
-    y[0] = r
+    nx_arr[0] = n_peak
+    y[0] = rise
     l1[0] = l0
     l2[0] = l0
-    d = [0.1]
+    dy = np.array([0.1])
 
-    for i in range(len(X) - 1):
-        def displacement_d(d): return displacement(d, q, s, nx_arr[i], ny_arr[i], X[i], y[i], dx[i], l1[i], l2[i],
-                                                   fun_angle, fun_height_2)[0]
-
-        d = fsolve(displacement_d, d, factor=0.1)
-        [a, nx, ny, dl1, dl2] = displacement(d, q, s, nx_arr[i], ny_arr[i], X[i], y[i], dx[i], l1[i], l2[i], fun_angle,
-                                             fun_height_2)
-        y[i + 1] = y[i] - d
+    for i in range(len(x_arch) - 1):
+        dy = fsolve(lambda d: thrust_line_step(d, g_tie, g_arch, span, nx_arr[i], ny_arr[i], x_arch[i], y[i],
+                                               dx[i], l1[i], l2[i], fun_angle, fun_height_2)[0], dy, factor=0.1)[0]
+        [nx, ny, dl1, dl2] = thrust_line_step(dy, g_tie, g_arch, span, nx_arr[i], ny_arr[i], x_arch[i],
+                                              y[i], dx[i], l1[i], l2[i], fun_angle, fun_height_2)[1:]
+        y[i + 1] = y[i] - dy
         l1[i + 1] = l1[i] + dl1
         l2[i + 1] = l2[i] - dl2
         nx_arr[i + 1] = nx
@@ -54,32 +71,21 @@ def arch(N, X, r, s, l0, q, fun_angle, fun_height_2):
     return dy, y, nx_arr, ny_arr, l1, l2
 
 
-class ContinuousArch(Arch):
-    def __init__(self, nodes, hanger_set, span, rise, n=30):
-        super().__init__(nodes, span, rise)
+def thrust_line_step(dy, g_tie, g_arch, s, nx, ny, x, y, dx, l1, l2, fun_angle, fun_height_2):
+    dl1 = fsolve(lambda z: fun_height_2(l1 + z, y - dy) - (x + dx), np.array([0]))[0]
+    dl2 = fsolve(lambda z: fun_height_2(l2 - z, y - dy) - (s - x - dx), np.array([0]))[0]
 
-        a_x = [hanger.tie_node.x for hanger in hanger_set.hangers]
-        angles = [hanger.inclination for hanger in hanger_set.hangers]
-        g = 500
-        f_n = g * span ** 2 / 8 / rise
-        x_arch = np.linspace(span / 2, span, n + 1)
+    a1 = fun_angle(l1 + dl1 / 2)
+    b1 = fun_angle(s - (l1 + dl1 / 2))
+    a2 = fun_angle(l2 - dl2 / 2)
+    b2 = fun_angle(s - (l2 - dl2 / 2))
 
-        def fun_angle(x): return np.interp(x, a_x, angles)
-        def fun_height(x, angle, h): return x + h / np.tan(angle)
-        def fun_height_2(x, h): return fun_height(x, fun_angle(x), h)
+    dl = (dx ** 2 + dy ** 2) ** 0.5
+    f1 = g_tie * dl1 / (np.sin(a1) + np.cos(a1) * np.tan(b1))
+    f2 = g_tie * dl2 / (np.sin(a2) + np.cos(a2) * np.tan(b2))
 
-        # Find hangers that reach the top of the arch
-        l0 = fsolve(lambda l: (fun_height_2(l, rise) - span / 2), 0)
+    nx2 = nx - f1 * np.cos(a1) + f2 * np.cos(a2)
+    ny2 = ny + f1 * np.sin(a1) + f2 * np.sin(a2) + g_arch * dl
 
-        f_n = fsolve(lambda n_x: arch(n_x, x_arch, rise, span, l0, g, fun_angle, fun_height_2)[0], f_n)
-        [dy, y_arch, nx, ny, l1, l2] = arch(f_n, x_arch, rise, span, l0, g, fun_angle, fun_height_2)
-
-        # Mirror the obtained shape
-        x_arch = list(np.linspace(0, span, 2 * n + 1))
-        y_arch = y_arch.tolist()
-        y_arch = y_arch[-1:0:-1] + y_arch
-
-        self.n_0 = f_n
-        for i in range(len(x_arch)):
-            self.insert_node(nodes, x_arch[i], y_arch[i])
-        return
+    x3 = (dx / 2 * (ny / nx + ny2 / nx2) - dy)
+    return x3, nx2, ny2, dl1, dl2

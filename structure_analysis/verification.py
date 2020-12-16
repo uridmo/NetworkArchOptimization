@@ -276,22 +276,22 @@ def verify_input(model_original):
             for i in multiple_displacements:
                 load_group['Initial Displacements'].pop(i)
 
-    # Check whether the system is kinematically stable. Define discElements as 1
-    # and check whether the stiffness matrix is regular.
-    discretization_information = discretize(model['Nodes'], model['Beams'], discType='Elementwise', discElements=1)
-    nodes_lists = discretization_information['Nodes']
-    releases_beams = discretization_information['Releases']['Beams']
-    beams_information = discretization_information['Beams Information']
-
-    stiffness_mat = get_stiffness_matrix(beams_stiffness, nodes_lists, releases_beams, beams_information)
-    force_mat = np.ones((len(nodes) * 3, 1))
-    modified_matrices = apply_boundary_conditions(model['Boundary Conditions'], stiffness_mat, force_mat)
-    if modified_matrices[0].shape[0] != 0:
-        rank = np.linalg.matrix_rank(modified_matrices[0].toarray())
-        n_dofs = modified_matrices[0].shape[0]
-        if rank != n_dofs:
-            print("The rank is not full! Number of dofs:" + str(n_dofs))
-            # raise Exception('The system is kinematically unstable.')
+    # # Check whether the system is kinematically stable. Define discElements as 1
+    # # and check whether the stiffness matrix is regular.
+    # discretization_information = discretize(model['Nodes'], model['Beams'], discType='Elementwise', discElements=1)
+    # nodes_lists = discretization_information['Nodes']
+    # releases_beams = discretization_information['Releases']['Beams']
+    # beams_information = discretization_information['Beams Information']
+    #
+    # stiffness_mat = get_stiffness_matrix(beams_stiffness, nodes_lists, releases_beams, beams_information)
+    # force_mat = np.ones((len(nodes) * 3, 1))
+    # modified_matrices = apply_boundary_conditions(model['Boundary Conditions'], stiffness_mat, force_mat)
+    # if modified_matrices[0].shape[0] != 0:
+    #     rank = np.linalg.matrix_rank(modified_matrices[0].toarray())
+    #     n_dofs = modified_matrices[0].shape[0]
+    #     if rank != n_dofs:
+    #         print("The rank is not full! Number of dofs:" + str(n_dofs))
+    #         # raise Exception('The system is kinematically unstable.')
 
     return model
 

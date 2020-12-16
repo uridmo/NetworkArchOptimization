@@ -119,14 +119,20 @@ class LineElement(Element):
             cs.calculate_doc_max(name)
         return
 
+    def get_coordinate_step(self, i):
+        x = self.nodes[i].x, self.nodes[i + 1].x
+        y = self.nodes[i].y, self.nodes[i + 1].y
+        dx = x[0] - x[1]
+        dy = y[0] - y[1]
+        dl = (dx ** 2 + dy ** 2) ** 0.5
+        return x, y, dx, dy, dl
+
     def get_coordinates(self):
         xy_coord = np.empty((0, 2))
         for i in range(len(self.nodes) - 1):
-            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
-            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
-            length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
-            x = np.linspace(x_start, x_end, num=int(np.ceil(length)) + 1)
-            y = np.linspace(y_start, y_end, num=int(np.ceil(length)) + 1)
+            x, y, dx, dy, dl = self.get_coordinate_step(i)
+            x = np.linspace(*x, num=int(np.ceil(dl)) + 1)
+            y = np.linspace(*y, num=int(np.ceil(dl)) + 1)
             xy_coord = np.vstack((xy_coord, np.vstack((x, y)).transpose()))
         return xy_coord
 
@@ -134,24 +140,18 @@ class LineElement(Element):
         x_norm = []
         y_norm = []
         for i in range(len(self.nodes) - 1):
-            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
-            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
-            dx = x_start - x_end
-            dy = y_start - y_end
-            length = (dx ** 2 + dy ** 2) ** 0.5
-            n = int(np.ceil(length)) + 1
-            x_norm.extend([dy / length]*n)
-            y_norm.extend([-dx / length]*n)
+            x, y, dx, dy, dl = self.get_coordinate_step(i)
+            n = int(np.ceil(dl)) + 1
+            x_norm.extend([dy / dl]*n)
+            y_norm.extend([-dx / dl]*n)
         xy_norm = np.array([x_norm, y_norm]).transpose()
         return xy_norm
 
     def get_cross_sections(self):
         cs_i = []
         for i in range(len(self.nodes) - 1):
-            x_start, x_end = self.nodes[i].x, self.nodes[i + 1].x
-            y_start, y_end = self.nodes[i].y, self.nodes[i + 1].y
-            length = ((x_start - x_end) ** 2 + (y_start - y_end) ** 2) ** 0.5
-            cs_i.extend([self.cross_sections[i] for j in range(int(np.ceil(length)) + 1)])
+            dl = self.get_coordinate_step(i)[4]
+            cs_i.extend([self.cross_sections[i]] * (int(np.ceil(dl)) + 1))
         cs_i = np.array(cs_i)
         return cs_i
 
@@ -170,6 +170,14 @@ class LineElement(Element):
         self.set_effects(dc_1, name, 'D/C_1')
         self.set_effects(dc_2, name, 'D/C_2')
         return
+
+    # def calculate_tie_fracture_stress(self, name):
+    #     cs_i = self.get_cross_sections()
+    #     dc_1 = np.zeros_like(self.effects[name]['Normal Force'])
+    #     dc_2 = np.zeros_like(self.effects[name]['Normal Force'])
+    #     for cs in set(cs_i):
+    #         for
+    #     return
 
     def set_effects(self, effects, name, key=None):
         super().set_effects(effects, name, key=key)
@@ -232,7 +240,7 @@ class LineElement(Element):
         min_value = np.min(values)
         return max_value, min_value
 
-    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False, name='Line Element'):
+    def assign_permanent_effects(self, nodes, hangers, f_x, m_z, plots=False):
         # Define the list of all nodes
         structural_nodes = nodes.structural_nodes()
         beams_nodes, beams_stiffness = self.get_beams()
@@ -269,14 +277,4 @@ class LineElement(Element):
         self.set_effects(i_f[0], 'Permanent')
         effects = self.get_effects('Permanent')
         self.set_effects(multiply_effect(effects, 0), '0')
-
-        # Create the plots if needed
-        if plots:
-            model = verify_input(model)
-            fig, ax = plot_model(model, self)
-            save_plot(fig, 'optimisation methods', 'tie permanent loads')
-
-            # fig, ax = plot_model(model, self, i=None, show=False)
-            # # self.plot_effects_on_arch(ax, nodes, 'Permanent', 'Moment')
-            # save_plot(fig, 'optimisation methods', 'tie permanent loads')
         return

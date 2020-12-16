@@ -5,7 +5,7 @@ import numpy as np
 
 class CrossSection:
     def __init__(self, name, g, stiffness, resistance, wind_effects={},
-                 unit_cost=0, unit_weight=0, dc_ref=0, load_ref=""):
+                 unit_cost=0, unit_weight=0, dc_ref=0, tie_fractures=()):
         self.name = name
         self.weight = g
         self.stiffness = stiffness
@@ -14,7 +14,6 @@ class CrossSection:
         self.unit_weight = unit_weight
         self.dc_ref = dc_ref
         self.dc_max = 0
-        self.load_ref = load_ref
         self.length = 0
         self.cost = 0
 
@@ -27,6 +26,8 @@ class CrossSection:
 
         self.wind_effects = None
         self.assign_wind_effects(wind_effects, resistance)
+
+        self.tie_fractures = tie_fractures
         return
 
     def __repr__(self):
@@ -96,21 +97,50 @@ class CrossSection:
         dc_1 = [0, 0]
         dc_2 = [0, 0]
         if 'Normal Force' in wind_effects:
-            dc_1[0] += wind_effects['Normal Force'][0]/resistance[0]
-            dc_1[1] += wind_effects['Normal Force'][-1]/resistance[0]
-            dc_2[0] += wind_effects['Normal Force'][0]/resistance[0]
-            dc_2[1] += wind_effects['Normal Force'][-1]/resistance[0]
+            dc_1[0] += wind_effects['Normal Force'][0] / resistance[0]
+            dc_1[1] += wind_effects['Normal Force'][-1] / resistance[0]
+            dc_2[0] += wind_effects['Normal Force'][0] / resistance[0]
+            dc_2[1] += wind_effects['Normal Force'][-1] / resistance[0]
         if 'Moment' in wind_effects:
-            dc_1[0] += 8/9 * wind_effects['Moment'][0]/resistance[1]
-            dc_1[1] += 8/9 * wind_effects['Moment'][-1]/resistance[1]
-            dc_2[0] -= 8/9 * wind_effects['Moment'][0]/resistance[1]
-            dc_2[1] -= 8/9 * wind_effects['Moment'][-1]/resistance[1]
+            dc_1[0] += 8 / 9 * wind_effects['Moment'][0] / resistance[1]
+            dc_1[1] += 8 / 9 * wind_effects['Moment'][-1] / resistance[1]
+            dc_2[0] -= 8 / 9 * wind_effects['Moment'][0] / resistance[1]
+            dc_2[1] -= 8 / 9 * wind_effects['Moment'][-1] / resistance[1]
         if 'Moment y' in wind_effects:
-            dc_1[0] += 8/9 * wind_effects['Moment y'][0]/resistance[2]
-            dc_1[1] -= 8/9 * wind_effects['Moment y'][0]/resistance[2]
-            dc_2[0] += 8/9 * wind_effects['Moment y'][0]/resistance[2]
-            dc_2[1] -= 8/9 * wind_effects['Moment y'][0]/resistance[2]
+            dc_1[0] += 8 / 9 * wind_effects['Moment y'][0] / resistance[2]
+            dc_1[1] -= 8 / 9 * wind_effects['Moment y'][0] / resistance[2]
+            dc_2[0] += 8 / 9 * wind_effects['Moment y'][0] / resistance[2]
+            dc_2[1] -= 8 / 9 * wind_effects['Moment y'][0] / resistance[2]
         wind_effects['D/C_1'] = dc_1
         wind_effects['D/C_2'] = dc_2
         self.wind_effects = wind_effects
         return
+
+
+class TieFracture:
+    def __init__(self, name, a, i, z_lost, a_lost, i_lost, z_min, z_max):
+        self.name = name
+        z_new = -a_lost / (a - a_lost) * z_lost
+        self.center_of_gravity = z_new
+        self.area = a - a_lost
+        self.inertia = i - i_lost - (a - a_lost) * z_new ** 2 - a_lost * z_lost ** 2
+        self.z_min = z_min
+        self.z_max = z_max
+        return
+
+    def __repr__(self):
+        return self.name
+
+    def calculate_stress(self, effects, mask):
+        a = self.area
+        i = self.inertia
+        z = self.center_of_gravity
+        z_min = self.z_min
+        z_max = self.z_max
+        n = effects['Normal Force'][:, mask]
+        m = effects['Moment'][:, mask]
+        m_new = m + n * z
+        o_max = n[0, :] / a + np.max(np.vstack((m_new[1, :] * (z - z_max) / i, m_new[0, :] * (z - z_min) / i)), axis=0)
+        o_min = n[1, :] / a + np.min(np.vstack((m_new[0, :] * (z - z_max) / i, m_new[1, :] * (z - z_min) / i)), axis=0)
+        stress_range = np.vstack((o_max, o_min))
+        return stress_range

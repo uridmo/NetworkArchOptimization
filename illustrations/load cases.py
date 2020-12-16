@@ -23,7 +23,7 @@ arch.define_cross_sections(nodes, [267.8/2], [cs, cs])
 
 bridge_parallel.network_arch.arch = arch
 
-model = bridge_parallel.network_arch.create_model(bridge_parallel.nodes)
+model = bridge_parallel.network_arch.create_model()
 
 loads_arch = bridge_parallel.network_arch.arch.self_weight(n_tie)
 loads_tie = bridge_parallel.network_arch.tie.self_weight()

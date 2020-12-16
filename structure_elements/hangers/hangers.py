@@ -1,7 +1,7 @@
 import numpy as np
 
 from .hanger_set import HangerSet
-from ..element import Element, multiply_effect
+from ..element import Element
 
 
 class Hangers(Element):
@@ -32,6 +32,14 @@ class Hangers(Element):
             return result
         else:
             raise StopIteration
+
+    def __getitem__(self, i):
+        j = 0
+        while i >= len(self.hanger_sets[j]):
+            i -= len(self.hanger_sets[j])
+            j += 1
+        result = self.hanger_sets[j].hangers[i]
+        return result
 
     def assign_cross_section(self, cross_section):
         for hanger in self:
@@ -89,28 +97,14 @@ class Hangers(Element):
                     hanger.prestressing_force = hanger_force
         return
 
-    def set_effects(self, effects, name, key=None):
-        if type(effects) is dict:
-            if type(effects['Normal Force']) is list:
-                effects_i = np.array([effects['Normal Force'][i][0] for i in range(len(self))])
-            else:
-                effects_i = effects['Normal Force']
-        elif type(effects) is list:
-            if type(effects[0]) is list:
-                effects_i = np.array([effects[i][0] for i in range(len(self))])
-            elif len(effects) == 1:
-                effects_i = np.array([effects[0] for i in range(len(self))])
-            else:
-                effects_i = np.array([effects for i in range(len(self))]).transpose()
-        else:
-            raise Exception('Unknown input format.')
-
-        self.effects[name] = {'Normal Force': effects_i}
+    def set_effects(self, effects_i, name, key=None):
+        key = 'Normal Force'
+        self.effects[name] = effects_i
         for i, hanger in enumerate(self):
-            if effects_i.ndim == 1:
-                hanger.effects_N[name] = effects_i[i]
+            if effects_i[key].ndim == 1:
+                hanger.effects_N[name] = effects_i[key][i]
             else:
-                hanger.effects_N[name] = effects_i[:, i]
+                hanger.effects_N[name] = effects_i[key][:, i]
         return
 
     def set_prestressing_forces(self, forces):
@@ -131,12 +125,11 @@ class Hangers(Element):
         return hanger_forces
 
     def assign_permanent_effects(self):
-        effects = []
-        for hanger in self:
-            effects.append([hanger.prestressing_force])
+        internal_forces = np.array([hanger.prestressing_force for hanger in self])
+        effects = {'Normal Force': internal_forces}
+        effects_0 = {'Normal Force': np.zeros_like(internal_forces)}
         self.set_effects(effects, 'Permanent')
-        effects = self.get_effects('Permanent')
-        self.set_effects(multiply_effect(effects, 0), '0')
+        self.set_effects(effects_0, '0')
         return
 
     def define_knuckles(self, nodes, span, tie, arch, mz_0, cs_knuckle, knuckle_x, knuckle_inclination):

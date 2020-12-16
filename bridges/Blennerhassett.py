@@ -8,9 +8,9 @@ from structure_elements.cross_section import CrossSection, TieFracture
 
 class BlennerhassettBridge(Bridge):
     def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=115.3, g_utilities=35.1, n_hangers=13,
-                 hanger_arrangement='Parallel', hanger_params=(1.117,), qd_live_load=27, qc_live_load=325,
+                 hanger_arrangement='Parallel', hanger_params=(1.117,), qd_live_load=23, qc_live_load=1063,
                  arch_shape='Parabolic', arch_optimisation=True, self_stress_state='Tie-optimisation',
-                 self_stress_state_params=(), exact_stiffness=True, knuckles=True):
+                 self_stress_state_params=(), exact_stiffness=True, knuckles=True, x_lost_cable=0.25):
 
         unit_weight_arch_1 = 2467.05
         unit_weight_arch_2 = 2310.68
@@ -136,5 +136,5 @@ class BlennerhassettBridge(Bridge):
         super().__init__(span, rise, n_cross_girders, g_deck, g_utilities, qd_live_load, qc_live_load, arch_shape,
                          arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch, cs_tie_x,
                          cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
-                         cost_cross_sections, unit_weight_anchorages, unit_price_anchorages)
+                         x_lost_cable, cost_cross_sections, unit_weight_anchorages, unit_price_anchorages)
         return

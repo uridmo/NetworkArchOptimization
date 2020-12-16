@@ -21,7 +21,7 @@ class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load,
                  arch_shape, arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch,
                  cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
-                 cost_cross_sections, unit_weight_anchorages, unit_price_anchorages):
+                 x_lost_cable, cost_cross_sections, unit_weight_anchorages, unit_price_anchorages):
 
         self.span = span
         self.rise = rise
@@ -44,6 +44,7 @@ class Bridge:
         self.cost_cross_sections = cost_cross_sections
         self.unit_weight_anchorages = unit_weight_anchorages
         self.unit_price_anchorages = unit_price_anchorages
+        self.x_lost_cable = x_lost_cable
 
         # Initialize nodes and create hanger set
         nodes = Nodes(accuracy=0.01)
@@ -84,7 +85,7 @@ class Bridge:
         hangers.assign_cross_section(cs_hangers)
 
         # Define the entire network arch structure
-        network_arch = NetworkArch(arch, tie, hangers)
+        network_arch = NetworkArch(arch, tie, hangers, nodes)
 
         # Determine the self equilibrium stress-state
         if self_stress_state == 'Zero-displacement':
@@ -107,7 +108,7 @@ class Bridge:
         else:
             raise Exception('Self-stress state "' + self_stress_state + '" is not defined')
 
-        if knuckle or arch_optimisation:
+        if knuckle:
             knuckles, dn = hangers.define_knuckles(nodes, span, tie, arch, mz_0, *knuckle)
             mz_0 = 0
             n_0 -= dn
@@ -134,6 +135,12 @@ class Bridge:
         network_arch.calculate_ultimate_limit_states()
 
         network_arch.calculate_tie_fracture_max()
+
+        x_hangers = [hanger.tie_node.x for hanger in hanger_set]
+        val, i_cable_lost = min((abs(val-x_lost_cable*span), i) for (i, val) in enumerate(x_hangers))
+
+        network_arch.calculate_cable_loss('Hanger_Replacement', i_cable_lost, qd_live_load, qc_live_load, 1.5, 1.00)
+        network_arch.calculate_cable_loss('Hanger_Loss', i_cable_lost, qd_live_load, qc_live_load, 0.75, 1.75)
 
         self.nodes = nodes
         self.network_arch = network_arch

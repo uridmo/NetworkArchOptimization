@@ -1,9 +1,7 @@
 import numpy as np
 from matplotlib.patches import Polygon
 
-from plotting.model import plot_model
-from plotting.save import save_plot
-from structure_analysis import structure_analysis, verify_input
+from structure_analysis import structure_analysis
 from structure_elements.element import Element, multiply_effect
 
 
@@ -17,6 +15,13 @@ class LineElement(Element):
 
     def __len__(self):
         return len(self.nodes) - 1
+
+    def effect_length(self):
+        n = 0
+        for i in range(len(self.nodes) - 1):
+            dl = self.get_coordinate_step(i)[4]
+            n += int(np.ceil(dl)) + 1
+        return n
 
     def insert_node(self, nodes, x, y=None):
         if y is None:

@@ -1,5 +1,6 @@
 import numpy as np
 from scipy.optimize import fsolve
+
 from structure_elements.arch.arch import Arch
 
 

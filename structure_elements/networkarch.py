@@ -1,11 +1,15 @@
+import numpy as np
+
 from structure_analysis import structure_analysis
+from structure_elements.element import connect_inner_lists
 
 
 class NetworkArch:
-    def __init__(self, arch, tie, hangers):
+    def __init__(self, arch, tie, hangers, nodes):
         self.arch = arch
         self.tie = tie
         self.hangers = hangers
+        self.nodes = nodes
         return
 
     def get_beams(self):
@@ -22,8 +26,8 @@ class NetworkArch:
         beams = {'Nodes': beams_nodes, 'Stiffness': beams_stiffness, 'Releases': hanger_releases}
         return beams
 
-    def create_model(self, nodes):
-        structural_nodes = nodes.structural_nodes()
+    def create_model(self):
+        structural_nodes = self.nodes.structural_nodes()
         beams = self.get_beams()
         loads = []
         restricted_degrees = [[self.tie.nodes[0].index, 1, 1, 0, 0], [self.tie.nodes[-1].index, 0, 1, 0, 0]]
@@ -32,16 +36,47 @@ class NetworkArch:
                  'Boundary Conditions': boundary_conditions}
         return model
 
-    def set_effects(self, effects, name):
+    def internal_forces_to_effects(self, internal_forces):
         i_tie = len(self.tie)
         i_arch = i_tie + len(self.arch)
+        effects = {}
+        for key in internal_forces:
+            effects[key] = np.array(connect_inner_lists(internal_forces[key][:i_arch]))
+
+        effects_hangers = np.array([eff[0] for eff in internal_forces['Normal Force'][i_arch:]])
+        effects['Normal Force'] = np.hstack((effects['Normal Force'], effects_hangers))
+        return effects
+
+    def set_effects(self, effects, name):
+        if type(effects) is str:
+            effects = self.get_effects(effects)
+
+        i_tie = self.tie.effect_length()
+        i_arch = i_tie + self.arch.effect_length()
         for key in effects:
             self.tie.set_effects(effects[key][:i_tie], name, key=key)
-            self.tie.calculate_doc(name)
             self.arch.set_effects(effects[key][i_tie:i_arch], name, key=key)
+        if 'D/C_1' not in effects:
+            self.tie.calculate_doc(name)
             self.arch.calculate_doc(name)
-        self.hangers.set_effects(effects['Normal Force'][i_arch:], name)
+
+        effects_hangers = {'Normal Force': effects['Normal Force'][i_arch:]}
+        self.hangers.set_effects(effects_hangers, name)
         return
+
+    def get_effects(self, name, key=''):
+        effects = self.tie.get_effects(name)
+        arch_effects = self.arch.get_effects(name)
+        hanger_effects = self.hangers.get_effects(name)
+
+        for arch_key in arch_effects:
+            effects[arch_key] = np.hstack((effects[arch_key], arch_effects[arch_key]))
+
+        effects['Normal Force'] = np.hstack((effects['Normal Force'], hanger_effects['Normal Force']))
+        if key:
+            return effects[key]
+        else:
+            return effects
 
     def set_range(self, range_name, name):
         self.tie.get_range(range_name, name=name)
@@ -62,7 +97,7 @@ class NetworkArch:
         return
 
     def calculate_load_cases(self, nodes, q_d, q_c):
-        model = self.create_model(nodes)
+        model = self.create_model()
 
         n_tie = len(self.tie)
         loads_tie = self.tie.self_weight()
@@ -73,19 +108,21 @@ class NetworkArch:
             model['Loads'].append({'Nodal': [[node.index, 0, -1, 0]]})
 
         d, i_f, rd, sp = structure_analysis(model)
-        self.set_effects(i_f[0], 'DC')
+        effects = self.internal_forces_to_effects(i_f[0])
+        self.set_effects(effects, 'DC')
 
         added = '0'
         inclusive = '0'
         exclusive = '0'
         for i in range(len(self.tie.cross_girders_nodes)):
             name = 'F'+str(i+1)
-            self.set_effects(i_f[i+1], name)
+            effects = self.internal_forces_to_effects(i_f[i+1])
+            self.set_effects(effects, name)
             added += ' + ' + name
             inclusive += ', 0/' + name
             exclusive += '/' + name
 
-        self.set_range(added, 'Added')
+        self.set_effects(added, 'Added')
         self.set_range(inclusive, 'Inclusive')
         self.set_range(exclusive, 'Exclusive')
 
@@ -95,12 +132,12 @@ class NetworkArch:
         f_c = q_c
         g_c = self.tie.force_utilities
 
-        self.set_range(str(g_c)+' Added', 'DW')
+        self.set_effects(str(g_c)+' Added', 'DW')
         self.set_range(str(f_d)+' Inclusive', 'LLd')
         self.set_range(str(f_c)+' Exclusive', 'LLc')
 
-        self.set_range('DC + DW', 'DL')
-        self.set_range('Permanent - DL', 'EL')
+        self.set_effects('DC + DW', 'DL')
+        self.set_effects('Permanent - DL', 'EL')
         self.set_range('LLc, LLd', 'LL')
         return
 
@@ -115,12 +152,12 @@ class NetworkArch:
                     element.effects['WS'][effect][0, mask] = cs.wind_effects[effect][0]
                     element.effects['WS'][effect][1, mask] = cs.wind_effects[effect][-1]
 
-        # Get the first hanger
-        hanger = self.hangers.hanger_sets[0].hangers[0]
-        cs = hanger.cross_section
-        for name in cs.wind_effects:
-            effect = cs.wind_effects[name]
-            self.hangers.set_effects(effect, 'WS')
+        forces = []
+        for hanger in self.hangers:
+            force = hanger.cross_section.wind_effects.get('Normal Force', [0])
+            forces.append([force[0], force[-1]])
+        effects = {'Normal Force': np.array(forces).transpose()}
+        self.hangers.set_effects(effects, 'WS')
         return
 
     def calculate_ultimate_limit_states(self):
@@ -140,4 +177,56 @@ class NetworkArch:
     def calculate_tie_fracture_max(self):
         self.set_range('EL, 1.25 DC, 1.5 DW, 1.3 LL', 'Tie Fracture')
         self.tie.assign_fracture_stress('Tie Fracture')
+        return
+
+    def calculate_cable_loss(self, name, i_hanger, q_d, q_c, ll_factor, daf=1):
+        hanger = self.hangers[i_hanger]
+        span = self.tie.span
+        n = self.tie.cross_girders_amount
+        f_d = span * q_d / (n + 1)
+
+        # Find worst load arrangement
+        self.set_range('EL + 1.2 DC + 1.4 DW', 'Cable loss')
+        load = '0'
+        max_hanger_force = 0
+        max_hanger_force_i = 0
+        for i in range(len(self.tie.cross_girders_nodes)):
+            hanger_force = hanger.effects_N['F'+str(i+1)]
+            if hanger_force > 0:
+                load += ' + ' + str(f_d) + ' F'+str(i+1)
+            if hanger_force > max_hanger_force:
+                max_hanger_force = hanger_force
+                max_hanger_force_i = i
+        load += ' + ' + str(q_c) + ' F'+str(max_hanger_force_i+1)
+        effects = self.get_effects(load)
+        self.set_effects(effects, 'LL_'+name)
+        effects = self.get_effects('EL + 1.2 DC + 1.4 DW + '+str(ll_factor)+' LL_'+name)
+        self.set_effects(effects, name+'_static')
+        hanger_force = hanger.effects_N[name+'_static']
+
+        model = self.create_model()
+        i_tie = len(self.tie)
+        i_arch = i_tie + len(self.arch)
+        i = i_arch + i_hanger
+        model['Beams']['Nodes'].pop(i)
+        model['Beams']['Stiffness'].pop(i)
+        model['Beams']['Releases'] = model['Beams']['Releases'][:-1]
+
+        vertical_force = hanger_force * np.sin(hanger.inclination)
+        horizontal_force = hanger_force * np.cos(hanger.inclination)
+        loads_nodal = [[hanger.tie_node.index, -horizontal_force, -vertical_force, 0],
+                       [hanger.arch_node.index, horizontal_force, vertical_force, 0]]
+        model['Loads'] = [{'Nodal': loads_nodal}]
+        # plot_loads_old(model, 0, 'Test')
+        # pyplot.show()
+
+        d, i_f, rd, sp = structure_analysis(model)
+        i_f[0]['Normal Force'].insert(i, [-hanger_force/daf])
+        effects = self.internal_forces_to_effects(i_f[0])
+        self.set_effects(effects, name+'_dyn')
+        self.set_range(name + '_static, '
+                       + str(2-daf) + ' ' + name + '_dyn/'
+                       + str(daf) + ' ' + name + '_dyn', name)
+        self.hangers.effects[0, i_hanger] = 0
+        hanger.effects_N[name][0] = 0
         return

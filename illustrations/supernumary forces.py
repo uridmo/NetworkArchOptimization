@@ -26,7 +26,7 @@ ax_2.axis('off')
 bridge_parallel.network_arch.arch.plot_elements(ax_1)
 bridge_parallel.network_arch.tie.plot_elements(ax_2)
 
-model = bridge_parallel.network_arch.create_model(nodes)
+model = bridge_parallel.network_arch.create_model()
 loads_arch = {'Nodal': [[13, 0, 0, -1], [14, -2, 0, 1]]}
 loads_tie = {'Nodal': [[13, 0, 0, 1], [14, 2, 0, -1, []]]}
 

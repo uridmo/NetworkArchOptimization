@@ -14,10 +14,6 @@ from copy import deepcopy
 
 import numpy as np
 
-from .apply_boundary_conditions import apply_boundary_conditions
-from .assembly.stiffness_matrix import get_stiffness_matrix
-from .discretization import discretize
-
 
 def verify_input(model_original):
     """Checks whether the model is valid and modifies certain mistakes.

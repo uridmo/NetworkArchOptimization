@@ -12,11 +12,11 @@ f.close()
 
 bridge_optimized = BlennerhassettBridge()
 bridge_continuous = BlennerhassettBridge(arch_shape='Continuous optimisation', arch_optimisation=False,
-                                         n_hangers=40, n_cross_girders=40)
+                                         n_hangers=26, n_cross_girders=26)
 
 bridges_dict = {'Final design': bridge_ref, 'Thrust line arch': bridge_optimized,
                 'Continuous arch shape': bridge_continuous}
-load_groups = {'permanent state': 'Permanent', 'strength-I': 'Strength-I'}
+load_groups = {'permanent state': 'Permanent', 'strength-I': 'Strength-I', 'strength-III': 'Strength-III'}
 make_plots(bridges_dict, load_groups)
 
 bridge_optimized.cost_table()

@@ -61,7 +61,7 @@ class BlennerhassettBridge(Bridge):
         wind_load_tie_2 = {'Normal Force': [7002], 'Moment': [-1109], 'Moment y': [5880, -5880]}
         wind_load_tie_3 = {'Normal Force': [6152], 'Moment': [404], 'Moment y': [434, -434]}
         wind_load_tie_4 = {'Normal Force': [5275], 'Moment': [702], 'Moment y': [788, -788]}
-        wind_load_hangers = {'Normal Force': [480]}
+        wind_load_hangers = {'Normal Force': [480* 13 / n_hangers]}
 
         tie_fracture_1_web = TieFracture('Web', 0.369, 0.150, 0, 0.1089, 0.0267, -0.8826, 0.8826)
         tie_fracture_2_web = TieFracture('Web', 0.314, 0.137, 0, 0.0817, 0.0200, -0.8826, 0.8826)

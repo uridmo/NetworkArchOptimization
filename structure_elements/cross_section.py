@@ -4,11 +4,13 @@ import numpy as np
 
 
 class CrossSection:
-    def __init__(self, name, g, stiffness, resistance, wind_effects={},
-                 unit_cost=0, unit_weight=0, dc_ref=0, tie_fractures=()):
+    def __init__(self, name, g, stiffness, resistance, wind_effects,
+                 unit_cost=0, unit_weight=0, dc_ref=0, tie_fractures=(),
+                 released=False, fatigue_resistance=1):
         self.name = name
         self.weight = g
         self.stiffness = stiffness
+        self.released = released
 
         self.unit_cost = unit_cost
         self.unit_weight = unit_weight
@@ -23,6 +25,7 @@ class CrossSection:
         self.normal_force_resistance = resistance[0]
         self.moment_z_resistance = resistance[1]
         self.moment_y_resistance = resistance[2]
+        self.fatigue_resistance = fatigue_resistance
 
         self.wind_effects = None
         self.assign_wind_effects(wind_effects, resistance)
@@ -40,6 +43,11 @@ class CrossSection:
     def get_self_weight(self, i):
         load = [i, 0, 0, 0, -self.weight, 0, 0, -self.weight, 0]
         return load
+
+    def append_releases(self, releases, i):
+        if self.released:
+            releases.append([i, 1, 1])
+        return
 
     def assign_extrema(self, effects, name, key):
         if name not in self.effects:
@@ -70,9 +78,22 @@ class CrossSection:
                 d_o_c = n_max / n_rd + 8 / 9 * (mz_max / mz_rd + my_max / my_rd)
                 self.degree_of_compliance[name] = d_o_c
         else:
-            n_max = self.effects[name]['Normal Force'][2]
-            n_rd = self.normal_force_resistance
-            d_o_c = n_max / n_rd
+            if name == 'Fatigue':
+                n_max = self.effects[name]['Normal Force'][0]
+                n_min = self.effects[name]['Normal Force'][1]
+                d_n = n_max - n_min
+                self.effects[name]['Normal Force'][2] = d_n
+                self.effects[name]['Normal Force'][3] = d_n
+                n_rd = self.fatigue_resistance
+                d_o_c = d_n / n_rd
+            else:
+                n_max = self.effects[name]['Normal Force'][2]
+                n_rd = self.normal_force_resistance
+                if name == 'Cable_Loss':
+                    n_rd = 0.9/0.65 * n_rd
+                if name == 'Cable_Replacement':
+                    n_rd = 0.8/0.65 * n_rd
+                d_o_c = n_max / n_rd
             self.degree_of_compliance[name] = d_o_c
         return
 

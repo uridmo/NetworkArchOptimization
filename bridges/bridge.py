@@ -18,33 +18,26 @@ from structure_elements.tie import Tie
 
 
 class Bridge:
-    def __init__(self, span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load,
+    def __init__(self, span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load, qc_fatigue,
                  arch_shape, arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch,
                  cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
-                 x_lost_cable, cost_cross_sections, unit_weight_anchorages, unit_price_anchorages):
+                 x_lost_cable, qd_repl, qc_repl, qd_loss, qc_loss, cost_cross_sections, unit_weight_anchorages, unit_price_anchorages):
 
+        self.input = {'span': span, 'rise': rise, 'cross_girder_amount': n_cross_girders, 'weight_deck': g_deck,
+                      'weight_surface_utilities': g_wearing, 'distributed_live_load': qd_live_load,
+                      'concentrated_live_load': qc_live_load, 'self_stress_state': self_stress_state,
+                      'arch_shape': arch_shape, 'arch_optimisation': arch_optimisation, 'arch_cross_sections': cs_arch,
+                      'arch_cross_sections_x': cs_arch_x, 'tie_cross_sections': cs_tie, 'tie_cross_sections_x': cs_tie_x,
+                      'hangers_amount': n_hangers, 'hangers_arrangement': hanger_arrangement,
+                      'hangers_parameters': hanger_params, 'hangers_cross_section': cs_hangers,
+                      'cost_cross_sections': cost_cross_sections, 'unit_weight_anchorages': unit_weight_anchorages,
+                      'unit_price_anchorages': unit_price_anchorages}
         self.span = span
-        self.rise = rise
-        self.cross_girder_amount = n_cross_girders
-        self.weight_deck = g_deck
-        self.weight_surface_utilities = g_wearing
-        self.distributed_live_load = qd_live_load
-        self.concentrated_live_load = qc_live_load
-        self.self_stress_state = self_stress_state
-        self.arch_shape = arch_shape
-        self.arch_optimisation = arch_optimisation
-        self.arch_cross_sections = cs_arch
-        self.arch_cross_sections_x = cs_arch_x
-        self.tie_cross_sections = cs_tie
-        self.tie_cross_sections_x = cs_tie_x
         self.hangers_amount = n_hangers
-        self.hangers_arrangement = hanger_arrangement
-        self.hangers_parameters = hanger_params
         self.hangers_cross_section = cs_hangers
         self.cost_cross_sections = cost_cross_sections
         self.unit_weight_anchorages = unit_weight_anchorages
         self.unit_price_anchorages = unit_price_anchorages
-        self.x_lost_cable = x_lost_cable
 
         # Initialize nodes and create hanger set
         nodes = Nodes(accuracy=0.01)
@@ -130,20 +123,26 @@ class Bridge:
         tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0)
 
         # Calculate the load cases
-        network_arch.calculate_load_cases(nodes, qd_live_load, qc_live_load)
+        network_arch.calculate_load_cases(qd_live_load, qc_live_load, qc_fatigue)
         network_arch.assign_wind_effects()
         network_arch.calculate_ultimate_limit_states()
 
         network_arch.calculate_tie_fracture_max()
 
-        x_hangers = [hanger.tie_node.x for hanger in hanger_set]
-        val, i_cable_lost = min((abs(val-x_lost_cable*span), i) for (i, val) in enumerate(x_hangers))
+        events = [{'Name': 'Cable_Replacement', 'Distributed Load': qd_repl, 'Concentrated Load': qc_repl,
+                   'Factor LL': 1.5, 'Dynamic Amplification Factor': 1.00},
+                  {'Name': 'Cable_Loss', 'Distributed Load': qd_loss, 'Concentrated Load': qc_loss,
+                   'Factor LL': 0.75, 'Dynamic Amplification Factor': 1.75}]
+        network_arch.calculate_cable_loss(events)
 
-        network_arch.calculate_cable_loss('Hanger_Replacement', i_cable_lost, qd_live_load, qc_live_load, 1.5, 1.00)
-        network_arch.calculate_cable_loss('Hanger_Loss', i_cable_lost, qd_live_load, qc_live_load, 0.75, 1.75)
+        # x_hangers = [hanger.tie_node.x for hanger in hanger_set]
+        # val, i_cable_lost = min((abs(val-x_lost_cable*span), i) for (i, val) in enumerate(x_hangers))
+        # network_arch.calculate_cable_loss('Cable_Replacement_Comparison', i_cable_lost, qd_repl, qc_repl, 1.5, 1.00)
+        # network_arch.calculate_cable_loss('Cable_Loss_Comparison', i_cable_lost, qd_loss, qc_loss, 0.75, 1.75)
 
         self.nodes = nodes
         self.network_arch = network_arch
+
         self.cost = 0
         self.costs = 0
         self.cost_anchorages = 0

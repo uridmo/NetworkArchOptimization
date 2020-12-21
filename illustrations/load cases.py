@@ -17,8 +17,8 @@ fig_3, ax_3 = bridge_parallel.plot_elements()
 nodes = bridge_parallel.nodes
 
 n_tie = len(bridge_parallel.network_arch.tie)
-arch = ParabolicArch(nodes, 267.8, 53.5)
-cs = CrossSection("", 29.8, [1, 1], [1, 1, 1])
+arch = ParabolicArch(nodes, 267.8, 53.5, n=30)
+cs = CrossSection("", 29.8, [1, 1], [1, 1, 1], {})
 arch.define_cross_sections(nodes, [267.8/2], [cs, cs])
 
 bridge_parallel.network_arch.arch = arch
@@ -32,13 +32,13 @@ model['Loads'] = loads_dc
 
 model = verify_input(model)
 plot_loads(model, 0, ax)
-save_plot(fig, 'model overview', 'permanent loads')
+save_plot(fig, 'figures', 'permanent loads')
 
 model['Loads'] = [{'Nodal': model['Loads'][0]['Nodal']}]
 plot_loads(model, 0, ax_2)
-save_plot(fig_2, 'model overview', 'distributed live loads')
+save_plot(fig_2, 'figures', 'distributed live loads')
 
 model['Loads'] = [{'Nodal': [model['Loads'][0]['Nodal'][1]]}]
 plot_loads(model, 0, ax_3)
-save_plot(fig_3, 'model overview', 'concentrated live loads')
+save_plot(fig_3, 'figures', 'concentrated live loads')
 pyplot.show()

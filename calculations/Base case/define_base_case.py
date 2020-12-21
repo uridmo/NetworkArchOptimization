@@ -54,11 +54,6 @@ f = open('dc_ratios.pckl', 'wb')
 pickle.dump(dc, f)
 f.close()
 
-# Evaluate the cost function
-a = bridge_ref.cost_function()
-print('Costs: $', round(a/1000)/1000, 'Mio.')
-bridge_ref.cost_table()
-
 # Save the bridge file
 f = open('bridge.pckl', 'wb')
 pickle.dump(bridge_ref, f)

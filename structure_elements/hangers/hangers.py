@@ -57,14 +57,14 @@ class Hangers(Element):
             hanger.cross_section.calculate_doc_max(name, is_hanger=True)
         return
 
-    def get_beams(self, indices):
-        n = len(self)
+    def get_beams(self, i_first):
         beams_nodes = []
         beams_stiffness = []
-        for hanger in self:
+        beams_releases = []
+        for i, hanger in enumerate(self):
             beams_nodes.append([hanger.tie_node.index, hanger.arch_node.index])
             beams_stiffness.append(hanger.get_beam())
-        beams_releases = [[i, 1, 1] for i in indices]
+            hanger.cross_section.append_releases(beams_releases, i_first+i)
         return beams_nodes, beams_stiffness, beams_releases
 
     def get_connection_points(self):

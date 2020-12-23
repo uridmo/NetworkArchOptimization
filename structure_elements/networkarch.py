@@ -174,9 +174,36 @@ class NetworkArch:
         self.hangers.assign_range_to_sections('Fatigue')
         return
 
-    def calculate_tie_fracture_max(self):
+    def calculate_tie_fracture(self, q_d, q_c):
+
+        self.tie.calculate_fracture_stress('0')
+        self.tie.calculate_fracture_stress('EL')
+        self.tie.calculate_fracture_stress('DC')
+        self.tie.calculate_fracture_stress('DW')
+
+        inclusive = '0'
+        exclusive = '0'
+        for i in range(len(self.tie.cross_girders_nodes)):
+            name = 'F'+str(i+1)
+            self.tie.calculate_fracture_stress(name)
+            inclusive += ', 0/' + name
+            exclusive += '/' + name
+
+        self.set_range(inclusive, 'Inclusive')
+        self.set_range(exclusive, 'Exclusive')
+
+        span = self.tie.span
+        n = self.tie.cross_girders_amount
+        f_d = span * q_d / (n+1)
+        f_c = q_c
+
+        self.set_range(str(f_d) + ' Inclusive', 'LLd')
+        self.set_range(str(f_c) + ' Exclusive', 'LLc')
+
+        self.set_range('LLc, LLd', 'LL')
+
         self.set_range('EL, 1.25 DC, 1.5 DW, 1.3 LL', 'Tie Fracture')
-        self.tie.assign_fracture_stress('Tie Fracture')
+        self.tie.assign_range_to_sections('Tie Fracture')
         return
 
     # def calculate_cable_loss(self, name, i_hanger, q_d, q_c, ll_factor, daf=1):

@@ -127,18 +127,13 @@ class Bridge:
         network_arch.assign_wind_effects()
         network_arch.calculate_ultimate_limit_states()
 
-        network_arch.calculate_tie_fracture_max()
-
         events = [{'Name': 'Cable_Replacement', 'Distributed Load': qd_repl, 'Concentrated Load': qc_repl,
                    'Factor LL': 1.5, 'Dynamic Amplification Factor': 1.00},
                   {'Name': 'Cable_Loss', 'Distributed Load': qd_loss, 'Concentrated Load': qc_loss,
                    'Factor LL': 0.75, 'Dynamic Amplification Factor': 1.75}]
         network_arch.calculate_cable_loss(events)
 
-        # x_hangers = [hanger.tie_node.x for hanger in hanger_set]
-        # val, i_cable_lost = min((abs(val-x_lost_cable*span), i) for (i, val) in enumerate(x_hangers))
-        # network_arch.calculate_cable_loss('Cable_Replacement_Comparison', i_cable_lost, qd_repl, qc_repl, 1.5, 1.00)
-        # network_arch.calculate_cable_loss('Cable_Loss_Comparison', i_cable_lost, qd_loss, qc_loss, 0.75, 1.75)
+        network_arch.calculate_tie_fracture(qd_live_load, qc_live_load)
 
         self.nodes = nodes
         self.network_arch = network_arch

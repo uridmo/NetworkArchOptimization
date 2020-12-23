@@ -8,9 +8,16 @@ from plotting.plots import make_plots
 bridge_optimized = BlennerhassettBridge()
 bridge_optimized.plot_elements()
 
-fig = bridge_optimized.plot_all_effects('Cable_Replacement', label='New', c='blue')
-fig = bridge_optimized.plot_all_effects('Cable_Replacement_1', fig=fig, label='Old', c='red')
+# bridge_optimized.internal_forces_table(all_uls=True)
+# bridge_optimized.dc_ratio_table()
+# bridge_optimized.cost_table()
+
+fig = bridge_optimized.plot_all_effects('LL', label='New', c='blue')
 adjust_overview_plots(fig)
+
+# fig = bridge_optimized.plot_all_effects('Cable_Replacement', label='New', c='blue')
+# fig = bridge_optimized.plot_all_effects('Cable_Replacement_1', fig=fig, label='Old', c='red')
+# adjust_overview_plots(fig)
 
 
 #

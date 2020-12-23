@@ -23,40 +23,52 @@ def uls_forces_table(name, cross_sections, all_uls=False):
                 dc_max = d_c
                 uls_max = uls_type
             if all_uls:
-                text.write(" & " + uls_type + f" & {p:.1f} & {mz:.1f} & {my:.1f} & " + f"{d_c:.2f}" + r"\\" + "\n")
+                text.write(" & " + uls_type.replace('_', ' ') + f" & {p:.1f} & {mz:.1f} & {my:.1f} & " + f"{d_c:.2f}" + r"\\" + "\n")
 
         if not all_uls:
             p = cs.effects[uls_max]['Normal Force'][2] / 1000
             my = cs.effects[uls_max]['Moment y'][2] / 1000 if 'Moment y' in cs.effects[uls_max] else 0
             mz = cs.effects[uls_max]['Moment'][2] / 1000 if 'Moment' in cs.effects[uls_max] else 0
             d_c = cs.degree_of_compliance[uls_max]
-            text.write(" & " + uls_max + f" & {p:.1f} & {mz:.1f} & {my:.1f} & " + f"{d_c:.2f}" + r"\\" + "\n")
+            text.write(" & " + uls_max.replace('_', ' ') + f" & {p:.1f} & {mz:.1f} & {my:.1f} & " + f"{d_c:.2f}" + r"\\" + "\n")
 
         p_cl = 0
         mz_cl = 0
         my_cl = 0
         d_c_cl = 0
 
-        text.write(f" & Cable loss & {p_cl:.1f} & {mz_cl:.1f} & {my_cl:.1f} & " + f"{d_c_cl:.2f}" + r"\\ \hline" + "\n")
     text.write(r"\end{tabular}" + "\n")
 
     text.close()
     return
 
 
-def dc_table(name, cross_sections, uls_types=""):
+def dc_table(name, cross_sections, uls_types="", base_case=False):
     if not uls_types:
-        uls_types = list(cross_sections[0].degree_of_compliance.keys())
+        uls_types = []
+        for cs in cross_sections:
+            for key in cs.degree_of_compliance.keys():
+                if key not in uls_types:
+                    uls_types.append(key)
 
     n = len(uls_types)
     text = open(name + ".txt", 'w')
-    text.write(r"\begin{tabular}{c" + "c" * (n + 1) + "l}" + "\n")
+    text.write(r"\begin{tabular}{l" + "c" * n)
+    if base_case:
+        text.write("cl")
+    text.write("}" + "\n")
     text.write(r"\hline" + "\n")
-    text.write(r"Segment & \multicolumn{" + str(n + 1) + r"}{c}{Demand / Capacity} & \\" + "\n")
+
+    if base_case:
+        text.write(r"Segment & \multicolumn{" + str(n + 1) + r"}{c}{Demand / Capacity} & \\" + "\n")
+    else:
+        text.write(r"Segment & \multicolumn{" + str(n) + r"}{c}{Demand / Capacity} \\" + "\n")
 
     for uls_type in uls_types:
-        text.write(" & " + uls_type)
-    text.write(r" & Base case & \\ \hline" + "\n")
+        text.write(" & " + uls_type.replace('_', ' ').replace('Strength', 'S').replace('Tie ', '').replace('Cable ', ''))
+    if base_case:
+        text.write(r" & Base case & ")
+    text.write(r"\\ \hline "+"\n")
 
     for cs in cross_sections:
         text.write(cs.name)
@@ -70,9 +82,13 @@ def dc_table(name, cross_sections, uls_types=""):
         for dc in dcs:
             if dc == max(dcs):
                 text.write(r" & \textbf{" + f"{dc:.2f}" + r"}")
+            elif dc == 0:
+                text.write(r" & - ")
             else:
                 text.write(f" & {dc:.2f}")
-        text.write(r" & \textbf{" + f"{cs.dc_ref:.2f}" + r"} & (" + r") \\" + "\n")
+        if base_case:
+            text.write(r" & \textbf{" + f"{cs.dc_ref:.2f}" + r"} & (" + r")")
+        text.write(r"\\ " + "\n")
 
     text.write(r"\hline" + "\n")
     text.write(r"\end{tabular}" + "\n")

@@ -80,15 +80,17 @@ class Tie(LineElement):
         hangers.set_prestressing_force_from_nodes(nodes, forces)
         return mz_0
 
-    def assign_fracture_stress(self, range_name):
+    def calculate_fracture_stress(self, effect_name):
         cs_i = self.get_cross_sections()
-        effect_range = self.get_effects(range_name)
+        effects = self.get_effects(effect_name)
         for cs in set(cs_i):
             mask = cs == cs_i
             for tie_fracture in cs.tie_fractures:
                 name = tie_fracture.name
-                if name not in effect_range:
-                    effect_range[name] = np.zeros_like(effect_range['Normal Force'])
-                stresses = tie_fracture.calculate_stress(effect_range, mask)
-                effect_range[name][:, mask] = stresses
+                if name+'_top' not in effects:
+                    effects[name+'_top'] = np.zeros_like(effects['Normal Force'])
+                    effects[name+'_bot'] = np.zeros_like(effects['Normal Force'])
+                o_top, o_bot = tie_fracture.calculate_stress(effects, mask)
+                effects[name+'_top'][mask] = o_top
+                effects[name+'_bot'][mask] = o_bot
         return

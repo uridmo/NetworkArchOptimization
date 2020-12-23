@@ -60,7 +60,10 @@ def adjust_plot(ax, step=1.0, min_0=False):
     else:
         ax.set_ylim([np.min([np.floor(y_ticks[0] / step) * step, 0]), np.ceil(y_ticks[-1] / step) * step])
     y_ticks = ax.get_yticks()
-    # ax.set_ylim([y_ticks[0], y_ticks[-1]])
-    # ax.set_yticks(y_ticks)
+    ax.set_ylim([y_ticks[0], y_ticks[-1]])
+    y_ticks = ax.get_yticks()
+    if len(y_ticks) == 7:
+        y_ticks = y_ticks[::2]
+    ax.set_yticks(y_ticks)
     ax.axhline(0, color='black', lw=0.5)
     return

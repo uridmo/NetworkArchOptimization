@@ -67,7 +67,15 @@ class CrossSection:
     def calculate_doc_max(self, name, is_hanger=False, exact_maximum=True):
         if not is_hanger:
             if exact_maximum:
-                self.degree_of_compliance[name] = max(self.effects[name]['D/C_1'][2], self.effects[name]['D/C_2'][2])
+                if name == 'Tie Fracture':
+                    stresses = [0]
+                    for fracture in self.tie_fractures:
+                        frac_name = fracture.name
+                        stresses.append(self.effects[name][frac_name+'_top'][2])
+                        stresses.append(self.effects[name][frac_name+'_bot'][2])
+                    self.degree_of_compliance[name] = max(stresses)/485000
+                else:
+                    self.degree_of_compliance[name] = max(self.effects[name]['D/C_1'][2], self.effects[name]['D/C_2'][2])
             else:
                 n_max = self.effects[name]['Normal Force'][2]
                 mz_max = self.effects[name]['Moment'][2]
@@ -139,14 +147,19 @@ class CrossSection:
 
 
 class TieFracture:
-    def __init__(self, name, a, i, z_lost, a_lost, i_lost, z_min, z_max):
+    def __init__(self, name, a, i_yz, yz_lost, a_lost, i_yz_lost, yz_top, yz_bot):
         self.name = name
-        z_new = -a_lost / (a - a_lost) * z_lost
-        self.center_of_gravity = z_new
+        z_new = -a_lost / (a - a_lost) * yz_lost[1]
+        y_new = -a_lost / (a - a_lost) * yz_lost[0]
+        self.center_of_gravity_z = z_new
+        self.center_of_gravity_y = y_new
         self.area = a - a_lost
-        self.inertia = i - i_lost - (a - a_lost) * z_new ** 2 - a_lost * z_lost ** 2
-        self.z_min = z_min
-        self.z_max = z_max
+        self.y_inertia = i_yz[0] - i_yz_lost[0] - (a - a_lost) * z_new ** 2 - a_lost * yz_lost[1] ** 2
+        self.z_inertia = i_yz[1] - i_yz_lost[1] - (a - a_lost) * y_new ** 2 - a_lost * yz_lost[0] ** 2
+        self.y_top = yz_top[0]
+        self.z_top = yz_top[1]
+        self.y_bot = yz_bot[0]
+        self.z_bot = yz_bot[1]
         return
 
     def __repr__(self):
@@ -154,14 +167,20 @@ class TieFracture:
 
     def calculate_stress(self, effects, mask):
         a = self.area
-        i = self.inertia
-        z = self.center_of_gravity
-        z_min = self.z_min
-        z_max = self.z_max
-        n = effects['Normal Force'][:, mask]
-        m = effects['Moment'][:, mask]
-        m_new = m + n * z
-        o_max = n[0, :] / a + np.max(np.vstack((m_new[1, :] * (z - z_max) / i, m_new[0, :] * (z - z_min) / i)), axis=0)
-        o_min = n[1, :] / a + np.min(np.vstack((m_new[0, :] * (z - z_max) / i, m_new[1, :] * (z - z_min) / i)), axis=0)
-        stress_range = np.vstack((o_max, o_min))
-        return stress_range
+        i_y = self.y_inertia
+        i_z = self.z_inertia
+        z_c = self.center_of_gravity_z
+        y_c = self.center_of_gravity_y
+
+        y_top = self.y_top
+        z_top = self.z_top
+        y_bot = self.y_bot
+        z_bot = self.z_bot
+
+        n = effects['Normal Force'][mask]
+        m = effects['Moment'][mask]
+        m_y_new = m + n * z_c
+        m_z_new = n * y_c
+        o_top = n / a + (m_y_new * (z_c - z_top) / i_y) + (m_z_new * (y_c - y_top) / i_z)
+        o_bot = n / a + (m_y_new * (z_c - z_bot) / i_y) + (m_z_new * (y_c - y_bot) / i_z)
+        return o_top, o_bot

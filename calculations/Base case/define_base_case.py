@@ -26,7 +26,7 @@ axs[3].axhline(-3.69, c=colors[1], lw=1)
 axs[4].axhline(2.7, c=colors[1], lw=1)
 axs[4].plot([0, 270], [-3.17, -3.17], label='Design drawings', c=colors[1], lw=1)
 adjust_overview_plots(fig)
-fig.savefig('Permanent state.png')
+fig.savefig('permanent state.png')
 
 # Plot live loading range and compare to design drawings
 fig = bridge_ref.plot_effects('LL', 'Moment', label='Reference calculation range', c=colors[0])
@@ -39,7 +39,7 @@ axs[0].plot([0, 270], [0.744, 0.744], label='Design drawings', c=colors[1], lw=1
 axs[1].plot([0, 270], [4.73, 4.73], label='Design drawings', c=colors[1], lw=1)
 axs[2].plot(hanger_x, hanger_forces, label='Design drawings', c=colors[1])
 adjust_effects_plots(fig)
-fig.savefig('Live load.png')
+fig.savefig('live load.png')
 
 # Create table of internal forces and demand/capacity ratios
 bridge_ref.internal_forces_table()

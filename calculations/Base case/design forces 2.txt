@@ -22,19 +22,19 @@ Segment & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\
  & Strength-IV & 51.4 & 5.4 & 0.0 & 0.50\\
  & Cable Replacement & 48.8 & 28.1 & 0.0 & 0.67\\
  & Cable Loss & 46.0 & 32.8 & 0.0 & 0.70\\
- & Tie Fracture & 50.6 & 11.5 & 0.0 & 0.98\\
+ & Tie Fracture & 50.6 & 11.5 & 0.0 & 0.85\\
 \multirow{7}{*}{Tie 2} & Strength-I & 52.8 & 11.6 & 0.0 & 0.64\\
  & Strength-III & 52.9 & 3.0 & 0.6 & 0.57\\
  & Strength-IV & 51.4 & 3.6 & 0.0 & 0.55\\
  & Cable Replacement & 48.6 & 31.9 & 0.0 & 0.82\\
  & Cable Loss & 45.6 & 37.8 & 0.0 & 0.88\\
- & Tie Fracture & 50.6 & 9.2 & 0.0 & 1.15\\
+ & Tie Fracture & 50.6 & 9.2 & 0.0 & 1.00\\
 \multirow{7}{*}{Tie 3} & Strength-I & 52.0 & 12.8 & 0.0 & 0.63\\
  & Strength-III & 51.0 & 3.1 & 1.1 & 0.56\\
  & Strength-IV & 50.6 & 2.2 & 0.0 & 0.53\\
  & Cable Replacement & 47.4 & 27.2 & 0.0 & 0.78\\
  & Cable Loss & 44.6 & 34.0 & 0.0 & 0.84\\
- & Tie Fracture & 49.8 & 9.8 & 0.0 & 1.13\\
+ & Tie Fracture & 49.8 & 9.8 & 0.0 & 0.99\\
 \multirow{7}{*}{Hangers} & Strength-I & 4.4 & 0.0 & 0.0 & 1.06\\
  & Strength-III & 3.6 & 0.0 & 0.0 & 0.87\\
  & Strength-IV & 3.4 & 0.0 & 0.0 & 0.80\\

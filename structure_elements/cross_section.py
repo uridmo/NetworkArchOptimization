@@ -73,7 +73,7 @@ class CrossSection:
                         frac_name = fracture.name
                         stresses.append(self.effects[name][frac_name+'_top'][2])
                         stresses.append(self.effects[name][frac_name+'_bot'][2])
-                    self.degree_of_compliance[name] = max(stresses)/485000
+                    self.degree_of_compliance[name] = max(stresses)/(485000 * 1.15)
                 else:
                     self.degree_of_compliance[name] = max(self.effects[name]['D/C_1'][2], self.effects[name]['D/C_2'][2])
             else:

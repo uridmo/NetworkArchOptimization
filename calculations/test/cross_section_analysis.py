@@ -1,9 +1,11 @@
+import pickle
+
 import numpy as np
 from matplotlib import pyplot
 from scipy.integrate import dblquad
 from scipy.optimize import minimize
 from plotting.general import colors
-from pylab import meshgrid,cm,imshow,contour,clabel,colorbar,axis,title,show
+from shapely.geometry import Polygon
 from matplotlib.patches import Rectangle as Rectangle_plot
 
 
@@ -133,7 +135,7 @@ def stress(strain):
         return f_y + (strain - e_y) * E_sh
 
 
-f_y_2 = 1.2 * 485 * 10 ** 6
+f_y_2 = 1.15 * 485 * 10 ** 6
 e_y_2 = f_y_2 / E_s
 
 
@@ -146,50 +148,38 @@ def stress_2(strain):
         return f_y_2 + (strain - e_y_2) * E_sh
 
 
-cs_1 = CrossSection()
-cs_1.add_rectangle(-0.657, -1.111, 2*0.657, 0.044)
-cs_1.add_rectangle(-0.657, -1.067, 0.197, 0.025)
-cs_1.add_rectangle(0.46, -1.067, 0.197, 0.025)
-# cs_1.add_rectangle(-0.657, -1.042, 0.029, 2.084)
-cs_1.add_rectangle(0.628, -1.042, 0.029, 2.084)
-cs_1.add_rectangle(-0.657, 1.042, 0.197, 0.025)
-cs_1.add_rectangle(0.46, 1.042, 0.197, 0.025)
-cs_1.add_rectangle(-0.657, 1.067, 2*0.657, 0.044)
-
-x_0 = np.array([0.0, 0.0, 0.0])
-
-
 def ineq_cons(x, e_max, e_min):
-    strains = cs_1.get_corner_strains(x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)
+    strains = cs_web.get_corner_strains(x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)
     strains_0 = np.concatenate((strains - e_min, -strains + e_max))
     return strains_0
 
 
-def get_interaction_lines(stress_fun, e_max, e_min, ax, c, label):
+def get_interaction_lines(cs, stress_fun, e_max, e_min, ax, c, label):
     cons = [{"type": "ineq", "fun": lambda x: ineq_cons(x, e_max, e_min)},
-            {"type": "eq", "fun": lambda x: cs_1.integrate_stresses(stress_fun, x[0] / factor_e,
+            {"type": "eq", "fun": lambda x: cs.integrate_stresses(stress_fun, x[0] / factor_e,
                                                                     x[1] / factor_chi,
                                                                     x[2] / factor_chi)[2]}]
-    fun_min_N = lambda x: cs_1.integrate_stresses(stress_fun, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)[0]
-    fun_max_N = lambda x: -1*cs_1.integrate_stresses(stress_fun, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)[0]
-    fun_min_M = lambda x: cs_1.integrate_stresses(stress_fun, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)[1]
-    fun_max_M = lambda x: -1*cs_1.integrate_stresses(stress_fun, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)[1]
+    fun_min_N = lambda x: cs.integrate_stresses(stress_fun, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)[0]
+    fun_max_N = lambda x: -1*cs.integrate_stresses(stress_fun, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)[0]
+    fun_min_M = lambda x: cs.integrate_stresses(stress_fun, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)[1]
+    fun_max_M = lambda x: -1*cs.integrate_stresses(stress_fun, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi)[1]
 
+    x_0 = np.array([0.0, 0.0, 0.0])
     sol_min = minimize(fun_min_N, x_0, constraints=cons)
     sol_min_M = fun_min_M(sol_min.x)
     print("N_min: "+str(sol_min.fun))
     sol_max = minimize(fun_max_N, x_0, constraints=cons)
     sol_max_M = fun_min_M(sol_max.x)
     print("N_max: "+str(-sol_max.fun))
-    N = np.linspace(sol_min.fun, -sol_max.fun, num=30)
+    N = np.linspace(sol_min.fun, -sol_max.fun, num=18)
     N = np.concatenate((N, np.array([0])))
-    N = N.sort()
+    N.sort()
     N_c = N[1:-1]
     cons = lambda NN: [{"type": "ineq", "fun": lambda x: ineq_cons(x, e_max, e_min)},
-                      {"type": "eq", "fun": lambda x: cs_1.integrate_stresses(stress_fun, x[0] / factor_e,
+                      {"type": "eq", "fun": lambda x: cs.integrate_stresses(stress_fun, x[0] / factor_e,
                                                                               x[1] / factor_chi,
                                                                               x[2] / factor_chi)[2]},
-                      {"type": "eq", "fun": lambda x: cs_1.integrate_stresses(stress_fun, x[0] / factor_e,
+                      {"type": "eq", "fun": lambda x: cs.integrate_stresses(stress_fun, x[0] / factor_e,
                                                                               x[1] / factor_chi,
                                                                               x[2] / factor_chi)[0]-NN}]
     sol_max = sol_min
@@ -211,24 +201,75 @@ def get_interaction_lines(stress_fun, e_max, e_min, ax, c, label):
 
     ax.plot(N/10**6, M_min/10**6, c=c, label=label)
     ax.plot(N/10**6, M_max/10**6, c=c)
+
+    N_poly = list(N/10**6) + list(N/10**6)[::-1]
+    M_poly = list(M_min/10**6) + list(M_max/10**6)[::-1]
+    polygon = Polygon([(N_poly[i], M_poly[i]) for i in range(len(M_poly))])
+    return polygon
+
+
+def analyse_cross_sections(cs, name):
+    fig, axs = pyplot.subplots(1, 3, figsize=(12, 4), dpi=720)
+    cs.plot_cross_section(axs[0])
+    axs[0].set_xlim([-1.2, 1.2])
+    axs[0].set_ylim([-1.2, 1.2])
+    axs[0].axis('off')
+    axs[0].set_title('Cross-section')
+
+    # fig_2, axs = pyplot.subplots(1, 1, figsize=(4, 4), dpi=720)
+    poly_y = get_interaction_lines(cs, stress, e_y, -e_y, axs[1], c=colors[0], label="Linear elastic")
+    poly_u = get_interaction_lines(cs, stress, 0.01, -e_y, axs[1], c=colors[1], label="Elastic - perfectly plastic")
+    poly_y_2 = get_interaction_lines(cs, stress_2, e_y_2, -e_y_2, axs[1], c=colors[2], label="Linear elastic (15% increased)")
+    axs[1].axhline(0, color='black', lw=0.5)
+    axs[1].axvline(0, color='black', lw=0.5)
+    axs[1].set_title('Interaction diagram')
+    axs[1].set_xlabel('N [MN]')
+    axs[1].set_ylabel('M [MNm]')
+
+    axs[2].remove()
+    handles, labels = axs[1].get_legend_handles_labels()
+    fig.legend(handles, labels, loc='upper left', bbox_to_anchor=(0.7, 0.85), frameon=False)
+
+    pyplot.show()
+    fig.savefig(name + '.png')
+
+    f = open(name + '.pckl', 'wb')
+    pickle.dump([poly_y, poly_u, poly_y_2], f)
+    f.close()
     return
 
 
-fig, axs = pyplot.subplots(1, 1, figsize=(4, 4), dpi=720)
-cs_1.plot_cross_section(axs)
-axs.set_xlim([-1, 1])
-axs.set_ylim([-1.5, 1.5])
-
-fig_2, axs = pyplot.subplots(1, 1, figsize=(4, 4), dpi=720)
-get_interaction_lines(stress, e_y, -e_y, axs, c=colors[0], label="Test 1")
-get_interaction_lines(stress, 0.01, -e_y, axs, c=colors[1], label="Test 2")
-get_interaction_lines(stress_2, e_y_2, -e_y_2, axs, c=colors[2], label="Test 3")
-axs.axhline(0, color='black', lw=0.5)
-axs.axvline(0, color='black', lw=0.5)
-
-pyplot.show()
+cs_web = CrossSection()
+cs_web.add_rectangle(-0.657, -1.111, 2 * 0.657, 0.044)
+cs_web.add_rectangle(-0.657, -1.067, 0.197, 0.025)
+cs_web.add_rectangle(0.46, -1.067, 0.197, 0.025)
+cs_web.add_rectangle(-0.657, -1.042, 0.029, 2.084)
+# cs_web.add_rectangle(0.628, -1.042, 0.029, 2.084)
+cs_web.add_rectangle(-0.657, 1.042, 0.197, 0.025)
+cs_web.add_rectangle(0.46, 1.042, 0.197, 0.025)
+cs_web.add_rectangle(-0.657, 1.067, 2 * 0.657, 0.044)
+analyse_cross_sections(cs_web, 'web_2')
 
 
+# cs_flange_top = CrossSection()
+# cs_flange_top.add_rectangle(-0.657, -1.111, 2 * 0.657, 0.044)
+# cs_flange_top.add_rectangle(-0.657, -1.067, 0.197, 0.025)
+# cs_flange_top.add_rectangle(0.46, -1.067, 0.197, 0.025)
+# cs_flange_top.add_rectangle(-0.657, -1.042, 0.029, 2.084)
+# cs_flange_top.add_rectangle(0.628, -1.042, 0.029, 2.084)
+# cs_flange_top.add_rectangle(-0.657, 1.042, 0.197, 0.025)
+# cs_flange_top.add_rectangle(0.46, 1.042, 0.197, 0.025)
+# # cs_flange_top.add_rectangle(-0.657, 1.067, 2 * 0.657, 0.044)
+# analyse_cross_sections(cs_flange_top, 'top')
 
-# print(cs_1.integrate_stresses(stress, x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi))
-# print(cs_1.get_corner_strains(x[0] / factor_e, x[1] / factor_chi, x[2] / factor_chi))
+
+# cs_flange_bot = CrossSection()
+# # cs_flange_bot.add_rectangle(-0.657, -1.111, 2 * 0.657, 0.044)
+# cs_flange_bot.add_rectangle(-0.657, -1.067, 0.197, 0.025)
+# cs_flange_bot.add_rectangle(0.46, -1.067, 0.197, 0.025)
+# cs_flange_bot.add_rectangle(-0.657, -1.042, 0.029, 2.084)
+# cs_flange_bot.add_rectangle(0.628, -1.042, 0.029, 2.084)
+# cs_flange_bot.add_rectangle(-0.657, 1.042, 0.197, 0.025)
+# cs_flange_bot.add_rectangle(0.46, 1.042, 0.197, 0.025)
+# cs_flange_bot.add_rectangle(-0.657, 1.067, 2 * 0.657, 0.044)
+# analyse_cross_sections(cs_flange_bot, 'bot')

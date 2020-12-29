@@ -13,7 +13,7 @@ folder = 'base case'
 bridge_ref = BlennerhassettBridge(arch_optimisation=False, self_stress_state='Overall-optimisation')
 
 # Plot permanent state and compare to design drawings
-fig = bridge_ref.plot_all_effects('Permanent', label='Reference calculation', c=colors[0])
+fig = bridge_ref.plot_all_effects('Permanent', label='Base case', c=colors[0])
 axs = fig.get_axes()
 axs[0].axhline(-44.5, c=colors[1], lw=1)
 axs[0].axhline(-38, c=colors[1], lw=1)
@@ -29,7 +29,7 @@ adjust_overview_plots(fig)
 fig.savefig('permanent state.png')
 
 # Plot live loading range and compare to design drawings
-fig = bridge_ref.plot_effects('LL', 'Moment', label='Reference calculation range', c=colors[0])
+fig = bridge_ref.plot_effects('LL', 'Moment', label='Base case', c=colors[0])
 axs = fig.get_axes()
 hanger_forces = [0.4981984, 0.7517458, 0.7695386, 0.7295048, 0.6850228, 0.644989, 0.5827142, 0.5515768, 0.5070948,
                  0.467061, 0.4136826, 0.3603042, 0.3514078]

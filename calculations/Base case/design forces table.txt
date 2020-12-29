@@ -8,5 +8,5 @@ Segment & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\
 \multirow{2}{*}{Tie 1} & Tie Fracture & 50.6 & 11.5 & 0.0 & 0.85\\
 \multirow{2}{*}{Tie 2} & Tie Fracture & 50.6 & 9.2 & 0.0 & 1.00\\
 \multirow{2}{*}{Tie 3} & Tie Fracture & 49.8 & 9.8 & 0.0 & 0.99\\
-\multirow{2}{*}{Hangers} & Fatigue & 0.2 & 0.0 & 0.0 & 1.06\\
+\multirow{2}{*}{Hangers} & Strength-I & 4.5 & 0.0 & 0.0 & 1.07\\
 \end{tabular}

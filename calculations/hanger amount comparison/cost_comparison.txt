@@ -1,0 +1,10 @@
+\begin{tabular}{lcccc}
+\hline
+Model & Arch cost & Tie cost & Hanger cost & Total cost \\
+ & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline
+13 Hangers & 5.25 & 3.56 & 1.61 & 10.42 \\ 
+20 Hangers & 4.46 & 4.28 & 1.67 & 10.40 \\ 
+26 Hangers & 4.07 & 4.14 & 1.65 & 9.87 \\ 
+27 Hangers & 4.14 & 3.99 & 1.76 & 9.89 \\ 
+\hline
+\end{tabular}

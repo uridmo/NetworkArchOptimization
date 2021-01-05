@@ -4,7 +4,7 @@ from matplotlib import pyplot
 
 from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.adjustments import adjust_plot
-from plotting.plots import make_plots, arch_plots
+from plotting.plots import make_plots, arch_or_tie_plots
 from plotting.general import colors
 from plotting.tables import dc_overview_table
 
@@ -36,7 +36,7 @@ for n in [13,26]:
     load_groups = {'permanent state_'+str(n): 'Permanent',
                    'strength-I_'+str(n): 'Strength-I'}
 
-    arch_plots(bridges_dict, load_groups, lw=0.8)
+    arch_or_tie_plots(bridges_dict, load_groups, lw=0.8)
 
     bridge_thrust.dc_ratio_table(name='dc_table_'+str(n))
     dc_overview_table('dc_comparison_'+str(n), bridges_dict, slice_cs=slice(0, 3))

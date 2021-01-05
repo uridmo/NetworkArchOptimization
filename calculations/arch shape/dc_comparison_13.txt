@@ -1,6 +1,8 @@
+Model & \multicolumn{3}{c}{Demand / Capacity} \\
 \begin{tabular}{lccc}
 \hline
-Model & Arch 1 & Arch 2 & Arch 3 \\
+Model & \multicolumn{3}{c}{Demand / Capacity} \\
+ & Arch 1 & Arch 2 & Arch 3 \\ \hline
 Thrust line arch & 0.83 (S3) & 0.85 (S1) & 0.74 (S1) \\ 
 Polynomial approximation & 0.87 (S3) & 0.95 (S1) & 0.80 (S1) \\ 
 Spline approximation & 0.90 (S3) & 0.89 (S3) & 0.77 (S1) \\ 

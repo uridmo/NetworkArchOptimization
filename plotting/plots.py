@@ -27,7 +27,7 @@ def make_plots(bridges_dict, load_groups, big_plots=False, lw=1.0, ls='-', marke
     return
 
 
-def arch_plots(bridges_dict, load_groups, lw=1.0, ls='-'):
+def arch_or_tie_plots(bridges_dict, load_groups, lw=1.0, ls='-', arch=True, effect='Moment'):
 
     for name in load_groups:
         load_group = load_groups[name]
@@ -35,9 +35,16 @@ def arch_plots(bridges_dict, load_groups, lw=1.0, ls='-'):
         for i, key in enumerate(bridges_dict):
             label = key
             bridge = bridges_dict[key]
-            bridge.network_arch.arch.plot_effects(axs[0], load_group, 'Moment', label=label, c=colors[i], lw=lw, ls=ls)
+            if arch:
+                bridge.network_arch.arch.plot_effects(axs[0], load_group, effect, label=label, c=colors[i], lw=lw, ls=ls)
+            else:
+                bridge.network_arch.tie.plot_effects(axs[0], load_group, effect, label=label, c=colors[i], lw=lw, ls=ls)
 
-        axs[0].set_title('Arch')
+        if arch:
+            axs[0].set_title('Arch')
+        else:
+            axs[0].set_title('Tie')
+
         axs[0].set_ylabel('M [MNm]')
         adjust_plot(axs[0])
 
@@ -47,3 +54,4 @@ def arch_plots(bridges_dict, load_groups, lw=1.0, ls='-'):
         fig.savefig(name + ".png")
         pyplot.show()
     return
+

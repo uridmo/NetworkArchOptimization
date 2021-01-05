@@ -168,12 +168,14 @@ def big_cost_overview_table(name, bridges):
 
 def dc_overview_table(name, bridges, show_lc=True, slice_cs=slice(0, 7)):
     text = open(name + ".txt", 'w')
-    text.write(r"\begin{tabular}{l"+"c"*(slice_cs.indices(100)[1])+"}" + "\n")
+    n = slice_cs.indices(100)[1]
+
+    text.write(r"\begin{tabular}{l"+"c"*n+"}" + "\n")
     text.write(r"\hline" + "\n")
-    text.write(r"Model")
+    text.write(r"Model & \multicolumn{" + str(n) + r"}{c}{Demand / Capacity} \\" + "\n")
     for cs in cost_cs[slice_cs]:
         text.write(" & " + cs)
-    text.write(r" \\" + "\n")
+    text.write(r" \\ \hline" + "\n")
 
     for name in bridges:
         bridge = bridges[name]

@@ -19,6 +19,30 @@ class CrossSection:
         self.rectangles.append(rectangle)
         return
 
+    def cross_section_properties(self):
+        a = 0
+        x_c = 0
+        y_c = 0
+        for rectangle in self.rectangles:
+            a_add = rectangle.l*rectangle.h
+            x_c = (a*x_c + a_add*(rectangle.x+rectangle.l/2))/(a+a_add)
+            y_c = (a*y_c + a_add*(rectangle.y+rectangle.h/2))/(a+a_add)
+            a += a_add
+        i_y = 0
+        i_x = 0
+        for rectangle in self.rectangles:
+            a_rec = rectangle.l*rectangle.h
+            i_x_rec = rectangle.l*rectangle.h**3/12
+            i_y_rec = rectangle.l**3*rectangle.h/12
+            i_y += (rectangle.x+rectangle.l/2-x_c)**2*a_rec + i_y_rec
+            i_x += (rectangle.y+rectangle.h/2-y_c)**2*a_rec + i_x_rec
+        return x_c, y_c, a, i_x, i_y
+
+    def elastic_stress(self, N, M_x, M_y, x_m, y_m, x_p, y_p):
+        x_c, y_c, a, i_x, i_y = self.cross_section_properties()
+        o= N/a + (M_x + N * (y_m-y_c))*(y_p-y_c)/i_y
+        return o
+
     def integrate_stresses(self, stress_function, e, chi_x, chi_y):
         strain_function = lambda x, y: e + chi_x * y + chi_y * x
         stress_function_xy = lambda x, y: stress_function(strain_function(x, y))
@@ -117,6 +141,7 @@ class Rectangle:
         return
 
 
+# Scaling factors for optimisation method to work
 factor_e = 10**6
 factor_chi = 10**6
 
@@ -124,6 +149,8 @@ E_s = 205 * 10 ** 9
 E_sh = 1 * 10 ** 9
 f_y = 485 * 10 ** 6
 e_y = f_y / E_s
+f_y_2 = 585 * 10 ** 6
+e_y_2 = f_y_2 / E_s
 
 
 def stress(strain):
@@ -133,10 +160,6 @@ def stress(strain):
         return strain * E_s
     else:
         return f_y + (strain - e_y) * E_sh
-
-
-f_y_2 = 1.15 * 485 * 10 ** 6
-e_y_2 = f_y_2 / E_s
 
 
 def stress_2(strain):
@@ -209,17 +232,16 @@ def get_interaction_lines(cs, stress_fun, e_max, e_min, ax, c, label):
 
 
 def analyse_cross_sections(cs, name):
-    fig, axs = pyplot.subplots(1, 3, figsize=(12, 4), dpi=720)
+    fig, axs = pyplot.subplots(1, 3, figsize=(12, 4), dpi=240)
     cs.plot_cross_section(axs[0])
     axs[0].set_xlim([-1.2, 1.2])
     axs[0].set_ylim([-1.2, 1.2])
     axs[0].axis('off')
     axs[0].set_title('Cross-section')
 
-    # fig_2, axs = pyplot.subplots(1, 1, figsize=(4, 4), dpi=720)
     poly_y = get_interaction_lines(cs, stress, e_y, -e_y, axs[1], c=colors[0], label="Linear elastic")
-    poly_u = get_interaction_lines(cs, stress, 0.01, -e_y, axs[1], c=colors[1], label="Elastic - perfectly plastic")
-    poly_y_2 = get_interaction_lines(cs, stress_2, e_y_2, -e_y_2, axs[1], c=colors[2], label="Linear elastic (15% increased)")
+    poly_u = get_interaction_lines(cs, stress, 0.01, -e_y, axs[1], c=colors[1], label="Elastic - perfectly plastic (up to 1% strain)")
+    poly_y_2 = get_interaction_lines(cs, stress_2, e_y_2, -e_y_2, axs[1], c=colors[2], label="Linear elastic (up to ultimate stress)")
     axs[1].axhline(0, color='black', lw=0.5)
     axs[1].axvline(0, color='black', lw=0.5)
     axs[1].set_title('Interaction diagram')
@@ -233,9 +255,9 @@ def analyse_cross_sections(cs, name):
     pyplot.show()
     fig.savefig(name + '.png')
 
-    f = open(name + '.pckl', 'wb')
-    pickle.dump([poly_y, poly_u, poly_y_2], f)
-    f.close()
+    # f = open(name + '.pckl', 'wb')
+    # pickle.dump([poly_y, poly_u, poly_y_2], f)
+    # f.close()
     return
 
 
@@ -243,33 +265,24 @@ cs_web = CrossSection()
 cs_web.add_rectangle(-0.657, -1.111, 2 * 0.657, 0.044)
 cs_web.add_rectangle(-0.657, -1.067, 0.197, 0.025)
 cs_web.add_rectangle(0.46, -1.067, 0.197, 0.025)
-cs_web.add_rectangle(-0.657, -1.042, 0.029, 2.084)
+cs_web.add_rectangle(-0.6239, -1.042, 0.029, 2.084)
 # cs_web.add_rectangle(0.628, -1.042, 0.029, 2.084)
 cs_web.add_rectangle(-0.657, 1.042, 0.197, 0.025)
 cs_web.add_rectangle(0.46, 1.042, 0.197, 0.025)
 cs_web.add_rectangle(-0.657, 1.067, 2 * 0.657, 0.044)
-analyse_cross_sections(cs_web, 'web_2')
+print(cs_web.cross_section_properties())
+cs_web.add_rectangle(0.6239-0.029, -1.042, 0.029, 2.084)
+print(cs_web.cross_section_properties())
 
+analyse_cross_sections(cs_web, 'web fracture')
 
-# cs_flange_top = CrossSection()
-# cs_flange_top.add_rectangle(-0.657, -1.111, 2 * 0.657, 0.044)
-# cs_flange_top.add_rectangle(-0.657, -1.067, 0.197, 0.025)
-# cs_flange_top.add_rectangle(0.46, -1.067, 0.197, 0.025)
-# cs_flange_top.add_rectangle(-0.657, -1.042, 0.029, 2.084)
-# cs_flange_top.add_rectangle(0.628, -1.042, 0.029, 2.084)
-# cs_flange_top.add_rectangle(-0.657, 1.042, 0.197, 0.025)
-# cs_flange_top.add_rectangle(0.46, 1.042, 0.197, 0.025)
-# # cs_flange_top.add_rectangle(-0.657, 1.067, 2 * 0.657, 0.044)
-# analyse_cross_sections(cs_flange_top, 'top')
-
-
-# cs_flange_bot = CrossSection()
-# # cs_flange_bot.add_rectangle(-0.657, -1.111, 2 * 0.657, 0.044)
-# cs_flange_bot.add_rectangle(-0.657, -1.067, 0.197, 0.025)
-# cs_flange_bot.add_rectangle(0.46, -1.067, 0.197, 0.025)
-# cs_flange_bot.add_rectangle(-0.657, -1.042, 0.029, 2.084)
-# cs_flange_bot.add_rectangle(0.628, -1.042, 0.029, 2.084)
-# cs_flange_bot.add_rectangle(-0.657, 1.042, 0.197, 0.025)
-# cs_flange_bot.add_rectangle(0.46, 1.042, 0.197, 0.025)
-# cs_flange_bot.add_rectangle(-0.657, 1.067, 2 * 0.657, 0.044)
-# analyse_cross_sections(cs_flange_bot, 'bot')
+cs_flange_top = CrossSection()
+cs_flange_top.add_rectangle(-0.657, -1.111, 2 * 0.657, 0.044)
+cs_flange_top.add_rectangle(-0.657, -1.067, 0.197, 0.025)
+cs_flange_top.add_rectangle(0.46, -1.067, 0.197, 0.025)
+cs_flange_top.add_rectangle(-0.657, -1.042, 0.029, 2.084)
+cs_flange_top.add_rectangle(0.628, -1.042, 0.029, 2.084)
+cs_flange_top.add_rectangle(-0.657, 1.042, 0.197, 0.025)
+cs_flange_top.add_rectangle(0.46, 1.042, 0.197, 0.025)
+# cs_flange_top.add_rectangle(-0.657, 1.067, 2 * 0.657, 0.044)
+analyse_cross_sections(cs_flange_top, 'top fracture')

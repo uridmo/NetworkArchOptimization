@@ -12,6 +12,5 @@ class CircularArch(Arch):
         y_arch = [rise - radius * (1 - (1 - ((x - span / 2) / radius) ** 2) ** 0.5) for x in x_arch]
 
         for i in range(len(x_arch)):
-            node = nodes.add_node(x_arch[i], y_arch[i])
-            self.nodes.append(node)
+            self.insert_node(nodes, x_arch[i], y_arch[i])
         return

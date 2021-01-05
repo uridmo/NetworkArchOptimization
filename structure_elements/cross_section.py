@@ -16,6 +16,7 @@ class CrossSection:
         self.unit_weight = unit_weight
         self.dc_ref = dc_ref
         self.dc_max = 0
+        self.dc_max_limit_state = ''
         self.length = 0
         self.cost = 0
 
@@ -64,27 +65,17 @@ class CrossSection:
         self.effects[name][key][3] = e_max if e_max > -e_min else e_min
         return
 
-    def calculate_doc_max(self, name, is_hanger=False, exact_maximum=True):
+    def calculate_doc_max(self, name, is_hanger=False):
         if not is_hanger:
-            if exact_maximum:
-                if name == 'Tie Fracture':
-                    stresses = [0]
-                    for fracture in self.tie_fractures:
-                        frac_name = fracture.name
-                        stresses.append(self.effects[name][frac_name+'_top'][2])
-                        stresses.append(self.effects[name][frac_name+'_bot'][2])
-                    self.degree_of_compliance[name] = max(stresses)/(485000 * 1.15)
-                else:
-                    self.degree_of_compliance[name] = max(self.effects[name]['D/C_1'][2], self.effects[name]['D/C_2'][2])
+            if name == 'Tie Fracture':
+                stresses = [0]
+                for fracture in self.tie_fractures:
+                    frac_name = fracture.name
+                    stresses.append(self.effects[name][frac_name+'_top'][2])
+                    stresses.append(self.effects[name][frac_name+'_bot'][2])
+                self.degree_of_compliance[name] = max(stresses)/585000
             else:
-                n_max = self.effects[name]['Normal Force'][2]
-                mz_max = self.effects[name]['Moment'][2]
-                my_max = self.effects[name]['Moment y'][2]
-                n_rd = self.normal_force_resistance
-                mz_rd = self.moment_z_resistance
-                my_rd = self.moment_y_resistance
-                d_o_c = n_max / n_rd + 8 / 9 * (mz_max / mz_rd + my_max / my_rd)
-                self.degree_of_compliance[name] = d_o_c
+                self.degree_of_compliance[name] = max(self.effects[name]['D/C_1'][2], self.effects[name]['D/C_2'][2])
         else:
             if name == 'Fatigue':
                 n_max = self.effects[name]['Normal Force'][0]
@@ -110,15 +101,19 @@ class CrossSection:
         self.effects[name]['Moment y'] = -m_y
         return
 
-    def max_doc(self):
-        doc_max = 0.01
-        for name in self.degree_of_compliance:
-            doc_max = max(doc_max, self.degree_of_compliance[name])
-        return doc_max
+    # def max_doc(self):
+    #     doc_max = 0.01
+    #     for name in self.degree_of_compliance:
+    #         if doc_max < self.degree_of_compliance[name]:
+    #             doc_max = self.degree_of_compliance[name]
+    #     return doc_max
 
     def calculate_cost(self):
         weight = 2 * self.length * self.unit_weight
-        self.dc_max = self.max_doc()
+        for name in self.degree_of_compliance:
+            if self.dc_max < self.degree_of_compliance[name]:
+                self.dc_max = self.degree_of_compliance[name]
+                self.dc_max_limit_state = name
         self.cost = weight * self.unit_cost * self.dc_max / self.dc_ref
         return self.cost
 

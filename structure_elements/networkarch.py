@@ -206,57 +206,6 @@ class NetworkArch:
         self.tie.assign_range_to_sections('Tie Fracture')
         return
 
-    # def calculate_cable_loss(self, name, i_hanger, q_d, q_c, ll_factor, daf=1):
-    #     hanger = self.hangers[i_hanger]
-    #     span = self.tie.span
-    #     n = self.tie.cross_girders_amount
-    #     f_d = span * q_d / (n + 1)
-    #
-    #     # Find worst load arrangement
-    #     self.set_range('EL + 1.2 DC + 1.4 DW', 'Cable loss')
-    #     load = '0'
-    #     max_hanger_force = 0
-    #     max_hanger_force_i = 0
-    #     for i in range(len(self.tie.cross_girders_nodes)):
-    #         hanger_force = hanger.effects_N['F'+str(i+1)]
-    #         if hanger_force > 0:
-    #             load += ' + ' + str(f_d) + ' F'+str(i+1)
-    #         if hanger_force > max_hanger_force:
-    #             max_hanger_force = hanger_force
-    #             max_hanger_force_i = i
-    #     load += ' + ' + str(q_c) + ' F'+str(max_hanger_force_i+1)
-    #     effects = self.get_effects(load)
-    #     self.set_effects(effects, 'LL_'+name)
-    #     effects = self.get_effects('EL + 1.2 DC + 1.4 DW + '+str(ll_factor)+' LL_'+name)
-    #     self.set_effects(effects, name+'_static')
-    #     hanger_force = hanger.effects_N[name+'_static']
-    #
-    #     model = self.create_model()
-    #     i_tie = len(self.tie)
-    #     i_arch = i_tie + len(self.arch)
-    #     i = i_arch + i_hanger
-    #     model['Beams']['Nodes'].pop(i)
-    #     model['Beams']['Stiffness'].pop(i)
-    #     model['Beams']['Releases'] = model['Beams']['Releases'][:-1]
-    #
-    #     vertical_force = hanger_force * np.sin(hanger.inclination)
-    #     horizontal_force = hanger_force * np.cos(hanger.inclination)
-    #     loads_nodal = [[hanger.tie_node.index, -horizontal_force, -vertical_force, 0],
-    #                    [hanger.arch_node.index, horizontal_force, vertical_force, 0]]
-    #     model['Loads'] = [{'Nodal': loads_nodal}]
-    #     # plot_loads_old(model, 0, 'Test')
-    #     # pyplot.show()
-    #
-    #     d, i_f, rd, sp = structure_analysis(model)
-    #     i_f[0]['Normal Force'].insert(i, [-hanger_force/daf])
-    #     effects = self.internal_forces_to_effects(i_f[0])
-    #     self.set_effects(effects, name+'_dyn')
-    #     self.set_effects(name + '_static + ' + str(daf) + ' ' + name + '_dyn', name)
-    #     self.assign_range_to_sections([name])
-    #     # self.hangers.effects[0, i_hanger] = 0
-    #     # hanger.effects_N[name][0] = 0
-    #     return
-
     def calculate_cable_loss(self, events):
         model = self.create_model()
         n = self.tie.effect_length() + self.arch.effect_length()

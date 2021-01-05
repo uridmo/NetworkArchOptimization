@@ -7,6 +7,8 @@ from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_
 from structure_elements.arch.circular_arch import CircularArch
 from structure_elements.arch.continuous_arch import ContinuousArch
 from structure_elements.arch.parabolic_arch import ParabolicArch
+from structure_elements.arch.polynomial_arch import PolynomialArch
+from structure_elements.arch.spline_arch import SplineArch
 from structure_elements.arch.thrust_line_arch import ThrustLineArch
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
 from structure_elements.hangers.hangers import Hangers
@@ -19,9 +21,9 @@ from structure_elements.tie import Tie
 
 class Bridge:
     def __init__(self, span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load, qc_fatigue,
-                 arch_shape, arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch,
-                 cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
-                 x_lost_cable, qd_repl, qc_repl, qd_loss, qc_loss, cost_cross_sections, unit_weight_anchorages, unit_price_anchorages):
+                 arch_shape, arch_optimisation, curve_fitting, self_stress_state, self_stress_state_params, cs_arch_x,
+                 cs_arch, cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
+                 cable_loss_events, cost_cross_sections, unit_weight_anchorages, unit_price_anchorages):
 
         self.input = {'span': span, 'rise': rise, 'cross_girder_amount': n_cross_girders, 'weight_deck': g_deck,
                       'weight_surface_utilities': g_wearing, 'distributed_live_load': qd_live_load,
@@ -85,11 +87,11 @@ class Bridge:
             mz_0 = tie.zero_displacement(nodes, hangers, *self_stress_state_params[0:1])
             n_0 = arch.define_n_by_peak_moment(nodes, hangers, mz_0, *self_stress_state_params[1:])
 
-        elif self_stress_state == 'Embedded-beam':
-            k_y = self_stress_state_params[0]
-            peak_moment = self_stress_state_params[1]
-            mz_0 = embedded_beam(tie, nodes, hangers, k_y)
-            n_0 = arch.define_n_by_peak_moment(nodes, hangers, mz_0, peak_moment=peak_moment)
+        # elif self_stress_state == 'Embedded-beam':
+        #     k_y = self_stress_state_params[0]
+        #     peak_moment = self_stress_state_params[1]
+        #     mz_0 = embedded_beam(tie, nodes, hangers, k_y)
+        #     n_0 = arch.define_n_by_peak_moment(nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Tie-optimisation':
             mz_0 = optimize_self_stresses_tie_1(tie, nodes, hangers, *self_stress_state_params[1:2])
@@ -107,7 +109,7 @@ class Bridge:
             n_0 -= dn
 
         # Optimize the arch shape if specified
-        if arch_optimisation:
+        if arch_optimisation :
             nodes.pop_nodes(arch.nodes[1:-1])
             g_arch = cs_arch[0].weight
             arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)
@@ -115,6 +117,21 @@ class Bridge:
             arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
             n_0 = arch.define_n_by_least_squares(nodes, hangers, mz_0)
             network_arch.arch = arch
+
+        if curve_fitting:
+            nodes.pop_nodes(arch.nodes[1:-1])
+            if curve_fitting.startswith('Polynomial'):
+                arch = PolynomialArch(nodes, arch)
+            if curve_fitting.startswith('Spline'):
+                arch = SplineArch(nodes, arch, hangers)
+            arch.arch_connection_nodes(nodes, hangers)
+            arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
+            if not curve_fitting.endswith('-n'):
+                n_0 = arch.define_n_by_least_squares(nodes, hangers, mz_0)
+            network_arch.arch = arch
+
+
+
 
         # Assign the permanent effects to the cross sections
         hangers.assign_length_to_cross_section()
@@ -127,11 +144,7 @@ class Bridge:
         network_arch.assign_wind_effects()
         network_arch.calculate_ultimate_limit_states()
 
-        events = [{'Name': 'Cable_Replacement', 'Distributed Load': qd_repl, 'Concentrated Load': qc_repl,
-                   'Factor LL': 1.5, 'Dynamic Amplification Factor': 1.00},
-                  {'Name': 'Cable_Loss', 'Distributed Load': qd_loss, 'Concentrated Load': qc_loss,
-                   'Factor LL': 0.75, 'Dynamic Amplification Factor': 1.75}]
-        network_arch.calculate_cable_loss(events)
+        network_arch.calculate_cable_loss(cable_loss_events)
 
         network_arch.calculate_tie_fracture(qd_live_load, qc_live_load)
 
@@ -168,22 +181,22 @@ class Bridge:
         self.network_arch.hangers.plot_elements(ax)
         return
 
-    def plot_effects(self, name, key, fig=None, label='', c='black', lw=1.0, ls='-'):
+    def plot_effects(self, name, key, fig=None, label='', c='black', lw=1.0, ls='-', marker='x'):
         if not fig:
             fig, axs = pyplot.subplots(2, 2, figsize=(8, 4), dpi=240)
         axs = fig.get_axes()
         self.network_arch.arch.plot_effects(axs[0], name, key, label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[1], name, key, label=label, c=c, lw=lw, ls=ls)
-        self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls)
+        self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls, marker=marker)
         return fig
 
-    def plot_all_effects(self, name, fig=None, label='', c='black', lw=1.0, ls='-'):
+    def plot_all_effects(self, name, fig=None, label='', c='black', lw=1.0, ls='-', marker='x'):
         if not fig:
             fig, axs = pyplot.subplots(2, 3, figsize=(12, 4), dpi=240)
         axs = fig.get_axes()
         self.network_arch.arch.plot_effects(axs[0], name, 'Normal Force', label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[1], name, 'Normal Force', label=label, c=c, lw=lw, ls=ls)
-        self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls)
+        self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls,  marker=marker)
         self.network_arch.arch.plot_effects(axs[3], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[4], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
         return fig

@@ -1,3 +1,6 @@
+from plotting.general import abbreviations, cost_cs
+
+
 def uls_forces_table(name, cross_sections, all_uls=False):
     text = open(name + ".txt", 'w')
     text.write(r"\begin{tabular}{llcccc}" + "\n")
@@ -31,11 +34,6 @@ def uls_forces_table(name, cross_sections, all_uls=False):
             mz = cs.effects[uls_max]['Moment'][2] / 1000 if 'Moment' in cs.effects[uls_max] else 0
             d_c = cs.degree_of_compliance[uls_max]
             text.write(" & " + uls_max.replace('_', ' ') + f" & {p:.1f} & {mz:.1f} & {my:.1f} & " + f"{d_c:.2f}" + r"\\" + "\n")
-
-        p_cl = 0
-        mz_cl = 0
-        my_cl = 0
-        d_c_cl = 0
 
     text.write(r"\end{tabular}" + "\n")
 
@@ -165,5 +163,28 @@ def big_cost_overview_table(name, bridges):
     text.write(r"\hline" + "\n")
     text.write(r"\end{tabular}" + "\n")
     text.close()
+    return
 
+
+def dc_overview_table(name, bridges, show_lc=True, slice_cs=slice(0, 7)):
+    text = open(name + ".txt", 'w')
+    text.write(r"\begin{tabular}{l"+"c"*(slice_cs.indices(100)[1])+"}" + "\n")
+    text.write(r"\hline" + "\n")
+    text.write(r"Model")
+    for cs in cost_cs[slice_cs]:
+        text.write(" & " + cs)
+    text.write(r" \\" + "\n")
+
+    for name in bridges:
+        bridge = bridges[name]
+        text.write(name)
+        for cs in bridge.cost_cross_sections[slice_cs]:
+            if show_lc:
+                text.write(" & " + f"{cs.dc_max:.2f}"+" ("+abbreviations[cs.dc_max_limit_state]+')')
+            else:
+                text.write(" & " + f"{cs.dc_max:.2f}")
+        text.write(r" \\ " + "\n")
+    text.write(r"\hline" + "\n")
+    text.write(r"\end{tabular}" + "\n")
+    text.close()
     return

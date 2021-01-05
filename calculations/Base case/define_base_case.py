@@ -1,6 +1,8 @@
 import pickle
 import tracemalloc
 
+from matplotlib import pyplot
+
 from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.adjustments import adjust_overview_plots, adjust_effects_plots
 from plotting.general import colors
@@ -37,14 +39,26 @@ hanger_forces = [hanger_force / 4.19 for hanger_force in hanger_forces]
 hanger_x = [267.8*(i+1)/14 for i in range(13)]
 axs[0].plot([0, 270], [0.744, 0.744], label='Design drawings', c=colors[1], lw=1)
 axs[1].plot([0, 270], [4.73, 4.73], label='Design drawings', c=colors[1], lw=1)
-axs[2].plot(hanger_x, hanger_forces, label='Design drawings', c=colors[1])
+axs[2].plot(hanger_x, hanger_forces, label='Design drawings', c=colors[1], marker='x')
 adjust_effects_plots(fig)
 fig.savefig('live load.png')
 
 # Create table of internal forces and demand/capacity ratios
 bridge_ref.internal_forces_table()
 bridge_ref.internal_forces_table(name='design forces 2', all_uls=True)
+
 bridge_ref.dc_ratio_table()
+bridge_ref.cost_table()
+
+fig = bridge_ref.plot_effects('Cable_Loss', 'Moment', label='Cable loss ranges', c=colors[0])
+fig = bridge_ref.plot_effects('Cable_Loss_4', 'Moment', fig=fig, label='4. cable loss', c=colors[1])
+adjust_effects_plots(fig)
+
+fig = bridge_ref.plot_effects('Strength-I', 'Moment', label='Fatigue', c=colors[0])
+fig = bridge_ref.plot_effects('Fatigue', 'Moment', fig=fig, label='Fatigue', c=colors[0])
+adjust_effects_plots(fig)
+fig.savefig('hanger forces.png')
+
 
 # Save the demand over capacity ratios of the reference case
 dc = []

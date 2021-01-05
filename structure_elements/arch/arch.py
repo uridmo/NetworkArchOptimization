@@ -47,7 +47,7 @@ class Arch(LineElement):
         n_0 = self.tie_tension
         self.assign_permanent_effects(nodes, hangers, n_0, -mz_0)
         moments_arch = self.get_effects('Permanent', 'Moment')
-        moment = moments_arch[len(moments_arch)/2]
+        moment = moments_arch[len(moments_arch)//2]
         n_0 += (moment - peak_moment) / self.rise
         self.tie_tension = n_0
         return n_0

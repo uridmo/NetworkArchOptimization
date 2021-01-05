@@ -11,10 +11,10 @@ for year in range(1960, 2021):
 
 index = np.arange(len(years))
 bar_width = 0.9
-fig, ax = plt.subplots(figsize=(6,4), dpi=360)
+fig, ax = plt.subplots(figsize=(6, 3), dpi=360)
 ax.bar(range(1960, 2021), bridges, bar_width,  color=colors[0])
 ax.set_xlim([1960, 2021])
 ax.set_ylabel("Bridges")
 # plt.xticks(index, years) # labels get centered
-fig.savefig('yearly bridges diagram.png')
+fig.savefig('bridges diagram.png')
 plt.show()

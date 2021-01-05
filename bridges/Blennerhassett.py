@@ -9,8 +9,9 @@ from structure_elements.cross_section import CrossSection, TieFracture
 class BlennerhassettBridge(Bridge):
     def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=115.3, g_utilities=35.1, n_hangers=13,
                  hanger_arrangement='Parallel', hanger_params=(1.117,), qd_live_load=22.9, qc_live_load=1063,
-                 qc_fatigue=385, arch_shape='Parabolic', arch_optimisation=True, self_stress_state='Tie-optimisation',
-                 self_stress_state_params=(), exact_stiffness=True, knuckles=True, x_lost_cable=0.25):
+                 qc_fatigue=311, cable_loss=True, arch_shape='Parabolic', arch_optimisation=True, curve_fitting='',
+                 self_stress_state='Tie-optimisation', self_stress_state_params=(), exact_stiffness=True,
+                 knuckles=True):
 
         unit_weight_arch_1 = 2467.05
         unit_weight_arch_2 = 2310.68
@@ -24,7 +25,7 @@ class BlennerhassettBridge(Bridge):
 
         unit_price_arch = 4
         unit_price_tie = 3.5
-        unit_price_hanger = 22
+        unit_price_hanger = 17
         unit_price_anchorages = 9
 
         # Load the demand / capacity ratios from the base case
@@ -38,7 +39,6 @@ class BlennerhassettBridge(Bridge):
         dc_tie_1_ref, dc_tie_2_ref, dc_tie_3_ref, dc_hanger_ref = dc[3], dc[4], dc[5], dc[6]
 
         hanger_area = 0.004058 * 13 / n_hangers
-        characteristic_hanger_resistance = 6446 * 13 / n_hangers
 
         resistance_arch_1 = [130000, 78708, 79115]
         resistance_arch_2 = [108768, 71458, 63445]
@@ -46,7 +46,7 @@ class BlennerhassettBridge(Bridge):
         resistance_tie_1 = [153228, 100810, 76190]
         resistance_tie_2 = [117134, 82766, 56610]
         resistance_tie_3 = [100574, 76175, 45792]
-        resistance_hanger = [0.65 * characteristic_hanger_resistance, 1, 1]
+        resistance_hanger = [0.65 * hanger_area * 1675000 / 1.05, 1, 1]
         resistance_fatigue = hanger_area * 55000
 
         stiffness_arch_1 = [77429 * 10 ** 3, 31473 * 10 ** 3]
@@ -55,7 +55,7 @@ class BlennerhassettBridge(Bridge):
         stiffness_tie_1 = [77429 * 10 ** 3, 31473 * 10 ** 3]
         stiffness_tie_2 = [65997 * 10 ** 3, 28673 * 10 ** 3]
         stiffness_tie_3 = [61814 * 10 ** 3, 28113 * 10 ** 3]
-        stiffness_hanger = [13 / n_hangers * 643.5 * 10 ** 3, 10 ** 6]
+        stiffness_hanger = [hanger_area * 196 * 10 ** 6, 10 ** 6]
 
         wind_load_arch_1 = {'Normal Force': [-8175], 'Moment': [668], 'Moment y': [13851, -13851]}
         wind_load_arch_2 = {'Normal Force': [-7793], 'Moment': [-670], 'Moment y': [10749, -10749]}
@@ -67,12 +67,18 @@ class BlennerhassettBridge(Bridge):
         wind_load_tie_4 = {'Normal Force': [5275], 'Moment': [702], 'Moment y': [788, -788]}
         wind_load_hangers = {'Normal Force': [480 * 13 / n_hangers]}
 
-        tie_fracture_1_web = TieFracture('Web', 0.297, (0.220, 0.0866), (0.6255, 0), 0.0794, (0.0267, 0), (0.664, 1.111), (0.0664, -1.111))
-        tie_fracture_2_web = TieFracture('Web', 0.256, (0.204, 0.0695), (0.6239, 0), 0.0595, (0.0187, 0), (0.657, 1.111), (0.0657, -1.111))
-        tie_fracture_1_top = TieFracture('Top', 0.297, (0.220, 0.0866), (0, 1.089), 0.0584, (0, 0.00866), (0.664, 1.089), (0.0664, -1.111))
-        tie_fracture_2_top = TieFracture('Top', 0.256, (0.204, 0.0695), (0, 1.089), 0.0590, (0, 0.00841), (0.657, 1.089), (0.0657, -1.111))
-        tie_fracture_1_bot = TieFracture('Bot', 0.297, (0.220, 0.0866), (0, -1.089), 0.0584, (0, 0.00866), (0.664, 1.111), (0.0664, -1.089))
-        tie_fracture_2_bot = TieFracture('Bot', 0.256, (0.204, 0.0695), (0, -1.089), 0.0590, (0, 0.00841), (0.657, 1.111), (0.0657, -1.089))
+        tie_fracture_1_web = TieFracture('Web', 0.297, (0.220, 0.0866), (0.6255, 0), 0.0794, (0.0267, 0),
+                                         (0.664, 1.111), (0.0664, -1.111))
+        tie_fracture_2_web = TieFracture('Web', 0.256, (0.204, 0.0695), (0.6239, 0), 0.0595, (0.0187, 0),
+                                         (0.657, 1.111), (0.0657, -1.111))
+        tie_fracture_1_top = TieFracture('Top', 0.297, (0.220, 0.0866), (0, 1.089), 0.0584, (0, 0.00866),
+                                         (0.664, 1.089), (0.0664, -1.111))
+        tie_fracture_2_top = TieFracture('Top', 0.256, (0.204, 0.0695), (0, 1.089), 0.0590, (0, 0.00841),
+                                         (0.657, 1.089), (0.0657, -1.111))
+        tie_fracture_1_bot = TieFracture('Bot', 0.297, (0.220, 0.0866), (0, -1.089), 0.0584, (0, 0.00866),
+                                         (0.664, 1.111), (0.0664, -1.089))
+        tie_fracture_2_bot = TieFracture('Bot', 0.256, (0.204, 0.0695), (0, -1.089), 0.0590, (0, 0.00841),
+                                         (0.657, 1.111), (0.0657, -1.089))
 
         if not exact_stiffness:
             stiffness_tie_1 = stiffness_tie_3
@@ -130,12 +136,22 @@ class BlennerhassettBridge(Bridge):
             knuckle = (cs_knuckle, knuckle_x, knuckle_inclination)
         else:
             knuckle = ()
-        qd_repl = 18.8
-        qc_repl = 874
-        qd_loss = 14.2
-        qc_loss = 660
-        super().__init__(span, rise, n_cross_girders, g_deck, g_utilities, qd_live_load, qc_live_load, qc_fatigue, arch_shape,
-                         arch_optimisation, self_stress_state, self_stress_state_params, cs_arch_x, cs_arch, cs_tie_x,
-                         cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
-                         x_lost_cable, qd_repl, qc_repl, qd_loss, qc_loss, cost_cross_sections, unit_weight_anchorages, unit_price_anchorages)
+
+        if cable_loss:
+            qd_repl = 18.8
+            qc_repl = 874
+            qd_loss = 14.2
+            qc_loss = 660
+            cable_loss_events = [
+                {'Name': 'Cable_Replacement', 'Distributed Load': qd_repl, 'Concentrated Load': qc_repl,
+                 'Factor LL': 1.5, 'Dynamic Amplification Factor': 1.00},
+                {'Name': 'Cable_Loss', 'Distributed Load': qd_loss, 'Concentrated Load': qc_loss,
+                 'Factor LL': 0.75, 'Dynamic Amplification Factor': 1.75}]
+        else:
+            cable_loss_events = []
+        super().__init__(span, rise, n_cross_girders, g_deck, g_utilities, qd_live_load, qc_live_load, qc_fatigue,
+                         arch_shape, arch_optimisation, curve_fitting, self_stress_state, self_stress_state_params,
+                         cs_arch_x, cs_arch, cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers,
+                         knuckle, cable_loss_events, cost_cross_sections,
+                         unit_weight_anchorages, unit_price_anchorages)
         return

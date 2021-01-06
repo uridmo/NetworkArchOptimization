@@ -15,7 +15,7 @@ In this chapter, the arrangement of the live loads on the deck is investigated. 
 \end{equation}
 In a second step, the amount of loaded lanes is determined. As the multiple presence factors (MPF) decrease with the amount of loaded lanes, each possibility is calculated to find the worst arrangement. The calculations are conducted for a unit lane load. The obtained factor relates the load on one lane to the load that is applied on the investigated tie girder. The factor can then be used for the calculation of the force on the tie of the distributed lane load ($q_{LL}=\SI{9.3}{kN/m}$) as well as of the design truck load ($Q_{LL}=\SI{325}{kN}$). For the design truck load an additional dynamic multiplier of 1.33 is taken into account. 
 
-\subsubsection{Ultimate limit state} \label{Appendx_A_Live_loading_1}
+\subsubsection{Characteristic live loading} \label{Appendx_A_Live_loading_1}
 In the ultimate limit state, the entire width of the deck is available to traffic. The lanes are arranged as densely to one side as possible and the first lane starts at $\SI{4.6}{ft}=\SI{1.4}{m}$ from the investigated arch plane. The calculations presented in Table \ref{tab:app_ll_uls} show that the worst arrangement results with six loaded lanes. 
 
 \input{overleaf/Appendix/Tables/Live loading_ULS}
@@ -33,7 +33,7 @@ It can be seen that six loaded lanes yield a factor of 2.46. Hence the load appl
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{overleaf/Appendix/Pictures/Cross_Section_LL_ULS.PNG}
-    \caption{Illustration of the live load arrangement in the ultimate limit state}
+    \caption{Live load arrangement in the ultimate limit state}
     \label{fig:app_hangers_uls}
 \end{figure}
 
@@ -74,11 +74,69 @@ An illustration of the load arrangement for the event of cable loss is presented
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.9\textwidth]{overleaf/Appendix/Pictures/Cross_Section_LL_Cable Loss.PNG}
-    \caption{Illustration of the live load arrangement for hanger loss}
+    \caption{Live load arrangement for hanger loss}
     \label{fig:app_hangers_cable_loss}
 \end{figure}
 
+\newpage
 \section{Optimisation methods}
+In this chapter, the mathematical background of the used optimisation methods is briefly explained. First, the methods related to the assignment of the permanent hanger forces are introduced in Sec. \ref{app:moment_min} and \ref{app:lsq}. The calculation of the thrust line, including the self weight of the arch, is explained in Sec. \ref{app:thrust_line}.
+
+\subsection{Absolute moment minimisation} \label{app:moment_min}
+In a n-times statically indeterminate structure, there are n supernumerary forces or moments. These forces are present in the initial configuration even without any applied loads. The elastic answer of the structure for the different load cases is simply added to obtain the respective effects. It is the goal of an efficient initial configuration to simplify the design verifications by counteracting the effects expected in the various load cases. Here, this is achieved by minimising the permanent moment distribution in the tie and potentially the arch as well. The permanent moment distribution at m points along the considerded component $M \in \mathbb{R}^m$ can be described by Eq. \eqref{eq:perm_mom}. 
+\begin{equation}
+    {\bf M} = {\bf M_0} + \sum_{i=1}^{n} {\bf M_i} \cdot X_i = {\bf M_0} + {\bf M_{sn}} \cdot {\bf X}
+    \label{eq:perm_mom}
+\end{equation}
+where ${\bf M_0} \in \mathbb{R}^m$ is the moment distribution of the permanent loads on the basic system, ${\bf M_i} \in \mathbb{R}^m$ is the moment distribution of the i-th supernumerary unit force, ${X_i} \in \mathbb{R}$ is the i-th supernumerary force. The later two can be combined into the matrix of supernumerary moments ${\bf M_{sn}} \in  \mathbb{R}^{m\times n}$ and the vector of supernumerary forces or moments ${\bf X} \in \mathbb{R}^n$.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[trim={0 0cm 0 0},clip, width=0.9\textwidth]{overleaf/Appendix/Pictures/min_1.PNG}
+    \caption{Basic system and supernumerary force}
+    \label{fig:Minimisation_1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[trim={0 0cm 0 0},clip, width=0.9\textwidth]{overleaf/Appendix/Pictures/min_2.PNG}
+    \caption{Moments under supernumerary force}
+    \label{fig:Minimisation_2}
+\end{subfigure}
+\caption{Moment distribution of supernumerary force}
+\label{fig:Minimisation}
+\end{figure}
+
+The problem of minimising the absolute maximum moments can be formulated according to Eq. \eqref{eq:minimisation}, where the absolute maximum moment is expressed as the infinity norm.
+\begin{align}
+    \underset{{\bf X}}{\text{Minimize}} \quad & f({\bf X}) = \max({\bf M}, -{\bf M}) = \|{\bf M_0} + {\bf M_{sn}} \cdot {\bf X}\|_{\infty} 
+    \label{eq:minimisation}
+\end{align}
+
+The helper variable $t$ is introduced, which describes the moment magnitude which is larger than the absolute moments in ${\bf M}$. With the help of $t$, the previously stated problem can be formulated as a linear programming problem, as shown in Eq. \eqref{eq:minimisation_2}.
+\begin{align}
+    \underset{t, {\bf X}}{\text{Minimize}} \quad & f(t) = t \label{eq:minimisation_2} \\
+    \text{s.t.} \quad & {\bf M_0} + {\bf M_{sn}} \cdot {\bf X} - t {\bf 1} \leq  0 \nonumber \\
+    \quad & {-\bf M_0} - {\bf M_{sn}} \cdot {\bf X} - t {\bf 1} \leq 0 \nonumber
+\end{align}
+
+Additionally, bounds for the permanent hanger forces can be specified as further inequality conditions. It should be noted that under the consideration of symmetry the amount of variables in the linear problem can be reduced. If only the moment distribution in the tie is optimised, it makes sense to only consider vertical forces at each hanger node. In a second step, the optimised vertical forces are assigned to the two hangers at the node.
+
+\subsection{Least squares moments} \label{app:lsq}
+As an alternative approach, the supernumerary forces can be determined using the method of least squares. The objective of this method is to find supernumerary forces which counteract a certain moment distribution, for example the moment distribution on the basic system. Using the variables which were introduced in the previous section, the objective is described by Eq. \eqref{eq:lsq_1}.
+\begin{equation}
+    {\bf M_{sn}} \cdot {\bf X} = -{\bf M_0}
+    \label{eq:lsq_1}
+\end{equation}
+As this yields an overdetermined system, the equations cannot be solved simultaneously. Using the method of least squares, the sum of the squared deviations can be minimised by solving the determined system in Eq. \eqref{eq:lsq_2}.
+\begin{equation}
+    ({\bf M_{sn}}^T\,{\bf M_{sn}}) \cdot {\bf X} = -{\bf M_{sn}}^T\,{\bf M_0}
+    \label{eq:lsq_2}
+\end{equation}
+The drawback of this method is that no bounds for the hanger forces can be specified. However, this method is particularly useful, if the hanger forces have been optimised by minimising the moments on the tie girder. At this point, the permanent tension force in the tie girder is still undefined, as it does not affect the moment distribution. It can then be calculated by considering the moment distribution in the arch rib, minimising the squares of its moment distribution. In this case, the approach is fast and can even be solved without using linear algebra as there is only one variable.
+
+\subsection{Thrust line derivation} \label{app:thrust_line}
 
 \section{Implementation}
 

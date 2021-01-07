@@ -18,6 +18,8 @@ class SplineArch(Arch):
         sorted_xy = sorted(xy, key=lambda tup: tup[0])
         x = [node[0] for node in sorted_xy]
         y = [node[1] for node in sorted_xy]
+        dl = [((x[i]-x[i+1])**2+(y[i]-y[i+1])**2)**0.5 for i in range(len(x)-1)]
+
 
         tck = splrep(x, y, s=0)
         x_arch = list(np.linspace(0, span, 2 * n + 1))

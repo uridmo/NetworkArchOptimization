@@ -36,6 +36,7 @@ for n in [13,26]:
     load_groups = {'permanent state_'+str(n): 'Permanent',
                    'strength-I_'+str(n): 'Strength-I'}
 
+    # make_plots(bridges_dict, load_groups, lw=0.8, big_plots=True)
     arch_or_tie_plots(bridges_dict, load_groups, lw=0.8)
 
     bridge_thrust.dc_ratio_table(name='dc_table_'+str(n))
@@ -56,7 +57,7 @@ for n in [13,26]:
     y = np.array([rise - radius * (1 - (1 - ((x_i - span / 2) / radius) ** 2) ** 0.5) for x_i in x])
     axs[0].plot(x, y-y_ref, label='Circular arch', c=colors[i+1], lw=0.7)
 
-    axs[0].set_title('Arch rib')
+    axs[0].set_title('Arch shape')
     axs[0].set_ylabel('Deviation [m]')
     adjust_plot(axs[0], step=0.2, min_0=True)
 

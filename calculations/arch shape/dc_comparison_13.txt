@@ -1,4 +1,3 @@
-Model & \multicolumn{3}{c}{Demand / Capacity} \\
 \begin{tabular}{lccc}
 \hline
 Model & \multicolumn{3}{c}{Demand / Capacity} \\

@@ -2,9 +2,9 @@
 \hline
 Model & \multicolumn{7}{c}{Demand / Capacity} \\
  & Arch 1 & Arch 2 & Arch 3 & Tie 1 & Tie 2 & Tie 3 & Hangers \\ \hline
-13 Hangers & 0.84 (CL) & 1.15 (CL) & 1.11 (CL) & 0.79 (TF) & 0.90 (TF) & 0.88 (TF) & 0.96 (S1) \\ 
-20 Hangers & 0.84 (S3) & 0.93 (CL) & 0.88 (CL) & 0.87 (TF) & 1.10 (TF) & 1.10 (TF) & 1.01 (S1) \\ 
-26 Hangers & 0.82 (S3) & 0.83 (S1) & 0.78 (CL) & 0.83 (TF) & 1.08 (TF) & 1.06 (TF) & 0.97 (S1) \\ 
-27 Hangers & 0.84 (S3) & 0.84 (S1) & 0.80 (CL) & 0.81 (TF) & 1.03 (TF) & 1.01 (TF) & 1.08 (S1) \\ 
+13 Hangers & 0.87 (S3) & 1.12 (CL) & 1.05 (CL) & 0.79 (TF) & 0.90 (TF) & 0.88 (TF) & 0.96 (S1) \\ 
+20 Hangers & 0.88 (S3) & 0.89 (CL) & 0.82 (CL) & 0.87 (TF) & 1.10 (TF) & 1.10 (TF) & 1.01 (S1) \\ 
+26 Hangers & 0.83 (S3) & 0.84 (S1) & 0.77 (CL) & 0.83 (TF) & 1.08 (TF) & 1.06 (TF) & 0.97 (S1) \\ 
+27 Hangers & 0.86 (S3) & 0.87 (S1) & 0.77 (CL) & 0.82 (TF) & 1.03 (TF) & 1.01 (TF) & 1.08 (S1) \\ 
 \hline
 \end{tabular}

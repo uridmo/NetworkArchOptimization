@@ -13,7 +13,7 @@ f = open('../base case/bridge.pckl', 'rb')
 bridge_ref = pickle.load(f)
 f.close()
 cable_loss = False
-for n in [13,26]:
+for n in [13, 26]:
     bridge_thrust = BlennerhassettBridge(n_hangers=n, n_cross_girders=n, cable_loss=cable_loss)
 
     print('Potential for permanent moment distribution optimisation (n=' + str(n) + ')')
@@ -29,14 +29,15 @@ for n in [13,26]:
     bridge_spline = BlennerhassettBridge(curve_fitting='Spline-n', n_hangers=n, n_cross_girders=n, cable_loss=cable_loss)
     bridge_continuous = BlennerhassettBridge(arch_shape='Continuous optimisation', arch_optimisation=False, n_hangers=n, n_cross_girders=n, cable_loss=cable_loss)
 
+    bridges_dict = {'Thrust line arch': bridge_thrust}
+    load_groups = {'strength-I_'+str(n): 'Strength-I'}
+    arch_or_tie_plots(bridges_dict, load_groups, lw=0.8)
+
     bridges_dict = {'Thrust line arch': bridge_thrust,
                     'Polynomial approximation': bridge_polynomial,
                     'Spline approximation': bridge_spline,
                     'Continuous approximation': bridge_continuous}
-    load_groups = {'permanent state_'+str(n): 'Permanent',
-                   'strength-I_'+str(n): 'Strength-I'}
-
-    # make_plots(bridges_dict, load_groups, lw=0.8, big_plots=True)
+    load_groups = {'permanent state_'+str(n): 'Permanent'}
     arch_or_tie_plots(bridges_dict, load_groups, lw=0.8)
 
     bridge_thrust.dc_ratio_table(name='dc_table_'+str(n))

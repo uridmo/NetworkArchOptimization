@@ -39,22 +39,52 @@ Multiple approaches to determine the arch shape have been introduced in Section 
     \item Thrust line of continuous hanger arrangement: This shape is the thrust line of the hypothetical continuous hanger arrangement, which was introduced in Section [].
 \end{enumerate}
 
-These shapes are hardly distinguishable by eye. To make their differences visible, only their respective deviation to the parabolic shape is shown in Fig. []. Also a circular arch is shown to put the results into perspective.
+These shapes are hardly distinguishable by eye. To make their differences visible, only their respective deviations to the parabolic shape are shown in Fig. \ref{fig:arch_shapes_13}. Also a circular arch is shown to put the results into perspective.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{calculations/arch sha}
-    \caption{Arch shapes}
+    \includegraphics[trim={0 0 2cm 0},clip, width=0.8\textwidth]{calculations/arch shape/arch_shapes_13.png}
+    \caption{Deviation of arch shapes from parabolic shape}
     \label{fig:arch_shapes_13}
 \end{figure}
 
+In the range between the circular and the parabolic shape, the thrust line tends slightly to the parabolic side. From the similarity between the polynomial and the continuous approximation, it can be concluded, that if the hanger arrangement is dense enough, a quartic function can yield an appropriate arch shape for this hanger arrangement pattern. All three approximations seem to fit the thrust line reasonably well. But to investigate the impacts of the remain deviations from the thrust line, the corresponding permanent moment distribution is presented in Fig. \ref{fig:arch_permanent_moments_13}.
 
-The arch shape is a decisive factor, which also influences the results of the investigationthe hanger density investigation. Therefore, the arch shapes are first investigated independently in this Section. \medskip
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={0 0 2cm 0},clip, width=0.8\textwidth]{calculations/arch shape/permanent state_13.png}
+    \caption{Permanent arch moment distributions depending on arch shape}
+    \label{fig:arch_permanent_moments_13}
+\end{figure}
 
-This impact also influences the 
-As shown by Cavegn, these
-Further, the hanger forces on the arch are neither uniform nor radial, hence the thrust line follows a different shape, as . 
-In this Section, a few approaches are compared
+Despite the apparent match of the arch shapes, significant bending moments result in each of the three approximations. The spline approximation's moment distribution is strictly negative, which relies on the characteristic that a spline lies above the approximately linear thrust line and only matches it at the connection nodes. It is particularly interesting, that all approximations feature a similar parabolic moment distribution between the arch-hanger connection nodes. While these moment distributions resulting for the approximated shapes are certainly considerable, it is practically infeasible to find a simple shape matching the arch thrust line. Any shape with an approximately constant radius $R$ results in a certain deviation from the thrust line and the corresponding moment deviation $\Delta M$. This deviation can be approximated depending on the distance between two hanger points $d$ and the arch's normal force $N$ according to Eq. \eqref{eq:moment_deviation}.
+
+\begin{equation}
+    \Delta M=-\left(R-\sqrt{R^2-\left(d/2\right)^2}\right) \cdot N
+    \label{eq:moment_deviation}
+\end{equation}
+
+For the Blennerhassett Island Bridge, these variables roughly correspond to $R=\SI{194}{m}$, $d=\SI{17}{m}$ and $N=\SI{40}{MN}$. Eq. \eqref{eq:moment_deviation} yields a moment deviation of $\Delta M=\SI{7.5}{MNm}$ coming close to the value observed in Fig. \ref{fig:arch_shapes_13}. From the analytical form of Eq. \eqref{eq:moment_deviation} it can further be concluded, that a reduction of the hanger node spacing has a more than proportional impact on the bending moment deviation. To put these deviations into the context of the design verifications, the demand over capacity ratios resulting in the arch are shown in Table \ref{tab:arch_shape_dc_13} for each approach.
+
+\begin{table}[H]
+    \centering
+    \input{calculations/arch shape/dc_comparison_13.txt}
+    \caption{Arch design verifications considering different shapes}
+    \label{tab:arch_shape_dc_13}
+\end{table}
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 \subsection{Hanger density}
 It is evident, that an increase of the amount of hangers, can yield a substantial benefit by reducing the decisive effects in the extreme event of cable loss. For the design of the Blennerhassett Island Bridge, a detailed dynamic analysis was conducted, which allowed to reduce the dynamic amplification factor down to 1.6. Nevertheless, the extreme event of cable loss was decisive for the arch segments.

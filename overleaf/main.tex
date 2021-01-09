@@ -46,6 +46,7 @@
 \pgfplotsset{compat=newest}  
 \pgfplotsset{plot coordinates/math parser=false}
 
+
 %\graphicspath{ {Figures/} } 
 \setlength{\headheight}{14pt} 
 \setlength{\parindent}{0pt}
@@ -128,22 +129,12 @@
 \newpage
 \input{overleaf/S5_Conclusion and Outlook}
 
-%\newpage
-%\input{Section6}                   
-
-%\newpage
-%\input{Section7}                   
-
-%\newpage
-%\input{Section8}
-
-%\newpage
-%\input{Section9}
-
-\clearpage
-\appendix
-\section*{Appendix}\addcontentsline{toc}{section}{Appendix}
 \cleardoublepage
+\appendix
+\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
+
+\section*{Appendix}\addcontentsline{toc}{section}{Appendix}
+\newpage
 \input{overleaf/Appendix/appendix}
 
 \newpage

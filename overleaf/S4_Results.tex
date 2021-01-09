@@ -21,7 +21,7 @@ Another comparison is drawn between the effects under characteristic live loads.
     \label{fig:base_case_live}
 \end{figure}
 
-The moments in the arch given in the design drawings do not correspond to the maximum for the considered load case. The considerable difference cannot be explained in another way and seems physically impossible. The moment distribution in the tie and the hangers' normal forces seem to agree on the other hand. Apparently, the live loading is only slightly overestimated in the model, which can be seen particularly well in the hangers' demand over capacity ratios. These differences are accepted, as it is not the goal of this Thesis to reproduce the results from the design drawings. Interestingly, in particular, the arch segment near the knuckle is affected by strong bending moments. On the other hand, in the tie girder, the range of effects under live loading is well distributed. Apparently, the influence lines for the moments in the tie girder at the different cross-girders follow the same shape. For the hangers, it is the second one from the knuckle connected toward the middle of the arch that undergoes the largest normal force. Towards the other side of the hangers set, the hanger forces decrease. The stronger affected hangers have in common that their inclination is closer to the arch's inclination at their respective connection node. The arch is very stiff on axial loading and comparably weaker on perpendicular forces. Therefore, at the arch nodes, smaller displacements in the hanger's direction are expected for the strongly affected hangers, explaining their higher normal forces. Only the first hanger does not follow this rule, which can be explained by its smaller area of influence. \medskip
+The moments in the arch given in the design drawings do not correspond to the maximum for the considered load case. The considerable difference cannot be explained in another way and seems physically impossible. The moment distribution in the tie and the hangers' normal forces seem to agree on the other hand. Apparently, the live loading is only slightly overestimated in the model, which can be seen particularly well in the hangers' demand over capacity ratios. These differences are accepted, as it is not the goal of this Thesis to reproduce the results from the design drawings. Interestingly, in particular, the arch segment near the knuckle is affected by strong bending moments. On the other hand, in the tie girder, the range of effects under live loading is well distributed. Apparently, the influence lines for the moments in the tie girder at the different cross-girders follow the same shape. For the hangers, it is the second one from the knuckle connected toward the middle of the arch that undergoes the largest normal force. Towards the other side of the hanger set, the hanger forces decrease. The stronger affected hangers have in common that their inclination is closer to the arch's inclination at their respective connection node. The arch is very stiff on axial loading and comparably weaker on perpendicular forces. Therefore, at the arch nodes, smaller displacements in the hanger's direction are expected for the strongly affected hangers, explaining their higher normal forces. Only the first hanger does not follow this rule, which can be explained by its smaller area of influence. \medskip
 
 \newpage
 \subsection{Arch shape}
@@ -103,21 +103,103 @@ If the amount of hangers is large enough, all considered approximations yield su
 
 \newpage
 \subsection{Hanger density}
-A denser hanger arrangement provides multiple benefits. As seen in the previous chapter, the shape deviation moments are reduced by the corresponding reduction of the distances between the hanger's anchorages. Further, the effects in the extreme event of cable loss are strongly lowered, as the hanger forces are reduced proportionally to the increase of hangers. Also the impaired structural system loses less of its essential stiffness and undergoes additionally lower effects therefore. However, the challenging task is to find an appropriate self-equilibrium stress state for structural systems in which the locations of the floor beams and the hangers do not coincide on the tie girder. \medskip
+A denser hanger arrangement provides multiple benefits. As seen in the previous chapter, the shape deviation moments are reduced through the corresponding reduction of the distances between the hangers' anchorages. Further, the effects in the extreme event of cable loss are significantly lowered, as the hanger forces are reduced inverse proportionally to the increase of hangers. Also the impaired structural system loses less of its essential stiffness and undergoes additionally lower effects therefore. However, the challenging task is to find an appropriate self-equilibrium stress state for structural systems in which the locations of the floor beams and the hangers do not coincide on the tie girder. \medskip
 
-In this investigation, this challenge is tackled by tie moment optimisation method. It allows finding the permanent hanger forces within a certain range, which minimise the resulting moment distribution in the tie girder. This range is set between 25\% and 40 \% of the hangers' characteristic capacity.  Four bridges are analysed featuring 13, 20, 26 or 27 hangers per set and a constant amount of 13 floor beams. The arch shapes are defined as the quartic polynomial approximation of the thrust line. The model featuring 26 hangers is shown in Fig. []. The spacing between the knuckle an the first hanger is slightly increased so there is an equally spaced pair of hangers around every floor beam. While the arrangement appears dense, the hanger spacing on the tie girder is still around \SI{10}{m} representing a rather high value for the more modern network tied-arch bridges.
-
-
+In this investigation, this challenge is tackled by tie moment optimisation method. It allows finding the permanent hanger forces within a certain range minimising the resulting moment distribution in the tie girder. This range is set between 25\% and 40\% of the hangers' characteristic capacity.  Four bridges are analysed featuring 13, 20, 26 or 27 hangers per set and a constant amount of 13 floor beams. The arch shapes are defined as the quartic polynomial approximation of the thrust line. The model featuring 26 hangers is shown in Fig. \ref{fig:structure_26}. The spacing between the knuckle and the first hanger is slightly increased so there is an equally spaced pair of hangers around every floor beam. While the arrangement appears dense, the hanger spacing on the tie girder is still around \SI{10}{m} representing a rather high value for modern network tied-arch bridges.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0 2cm 0},clip, width=0.8\textwidth]{calculations/arch shape/arch_shapes_26.png}
-    \caption{Deviation of arch shapes from parabolic shape (26 hangers)}
-    \label{fig:arch_shapes_26}
+    \includegraphics[trim={0 1cm 0 1cm},clip, width=0.7\textwidth]{calculations/hanger amount comparison/structure_26.png}
+    \caption{Structural model of a dense hanger arrangement (26 hangers per set)}
+    \label{fig:structure_26}
 \end{figure}
 
-The optimised effects under permanent loads are shown in Fig [].
+The optimised effects under permanent loads are shown in Fig \ref{fig:hd_permanent}. As expected from the investigation of the arch shape, the bending moments in the arch are lowered for an increased hanger density. However, in the knuckle region of the arch the strong bending moments are retained for the arrangements with 20 and 27 hangers per set. They are due to the tie moment optimisation method assigning significant supernumerary moments to the knuckle. The quartic polynomial approximation is not able to match the corresponding thrust line.
 
-For the design of the Blennerhassett Island Bridge, a detailed dynamic analysis was conducted, which allowed to reduce the dynamic amplification factor down to 1.6. Nevertheless, the extreme event of cable loss was decisive for the arch segments.
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.9\textwidth]{calculations/hanger amount comparison/permanent state.png}
+    \caption{Optimised permanent effects for different hanger densities}
+    \label{fig:hd_permanent}
+\end{figure}
+
+The permanent hanger forces are no longer constant for the models with 20 and 27 hangers, as the hangers near the floor beams carry the majority of the forces. At the same time a strong bending moment distribution in the tie is inevitable. The model featuring 26 hangers seems slightly more suitable as it is able to retain constant hanger forces and also a slightly lower tie moment distribution. Further, the elastic responses to dead loading are shown in Fig. \ref{fig:hd_elastic_response_dl}.
+%On top of the disadvantageous permanent effects, also the elastic response of the modified models to live loading, which are shown in Fig. \ref{fig:hd_live}, seem unfavourable.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{calculations/hanger amount comparison/dead load.png}
+    \caption{Elastic response to dead loading for different hanger densities}
+    \label{fig:hd_elastic_response_dl}
+\end{figure}
+
+While these effects are already included in the permanent effects, they are still relevant for the design verifications as they are increased or decreased therefor. While the response of the arch and the hangers remains approximately identical, the tie is again affected by stronger bending moments in the denser models. This characteristic is accentuated by the range of tie moments relevant for the tie fracture extreme event, presented in Fig. \ref{fig:hd_tie_fracture}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={0 0 3cm 0},clip, width=0.8\textwidth]{calculations/hanger amount comparison/tie fracture.png}
+    \caption{Range of tie bending moment for tie fracture extreme event}
+    \label{fig:hd_tie_fracture}
+\end{figure}
+
+The previously rather uniform moments became particularly peaky. The corresponding design verification in the tie is thereby significantly impaired, as show in Table \ref{tab:hd_dc}. An optimisation of the hanger density itself, therefore renders no potential for optimisation, even though the cable loss extreme event improves as expected.
+
+\begin{table}[H]
+    \centering
+    \resizebox{\columnwidth}{!}{%
+    \input{calculations/hanger amount comparison/dc_comparison.txt}
+    }
+    \caption{Design verifications for different hanger densities}
+    \label{tab:hd_dc}
+\end{table}
+
 
 \subsection{Floor beam density}
+It was seen in the previous chapter, that it is impossible to obtain an optimised design with more hangers per set than floor beams. To facilitate the design verifications in the extreme event of cable loss, a denser hanger arrangement has to be paired with a higher floor beam density. It seems a particularly reasonable step, as the Blennerhassett Island Bridge holds the record for hanger spacing on the tie girder at \SI{20}{m}. This was only feasible as the extreme event of floor beam loss was not considered in the design. However, there are other causes to investigate the floor beam and hanger density. Besides the previously mentioned improved behaviour under cable loss and smaller deviations of the arch from the thrust line, a general more continuous transfer of loads might be beneficial. \medskip
+
+Theoretically, an adapted floor beam spacing changes the entire deck system and its weight. However, the deck is not subject to this investigation and it is therefore assumed, that the total weight of the deck system and the floor beams is constant and independent of the floor beam spacing. Four models with different floor beam and hanger densities are investigated in this Section. Besides the final design with 13 floor beams, models with 10, 20 and 27 floor beams are investigated. As an advantage for the sparse model with 10 floor beams, the actual thrust line is assumed as the arch shape. For the other models, the thrust line is approximated by the quartic polynomial. The respective permanent effects are shown in Fig. \ref{fig:fb_permanent}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{calculations/floor beam comparison/permanent state.png}
+    \caption{Optimised permanent effects for different floor beam densities}
+    \label{fig:fb_permanent}
+\end{figure}
+
+All models retain the characteristic permanent effects resulting from the tie optimisation, which are the uniform hanger forces and a uniform tie moment distribution with peaks at $M=\pm\,g_{Tie} \cdot s^2 / 16$. It can be seen, that the hanger forces slightly increase, as less weight of the deck is directly carried by the floor beam at the knuckle. Compared to the other models, the permanent arch moments for 13 floor beams seem to be significant. However, it is known from the investigation of the arch shape, that the moments only lower the demand over capacity ratio by about 0.05. \medskip
+
+In Fig. \ref{fig:fb_live} the elastic response under characteristic live loading is shown. For the hangers, the response is practically unchanged. Only the hangers very close to the knuckle undergo a lower normal force, as the tie girder at the knuckle carries the corresponding load directly to the knuckle. For the tie girder, the moment effects increase with the floor beam density and constitutes a slightly impairing impact on the design verifications. The stronger moments are due to the weaker coupling of the tie and the arch at the floor beams. While the force at the floor beams for the distributed lane load decreases, the force of the design trucks remain the same. They are responsible for the slightly increased hanger forces and bending moments in the tie girder. The moment distribution on the arch rib shows a different tendency. Overall the effects of the models resemble a similar shape. However, for fewer floor beams, certain moment peaks due to the stronger hanger forces become apparent. To put these differences into the context of the design verifications, the resulting demand over capacity ratios are shown in Tab. \ref{tab:fb_dc}.
+
+\begin{figure}
+    \centering
+    \includegraphics[trim={0 0.4cm 0 0.4cm},clip, width=0.78\textwidth]{calculations/floor beam comparison/live loading.png}
+    \caption{Elastic effects under live loading for different floor beam densities}
+    \label{fig:fb_live}
+\end{figure}
+
+\begin{table}[H]
+    \centering
+    \resizebox{\columnwidth}{!}{%
+    \input{calculations/floor beam comparison/dc comparison.txt}
+    }
+    \caption{Design verifications for different floor beam densities}
+    \label{tab:fb_dc}
+\end{table}
+
+The extreme event of cable loss is well controlled by a denser hanger arrangement, as was already observed in the previous chapter. The impacts on the other design verification are comparably small. Both the hangers and the tie girder undergo a decrease of about 0.05 in the demand over capacity ratio. The effect ranges for the strength-I limit state are shown in Fig. \ref{fig:fb_strength} for further details. Considering the arch, 10 floor beams with an optimised shape or 27 floor beams show a well balanced moment distribution. However, also the moments in the other models do not have a decisive influence on the design.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={0 0.4cm 0 0.4cm},clip, width=0.78\textwidth]{calculations/floor beam comparison/strength-I.png}
+    \caption{Strength-I effects for different floor beam densities}
+    \label{fig:fb_strength}
+\end{figure}
+
+[Beschreibung des Kostenverlaufs]
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.7\textwidth]{calculations/floor beam comparison/cost comparison.png}
+    \caption{Estimated costs for different floor beam densities}
+    \label{fig:fb_costs}
+\end{figure}

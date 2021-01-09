@@ -2,11 +2,11 @@
 \hline
 Segment & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\
  & & [MN]   & [MNm] & [MNm] & [-] \\ \hline
-\multirow{2}{*}{Arch 1} & Cable Loss & 56.7 & 30.8 & 0.0 & 0.87\\
-\multirow{2}{*}{Arch 2} & Cable Loss & 55.6 & 30.5 & 0.0 & 1.18\\
-\multirow{2}{*}{Arch 3} & Cable Loss & 48.6 & 30.1 & 0.0 & 1.10\\
-\multirow{2}{*}{Tie 1} & Tie Fracture & 50.6 & 10.8 & 0.0 & 0.81\\
-\multirow{2}{*}{Tie 2} & Tie Fracture & 50.6 & 8.2 & 0.0 & 0.94\\
-\multirow{2}{*}{Tie 3} & Tie Fracture & 49.8 & 9.2 & 0.0 & 0.93\\
-\multirow{2}{*}{Hangers} & Strength-I & 4.5 & 0.0 & 0.0 & 1.07\\
+\multirow{2}{*}{Arch 1} & Strength-III & 66.3 & 4.4 & 15.0 & 0.86\\
+\multirow{2}{*}{Arch 2} & Cable Loss & 55.6 & 26.2 & 0.0 & 1.09\\
+\multirow{2}{*}{Arch 3} & Cable Loss & 48.6 & 29.5 & 0.0 & 1.08\\
+\multirow{2}{*}{Tie 1} & Tie Fracture & 50.6 & 13.7 & 0.0 & 0.81\\
+\multirow{2}{*}{Tie 2} & Tie Fracture & 50.6 & 10.8 & 0.0 & 0.99\\
+\multirow{2}{*}{Tie 3} & Tie Fracture & 49.8 & 10.6 & 0.0 & 0.96\\
+\multirow{2}{*}{Hangers} & Strength-I & 4.5 & 0.0 & 0.0 & 1.06\\
 \end{tabular}

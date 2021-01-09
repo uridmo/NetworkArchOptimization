@@ -52,9 +52,9 @@ class BlennerhassettBridge(Bridge):
         stiffness_arch_1 = [77429 * 10 ** 3, 31473 * 10 ** 3]
         stiffness_arch_2 = [65997 * 10 ** 3, 28673 * 10 ** 3]
         stiffness_arch_3 = [61814 * 10 ** 3, 28113 * 10 ** 3]
-        stiffness_tie_1 = [77429 * 10 ** 3, 31473 * 10 ** 3]
-        stiffness_tie_2 = [65997 * 10 ** 3, 28673 * 10 ** 3]
-        stiffness_tie_3 = [61814 * 10 ** 3, 28113 * 10 ** 3]
+        stiffness_tie_1 = [89148 * 10 ** 3, 61596 * 10 ** 3]
+        stiffness_tie_2 = [62441 * 10 ** 3, 46255 * 10 ** 3]
+        stiffness_tie_3 = [53736 * 10 ** 3, 42811 * 10 ** 3]
         stiffness_hanger = [hanger_area * 196 * 10 ** 6, 10 ** 6]
 
         wind_load_arch_1 = {'Normal Force': [-8175], 'Moment': [668], 'Moment y': [13851, -13851]}

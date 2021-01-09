@@ -2,9 +2,9 @@
 \hline
 Model & \multicolumn{3}{c}{Demand / Capacity} \\
  & Arch 1 & Arch 2 & Arch 3 \\ \hline
-Thrust line arch & 0.83 (S3) & 0.85 (S1) & 0.74 (S1) \\ 
-Polynomial approximation & 0.87 (S3) & 0.95 (S1) & 0.80 (S1) \\ 
+Thrust line arch & 0.83 (S3) & 0.84 (S1) & 0.73 (S1) \\ 
+Polynomial approximation & 0.87 (S3) & 0.94 (S1) & 0.80 (S1) \\ 
 Spline approximation & 0.90 (S3) & 0.89 (S3) & 0.77 (S1) \\ 
-Continuous approximation & 0.88 (S3) & 0.92 (S1) & 0.78 (S1) \\ 
+Continuous approximation & 0.88 (S3) & 0.91 (S1) & 0.78 (S1) \\ 
 \hline
 \end{tabular}

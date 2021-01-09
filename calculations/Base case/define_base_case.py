@@ -63,7 +63,7 @@ fig.savefig('hanger forces.png')
 # Save the demand over capacity ratios of the reference case
 dc = []
 for cs in bridge_ref.cost_cross_sections:
-    dc.append(cs.max_doc())
+    dc.append(cs.dc_max)
 f = open('dc_ratios.pckl', 'wb')
 pickle.dump(dc, f)
 f.close()

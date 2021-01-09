@@ -2,43 +2,43 @@
 \hline
 Segment & Limit state & Normal force & Moment-y & Moment-z & Demand/Capacity \\
  & & [MN]   & [MNm] & [MNm] & [-] \\ \hline
-\multirow{6}{*}{Arch 1} & Strength-I & 66.0 & 11.5 & 0.0 & 0.73\\
+\multirow{6}{*}{Arch 1} & Strength-I & 65.8 & 10.9 & 0.0 & 0.72\\
  & Strength-III & 66.3 & 4.4 & 15.0 & 0.86\\
- & Strength-IV & 64.2 & 6.9 & 0.0 & 0.66\\
- & Cable Replacement & 60.6 & 26.4 & 0.0 & 0.84\\
- & Cable Loss & 56.7 & 30.8 & 0.0 & 0.87\\
-\multirow{6}{*}{Arch 2} & Strength-I & 64.5 & 11.1 & 0.0 & 0.96\\
- & Strength-III & 59.8 & 4.3 & 3.6 & 0.88\\
- & Strength-IV & 62.7 & 6.5 & 0.0 & 0.88\\
- & Cable Replacement & 59.3 & 26.1 & 0.0 & 1.13\\
- & Cable Loss & 55.6 & 30.5 & 0.0 & 1.18\\
-\multirow{6}{*}{Arch 3} & Strength-I & 57.8 & 6.2 & 0.0 & 0.79\\
- & Strength-III & 53.6 & 3.5 & 0.2 & 0.72\\
- & Strength-IV & 55.9 & 4.0 & 0.0 & 0.74\\
- & Cable Replacement & 51.8 & 18.4 & 0.0 & 0.91\\
- & Cable Loss & 48.6 & 30.1 & 0.0 & 1.10\\
-\multirow{7}{*}{Tie 1} & Strength-I & 52.8 & 13.4 & 0.0 & 0.57\\
- & Strength-III & 54.1 & 2.3 & 8.2 & 0.62\\
- & Strength-IV & 51.4 & 5.2 & 0.0 & 0.49\\
- & Cable Replacement & 48.9 & 26.8 & 0.0 & 0.66\\
- & Cable Loss & 46.1 & 31.6 & 0.0 & 0.69\\
- & Tie Fracture & 50.6 & 10.8 & 0.0 & 0.81\\
-\multirow{7}{*}{Tie 2} & Strength-I & 52.8 & 10.3 & 0.0 & 0.62\\
- & Strength-III & 52.9 & 2.8 & 0.6 & 0.57\\
- & Strength-IV & 51.4 & 3.3 & 0.0 & 0.55\\
- & Cable Replacement & 48.7 & 30.6 & 0.0 & 0.80\\
- & Cable Loss & 45.6 & 36.6 & 0.0 & 0.86\\
- & Tie Fracture & 50.6 & 8.2 & 0.0 & 0.94\\
-\multirow{7}{*}{Tie 3} & Strength-I & 52.0 & 12.0 & 0.0 & 0.62\\
+ & Strength-IV & 64.1 & 6.7 & 0.0 & 0.66\\
+ & Cable Replacement & 60.5 & 22.9 & 0.0 & 0.79\\
+ & Cable Loss & 56.7 & 26.5 & 0.0 & 0.81\\
+\multirow{6}{*}{Arch 2} & Strength-I & 64.4 & 10.5 & 0.0 & 0.95\\
+ & Strength-III & 59.7 & 4.2 & 3.6 & 0.87\\
+ & Strength-IV & 62.6 & 6.3 & 0.0 & 0.87\\
+ & Cable Replacement & 59.3 & 22.6 & 0.0 & 1.06\\
+ & Cable Loss & 55.6 & 26.2 & 0.0 & 1.09\\
+\multirow{6}{*}{Arch 3} & Strength-I & 57.7 & 5.9 & 0.0 & 0.79\\
+ & Strength-III & 53.6 & 3.6 & 0.2 & 0.72\\
+ & Strength-IV & 55.9 & 3.9 & 0.0 & 0.74\\
+ & Cable Replacement & 51.7 & 18.0 & 0.0 & 0.91\\
+ & Cable Loss & 48.6 & 29.5 & 0.0 & 1.08\\
+\multirow{7}{*}{Tie 1} & Strength-I & 52.8 & 17.1 & 0.0 & 0.60\\
+ & Strength-III & 54.1 & 3.0 & 8.2 & 0.62\\
+ & Strength-IV & 51.3 & 6.4 & 0.0 & 0.51\\
+ & Cable Replacement & 48.7 & 32.3 & 0.0 & 0.72\\
+ & Cable Loss & 45.9 & 37.5 & 0.0 & 0.75\\
+ & Tie Fracture & 50.6 & 13.7 & 0.0 & 0.81\\
+\multirow{7}{*}{Tie 2} & Strength-I & 52.8 & 13.7 & 0.0 & 0.66\\
+ & Strength-III & 52.9 & 3.5 & 0.6 & 0.58\\
+ & Strength-IV & 51.3 & 4.5 & 0.0 & 0.56\\
+ & Cable Replacement & 48.6 & 36.2 & 0.0 & 0.87\\
+ & Cable Loss & 45.5 & 42.6 & 0.0 & 0.93\\
+ & Tie Fracture & 50.6 & 10.8 & 0.0 & 0.99\\
+\multirow{7}{*}{Tie 3} & Strength-I & 52.0 & 13.8 & 0.0 & 0.64\\
  & Strength-III & 51.0 & 3.0 & 1.1 & 0.56\\
- & Strength-IV & 50.6 & 2.2 & 0.0 & 0.53\\
- & Cable Replacement & 47.4 & 25.6 & 0.0 & 0.76\\
- & Cable Loss & 44.6 & 32.4 & 0.0 & 0.82\\
- & Tie Fracture & 49.8 & 9.2 & 0.0 & 0.93\\
-\multirow{7}{*}{Hangers} & Strength-I & 4.5 & 0.0 & 0.0 & 1.07\\
+ & Strength-IV & 50.6 & 2.1 & 0.0 & 0.53\\
+ & Cable Replacement & 47.3 & 29.1 & 0.0 & 0.80\\
+ & Cable Loss & 44.6 & 36.5 & 0.0 & 0.87\\
+ & Tie Fracture & 49.8 & 10.6 & 0.0 & 0.96\\
+\multirow{7}{*}{Hangers} & Strength-I & 4.5 & 0.0 & 0.0 & 1.06\\
  & Strength-III & 3.7 & 0.0 & 0.0 & 0.87\\
  & Strength-IV & 3.4 & 0.0 & 0.0 & 0.81\\
- & Fatigue & 0.2 & 0.0 & 0.0 & 0.91\\
- & Cable Replacement & 5.5 & 0.0 & 0.0 & 1.06\\
- & Cable Loss & 5.8 & 0.0 & 0.0 & 1.00\\
+ & Fatigue & 0.2 & 0.0 & 0.0 & 0.82\\
+ & Cable Replacement & 5.4 & 0.0 & 0.0 & 1.04\\
+ & Cable Loss & 5.7 & 0.0 & 0.0 & 0.97\\
 \end{tabular}

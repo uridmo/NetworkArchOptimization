@@ -6,7 +6,7 @@ bridge_basic = BlennerhassettBridge(arch_optimisation=False, knuckles=False, exa
 bridge_stiffness = BlennerhassettBridge(arch_optimisation=False, knuckles=False, exact_stiffness=True)
 bridge_knuckle = BlennerhassettBridge(arch_optimisation=False, knuckles=True, exact_stiffness=False)
 
-bridges_dict = {'Basic model': bridge_basic, 'Accurate stiffness': bridge_stiffness, 'Accurate Knuckles': bridge_knuckle}
-load_groups = {'live loading': 'LL'}
+bridges_dict = {'Simplistic model': bridge_basic, 'Accurate stiffness': bridge_stiffness, 'Accurate Knuckles': bridge_knuckle}
+load_groups = {'live_loading': 'LL'}
 folder = 'model comparison'
-make_plots(bridges_dict, load_groups, folder)
+make_plots(bridges_dict, load_groups, lw=0.5)

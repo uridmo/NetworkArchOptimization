@@ -172,14 +172,18 @@ class Bridge:
         ax.axis('off')
         return fig, ax
 
-    def plot_effects_on_structure(self, ax, name, key):
+    def plot_effects_on_structure(self, name, key, ax=None):
+        if not ax:
+            fig, ax = self.plot_elements()
+        else:
+            fig = ax.get_figure()
         tie_max, tie_min = self.network_arch.tie.get_min_and_max(name, key)
         arch_max, arch_min = self.network_arch.arch.get_min_and_max(name, key)
         effect_amax = max(tie_max, -tie_min, arch_max, arch_min)
         self.network_arch.arch.plot_effects_on_structure(ax, name, key, reaction_amax=effect_amax)
         self.network_arch.tie.plot_effects_on_structure(ax, name, key, reaction_amax=effect_amax)
         self.network_arch.hangers.plot_elements(ax)
-        return
+        return fig, ax
 
     def plot_effects(self, name, key, fig=None, label='', c='black', lw=1.0, ls='-', marker='x'):
         if not fig:

@@ -15,8 +15,8 @@ def crop_plots(name, size, i_figure, i_skip_title=(), i_skip_label=()):
                        im.crop((960, 480, 1920, 960)),
                        im.crop((1920, 480, 2880, 960))]
     n = -1
-    for i in range(size[0]):
-        for j in range(size[1]):
+    for j in range(size[1]):
+        for i in range(size[0]):
             n += 1
             i_fig = i_figure[n]
             fig = cropped_figures[i_fig]

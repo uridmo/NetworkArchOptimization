@@ -21,7 +21,7 @@ make_plots(bridges_dict, load_groups)
 dc_overview_table('dc comparison', bridges_dict)
 small_cost_overview_table('cost comparison big', bridges_dict)
 
-cost_table = False
+cost_table = True
 if cost_table:
     hangers = []
     cost_label = ['Total cost', 'Tie cost', 'Hanger cost', 'Arch cost']
@@ -47,6 +47,7 @@ if cost_table:
     ax.set_yticks([0, 4, 8, 12, 16])
     ax.set_xlabel('Amount of hangers per set [-]')
 
-    ax.legend(frameon=False)
+    ax.legend(frameon=False, loc='upper right', ncol=2)
+    pyplot.tight_layout()
     fig.savefig('cost comparison.png')
     pyplot.show()

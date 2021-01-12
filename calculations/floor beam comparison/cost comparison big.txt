@@ -5,6 +5,6 @@ Model & Arch cost & Tie cost & Hanger cost & Total cost \\
 10 Floor beams & 6.30 & 3.82 & 1.63 & 11.75 \\ 
 13 Floor beams & 5.38 & 3.58 & 1.60 & 10.56 \\ 
 20 Floor beams & 4.48 & 3.65 & 1.62 & 9.75 \\ 
-27 Floor beams & 4.15 & 3.69 & 1.63 & 9.48 \\ 
+27 Floor beams & 4.15 & 3.69 & 1.77 & 9.62 \\ 
 \hline
 \end{tabular}

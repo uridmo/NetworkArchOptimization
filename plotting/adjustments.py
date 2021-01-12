@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot
 
 
-def adjust_overview_plots(fig):
+def adjust_overview_plots(fig, labels=False):
     axs = fig.get_axes()
 
     axs[0].set_title('Arch')
@@ -10,6 +10,8 @@ def adjust_overview_plots(fig):
     adjust_plot(axs[0])
 
     axs[1].set_title('Tie')
+    if labels:
+        axs[1].set_ylabel('N [MN]')
     adjust_plot(axs[1])
 
     axs[2].set_title('Hangers')
@@ -17,8 +19,13 @@ def adjust_overview_plots(fig):
     adjust_plot(axs[2], step=0.2, min_0=True)
 
     axs[3].set_ylabel('M [MNm]')
+    if labels:
+        axs[3].set_title('Arch')
     adjust_plot(axs[3])
 
+    if labels:
+        axs[4].set_title('Tie')
+        axs[4].set_ylabel('M [MNm]')
     adjust_plot(axs[4])
 
     axs[5].remove()
@@ -28,11 +35,15 @@ def adjust_overview_plots(fig):
     return
 
 
-def adjust_effects_plots(fig):
+def adjust_effects_plots(fig, key='Moment'):
     axs = fig.get_axes()
 
     axs[0].set_title('Arch')
-    axs[0].set_ylabel('M [MNm]')
+    if key == 'Moment':
+        axs[0].set_ylabel('M [MNm]')
+    elif key == 'Normal Force':
+        axs[0].set_ylabel('N [MN]')
+
     adjust_plot(axs[0])
 
     axs[1].set_title('Tie')

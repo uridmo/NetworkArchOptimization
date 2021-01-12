@@ -21,7 +21,7 @@ class BlennerhassettBridge(Bridge):
         unit_weight_tie_3 = 2008.71
 
         unit_weight_hanger = 31.9 * 13 / n_hangers
-        unit_weight_anchorages = 2322.82 * 13 / n_hangers
+        unit_weight_anchorages = max(2322.82 * 13 / n_hangers, 2322.82 * 12/29)
 
         unit_price_arch = 4
         unit_price_tie = 3.5

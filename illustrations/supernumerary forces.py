@@ -5,8 +5,7 @@ from bridges.Blennerhassett import BlennerhassettBridge
 from plotting.loads import plot_loads
 from plotting.supports import plot_supports_new
 
-hanger_params = (np.radians(63),)
-bridge_parallel = BlennerhassettBridge(knuckles=False, hanger_params=hanger_params, arch_optimisation=False)
+bridge_parallel = BlennerhassettBridge(knuckles=False, arch_optimisation=False)
 nodes = bridge_parallel.nodes
 hangers = bridge_parallel.network_arch.hangers
 
@@ -20,6 +19,10 @@ plot_supports_new(model, ax_2, factor=0.03)
 ax_1.set_aspect('equal', adjustable='box')
 ax_1.axis('off')
 
+bridge_parallel.network_arch.hangers.plot_elements(ax_1)
+
+pyplot.show()
+
 ax_2.set_aspect('equal', adjustable='box')
 ax_2.axis('off')
 
@@ -32,13 +35,13 @@ loads_tie = {'Nodal': [[13, 0, 0, 1], [14, 2, 0, -1, []]]}
 
 for hanger in hangers:
     node = hanger.tie_node.index
-    vertical_force = 1 * np.sin(hanger.inclination)
-    horizontal_force = 1 * np.cos(hanger.inclination)
+    vertical_force = -1 * np.sin(hanger.inclination)
+    horizontal_force = -1 * np.cos(hanger.inclination)
     loads_tie['Nodal'].append([node, horizontal_force, vertical_force, 0, []])
 
     node = hanger.arch_node.index
-    vertical_force = -1 * np.sin(hanger.inclination)
-    horizontal_force = -1 * np.cos(hanger.inclination)
+    vertical_force = 1 * np.sin(hanger.inclination)
+    horizontal_force = 1 * np.cos(hanger.inclination)
     loads_arch['Nodal'].append([node, horizontal_force, vertical_force, 0, []])
 model['Loads'] = [loads_arch, loads_tie]
 plot_loads(model, 0, ax_1)

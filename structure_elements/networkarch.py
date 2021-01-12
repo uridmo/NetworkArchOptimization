@@ -207,10 +207,13 @@ class NetworkArch:
         return
 
     def calculate_cable_loss(self, events):
+        set_plot = 0
         model = self.create_model()
         n = self.tie.effect_length() + self.arch.effect_length()
+        if set_plot == 1:
+            n += len(self.hangers.hanger_sets[0])
 
-        for hanger in self.hangers.hanger_sets[0]:
+        for hanger in self.hangers.hanger_sets[set_plot]:
             vertical_force = np.sin(hanger.inclination)
             horizontal_force = np.cos(hanger.inclination)
             loads_nodal = [[hanger.tie_node.index, -horizontal_force, -vertical_force, 0],
@@ -218,7 +221,7 @@ class NetworkArch:
             model['Loads'].append({'Nodal': loads_nodal})
 
         d, i_f, rd, sp = structure_analysis(model)
-        for i, hanger in enumerate(self.hangers.hanger_sets[0]):
+        for i, hanger in enumerate(self.hangers.hanger_sets[set_plot]):
             effects_i = self.internal_forces_to_effects(i_f[i])
             hanger_force = effects_i['Normal Force'][n+i]
             effects_i['Normal Force'][n + i] = 0
@@ -236,7 +239,7 @@ class NetworkArch:
             daf = event['Dynamic Amplification Factor']
             f_d = span * q_d / (n_girders + 1)
             range_name = ''
-            for i, hanger in enumerate(self.hangers.hanger_sets[0]):
+            for i, hanger in enumerate(self.hangers.hanger_sets[set_plot]):
                 load = '0'
                 max_hanger_force = 0
                 max_hanger_force_i = 0

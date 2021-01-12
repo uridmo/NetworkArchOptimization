@@ -1,42 +1,3 @@
-
-
-
-%\graphicspath{ {Figures/} } 
-%\setlength{\headheight}{14pt} 
-%\setlength{\parindent}{0pt}
-%\setcounter{secnumdepth}{4}
-%\titleformat{\paragraph}
-%{\normalfont\normalsize\bfseries}{\theparagraph}{1em}{}
-%\titlespacing*{\paragraph}
-%{0pt}{3.25ex plus 1ex minus .2ex}{1.5ex plus .2ex}
-
-%Introduce blank page without numbering
-%\usepackage{afterpage}
-%\newcommand\myemptypage{
-%    \null
-%    \thispagestyle{empty}
-%    \addtocounter{page}{-1}
-%    \newpage
-%    }
-
-%Literature
-%\usepackage[style=alphabetic,citestyle=authoryear]{biblatex}
-%\usepackage[natbib=true,backend=biber,maxnames=2,sorting=none]{biblatex}
-%\renewcommand\nameyeardelim{, }
-
-
-%\begin{document}
-
-%\appendix
-%\addtocontents{toc}{\protect\setcounter{tocdepth}{2}}
-
-%\section*{Appendix}\addcontentsline{toc}{section}{Appendix}
-%\newpage
-%\input{overleaf/Appendix/appendix}
-
-%\newpage
-%\printbibliography
-
 %% Template for IBK Report, or ETH Zurich Doctoral/Master Thesis 
 %% Pedro Palma, IBK, ETH Zurich 
 %% 2016-03-06 
@@ -49,29 +10,22 @@
 
 % ----------------------------------------------------------
 % Document class 
-\documentclass[
-    a4paper, 
-    twoside, 
-    11pt]
-    {report}    % specifies the type of document to be created. 
+\documentclass[a4paper, twoside, 11pt]{report}
+    % specifies the type of document to be created. 
 
 % ----------------------------------------------------------
 % Character encoding 
 \usepackage{mathptmx}
-\usepackage[
-    T1]
-    {fontenc}    % {fontenc} package allows the user to select font encodings, and for each encoding provides an interface to ‘font-encoding-specific’ commands for each font (it enables hyphenation to operate on texts containing any character in the font). 
-\usepackage[
-    utf8]
-    {inputenc}    % {inputenc} package allows the user to directly input accented and other characters (it translates various standard and other input encodings into a ‘LaTeX internal language'). age'). 
+\usepackage[T1]{fontenc}
+    % {fontenc} package allows the user to select font encodings, and for each encoding provides an interface to ‘font-encoding-specific’ commands for each font (it enables hyphenation to operate on texts containing any character in the font). 
+\usepackage[utf8] {inputenc}
+    % {inputenc} package allows the user to directly input accented and other characters (it translates various standard and other input encodings into a ‘LaTeX internal language'). age'). 
 \usepackage{mathptmx}
 
 % ----------------------------------------------------------
 % Languages 
-\usepackage[
-    ngerman,
-    english]
-    {babel}    % {babel} package manages culturally-determined typographical (and other) rules, and hyphenation patterns for a wide range of languages used languages; the last language in the option list will be active. 
+\usepackage[ngerman, english]{babel}
+    % {babel} package manages culturally-determined typographical (and other) rules, and hyphenation patterns for a wide range of languages used languages; the last language in the option list will be active. 
 
 % ----------------------------------------------------------
 % Margins 
@@ -80,7 +34,7 @@
     outer=2.5cm,
     top=1.5cm,
     bottom=1.5cm,
-    footskip=1.5cm,
+    footskip=1.0cm,
     includeheadfoot]
     {geometry}    % {geometry} package allows to specify the 4 margins without needing to remember the particular page dimensions commands. 
 
@@ -100,25 +54,25 @@
 
 % ----------------------------------------------------------
 % Highlighting 
-\usepackage{soul}    % {soul} package provides hy­phen­at­able spac­ing out (let­terspac­ing), underlining and some derivatives such as over striking and highlighting; \hl{some text} will highlight 'some text'. 
+\usepackage{soul}    % {soul} package provides hyphenatable spacing out (letterspacing), underlining and some derivatives such as over striking and highlighting; \hl{some text} will highlight 'some text'. 
 
 % ----------------------------------------------------------
 % Floating objects (e.g. figures and table) 
-\usepackage{float}    %  {float} package im­proves the in­ter­face for defin­ing float­ing ob­jects such as fig­ures and ta­bles. In­tro­duces the boxed float, the ruled float and the plain­top float. You can de­fine your own floats and im­prove the be­haviour of the old ones. 
+\usepackage{float}    %  {float} package improves the interface for defining floating objects such as figures and tables. Introduces the boxed float, the ruled float and the plaintop float. You can define your own floats and improve the behaviour of the old ones. 
 
 % ----------------------------------------------------------
 % Graphics 
 \usepackage[
     pdftex]
-    {graphicx}    % {graphicx} is the `extended' or `enhanced' {graphics} package and it ac­comdates all needs for inclusion of graphics in LaTeX documents; the [pdftex] option (default if compiling with pdflatex) should be passed if you are compiling with pdftex to get a PDF that you will see with any PDF viewer. 
+    {graphicx}    % {graphicx} is the `extended' or `enhanced' {graphics} package and it accomdates all needs for inclusion of graphics in LaTeX documents; the [pdftex] option (default if compiling with pdflatex) should be passed if you are compiling with pdftex to get a PDF that you will see with any PDF viewer. 
 \usepackage{grffile}    % {grffile} extends the file name processing of package {graphics} to support a larger range of file names. 
 
 % ----------------------------------------------------------
 % Tables 
 %\usepackage{tabu}    % The package provides a single environment, tabu, which will make any sort of tabular (that doesn't need to split across pages). The package requires the array package, and needs e-TeX to run (since array.sty is present in every conforming distribution of LaTeX, and since every publicly available LaTeX format is built using e-TeX, the requirements are provided by default on any reasonable system). The tabu environment may be used in place of tabular, tabular* and tabularx environments, as well as array in maths mode. It overloads tabularx's X-column specification, allowing a width specification, alignment (l, r, c and j) and column type indication (p, m and b). \begin{tabu} to <dimen> specifies a target width, and \begin{tabu} spread <dimen> enlarges the environment's "natural" width.
-\usepackage{booktabs}    % Publication quality tables in LaTeX. The pack­age en­hances the qual­ity of ta­bles in LaTeX, pro­vid­ing ex­tra com­mands as well as be­hind-the-scenes op­ti­mi­sa­tion.  
+\usepackage{booktabs}    % Publication quality tables in LaTeX. The package enhances the quality of tables in LaTeX, providing extra commands as well as behind-the-scenes optimisation.  
 \usepackage{multirow}    % {multirow} package allows creating tabular cells spanning multiple rows. 
-\usepackage{array}    % {array} package is an ex­tended im­ple­men­ta­tion of the ar­ray and tab­u­lar en­vi­ron­mentswhich ex­tends the op­tions for col­umn for­mats, and pro­vides "pro­grammable" for­mat spec­i­fi­ca­tions.
+\usepackage{array}    % {array} package is an extended implementation of the array and tabular environmentswhich extends the options for column formats, and provides "programmable" format specifications.
 \usepackage{hhline}    % {hhline} package produces a line like \hline, or a double line like \hline\hline, except for its interaction with vertical lines.
 \usepackage{tabularx}    % {tabularx} package implements a version of the tabular environment in which the widths of certain columns are calculated so that the table is is a specified width. 
 %% Define new column types
@@ -143,12 +97,12 @@
 \captionsetup{textfont=footnotesize}    % same options as for 'labelfont'. 
 
 \usepackage{subcaption}    % {subcaption} package provides a means of using facilities analagous to those of the caption package, when writing captions for subfigures and the like. 
-\captionsetup{belowskip=5pt}    % space between caption and content (figure or table) can be adjusted with the 'caption' package, using the arguments 'belowskip' and 'aboveskip'. Below and above have the meaning as it would make sense for figure captions below a figure: 'aboveskip' is the space between the content and the caption (which would be above the caption for a figure caption that's set underneath the figure, but below it for a table caption that's set above the table), belowskip is the space between the caption and the surrounding text.
+\captionsetup{belowskip=0pt}    % space between caption and content (figure or table) can be adjusted with the 'caption' package, using the arguments 'belowskip' and 'aboveskip'. Below and above have the meaning as it would make sense for figure captions below a figure: 'aboveskip' is the space between the content and the caption (which would be above the caption for a figure caption that's set underneath the figure, but below it for a table caption that's set above the table), belowskip is the space between the caption and the surrounding text.
 \captionsetup[subfigure]{labelfont=bf,textfont=footnotesize,singlelinecheck=on,justification=raggedright}
 % ----------------------------------------------------------
 % Equations and mathematical symbols 
 \usepackage{amsmath}    % {amsmath} package provides miscellaneous enhancements for improving the information structure and printed output of documents containing mathematical formulas. 
-\usepackage{mathtools}    % {mathtools} package pro­vides many use­ful tools to en­hance the ap­pear­ance of doc­u­ments con­tain­ing a lot of math­e­mat­ics.
+\usepackage{mathtools}    % {mathtools} package provides many useful tools to enhance the appearance of documents containing a lot of mathematics.
 \usepackage{amssymb}    % {amssymb} package provides an extended symbol collection. 
 %\usepackage{amsfonts}    % {amsfonts} package is automatically loaded by {amssymb} package. 
 
@@ -181,7 +135,7 @@
 
 % ----------------------------------------------------------
 % Header and footer 
-\usepackage{fancyhdr}    % this pack­age pro­vides several commands that allow customizing the header and footer. 
+\usepackage{fancyhdr}    % this package provides several commands that allow customizing the header and footer. 
 \pagestyle{fancy}    % \pagestyle{fancy} sets the "fancy" style. 
 \fancyhf{}    % \fancyhf{} clears the header and footer, otherwise the elements of the default "plain" page style will appear. 
 
@@ -237,7 +191,7 @@
 % Nomenclature 
 \usepackage[
     intoc]    % [intoc] option adds the Nomenclature to the table of contents. 
-    {nomencl}    % {nomencl} package pro­duces formated lists of symbols (e.g. anomenclature) using the capbilities of the MakeIndex program. 
+    {nomencl}    % {nomencl} package produces formated lists of symbols (e.g. anomenclature) using the capbilities of the MakeIndex program. 
 \makenomenclature    % \makenomenclature command is required to generate the nomenclature file (*.nlo); commenting it out is a convenient way to switch it off. 
 
 % Group symbols depending on their type 
@@ -267,7 +221,7 @@
     {footmisc}    % {footmisc} package allows changing the the typesetting of footnotes. 
 
 % ----------------------------------------------------------
-% Enu­mer­ate and item­ize 
+% Enumerate and itemize 
 %\usepackage{paralist}    % {paralist} package provides enumerate and itemize environments that can be used within paragraphs to format the items either as running text or as separate paragraphs with a preceding number or symbol. 
 
 % ----------------------------------------------------------
@@ -286,13 +240,13 @@ pdftex]
 % ----------------------------------------------------------
 % Text spacing 
 \usepackage{setspace}    % {setspace} package provides support for setting the spacing between lines in a document
-\setstretch{1.2}    % line spacing of body text and bibliography. 
+\setstretch{1.1}    % line spacing of body text and bibliography. 
 \captionsetup[table]{font={stretch=1.1}}    % line spacing of table captions. 
 \captionsetup[figure]{font={stretch=1.1}}    % line spacing of table captions. 
 
 % ----------------------------------------------------------
 % Cross-references
-%\usepackage{cleveref}    % {cleveref} package en­hances LaTeX's cross-referencing features, allowing the format of references to be determined automatically according to the type of reference. The formats used may be customised in the preamble of a document. The package also offers a means of referencing a list of references, each formatted according to its type. In such lists, it can collapse sequences of numerically-consecutive labels to a reference range. Care must be taken when using {cleveref} in conjunction with other packages that modify LaTeX’s referencing system. Basically, {cleveref} must be loaded last...
+%\usepackage{cleveref}    % {cleveref} package enhances LaTeX's cross-referencing features, allowing the format of references to be determined automatically according to the type of reference. The formats used may be customised in the preamble of a document. The package also offers a means of referencing a list of references, each formatted according to its type. In such lists, it can collapse sequences of numerically-consecutive labels to a reference range. Care must be taken when using {cleveref} in conjunction with other packages that modify LaTeX’s referencing system. Basically, {cleveref} must be loaded last...
 \hypersetup{
 	colorlinks   = true,  %Colours links instead of ugly boxes
 	urlcolor     = black, %Colour for external hyperlinks
@@ -320,48 +274,11 @@ pdftex]
 \usepackage{cases}
 \usepackage{printlen} %print length of texwidth
 \usepackage[export]{adjustbox} %align figure left, right
-\usepackage{csquotes}
-\usepackage{amsmath}
-\usepackage{mathtools}
 \usepackage{bm}
-\usepackage{amsfonts}
 \usepackage{multicol}
-\usepackage{amssymb}
-\usepackage{wasysym}
-\usepackage{textcomp}
 \usepackage{gensymb}
-\usepackage{graphicx}
-\usepackage{fancyhdr}
-\usepackage{float}
 \usepackage{siunitx}
-%\usepackage[margin=1.1in]{geometry}
-%\usepackage{lastpage}
-%\usepackage{pdfpages}
-%\usepackage{geometry}
-%\usepackage{multirow}
-%\usepackage{afterpage}
-%\usepackage[nottoc]{tocbibind}
-%\usepackage{url}
-%\usepackage{hyperref} 
-%\usepackage{titlesec}
-%\usepackage[title]{appendix}
-%\usepackage[font={small}]{caption}
-%\usepackage{subcaption}
-%\usepackage[export]{adjustbox}
-%\usepackage{wrapfig}
-%\usepackage[super]{nth}
-%\usepackage{array}
-%\usepackage{arydshln}
-%\usepackage{titlesec}
-%\usepackage{verbatim}
-%\usepackage{booktabs}
-%\usepackage{tikz}
-%\usepackage[utf8]{inputenc}
-%\usepackage{pgfplots} 
-%\usepackage{pgfgantt}
-%\usepackage{pdflscape}
-%\pgfplotsset{compat=newest}  
-%\pgfplotsset{plot coordinates/math parser=false}
+
 %% ---------------------------------------------------------
 %% ---------------------------------------------------------
 %% DOCUMENT 
@@ -369,7 +286,7 @@ pdftex]
 %% ---------------------------------------------------------
 
 \begin{document}
-\raggedbottom 			% doesn't strech pages with little content (instead of clear page)
+\raggedbottom 			% doesn't stretch pages with little content (instead of clear page)
 \setlength{\parindent}{0.0cm} 	% sets indent space for whole document
 
 %% ---------------------------------------------------------
@@ -378,7 +295,7 @@ pdftex]
 
 \thispagestyle{empty}    % \thispagestyle changes the style for the current page only; {empty} produces empty heads and feet - no page numbers. 
 
-\input{overleaf/Frontpage}
+\input{overleaf/S0_Frontpage}
 
 %\thispagestyle{empty}
 \cleardoublepage    % \cleardoublepage ends the current page and causes all figures and tables that have so far appeared in the input to be printed; in a two-sided printing style, it also makes the next page a right-hand (odd-numbered) page, producing a blank page if necessary. 
@@ -387,40 +304,27 @@ pdftex]
 %% ---------------------------------------------------------
 %% FOREWORD 
 %% ---------------------------------------------------------
-
 \pagenumbering{roman}
 
-\input{overleaf/Foreword}
+\input{overleaf/S1_Foreword}
 \cleardoublepage
 
 
 %% ---------------------------------------------------------
 %% ACKNOWLEDGEMENTS 
 %% ---------------------------------------------------------
-
-%\input{../00_Acknowledgements/Acknowledgements.tex}
-%\cleardoublepage
+\input{overleaf/S2_Acknowledgements}
+\cleardoublepage
 
 %% ---------------------------------------------------------
 %% ABSTRACT AND ZUSAMMENFASSUNG 
 %% ---------------------------------------------------------
-
-\input{overleaf/Summary}
+\input{overleaf/S3_Abstract}
 \cleardoublepage
-
 
 %% ---------------------------------------------------------
 %% TABLE OF CONTENTS 
 %% ---------------------------------------------------------
-
-%\begingroup
-%	\thispagestyle{empty}
-%	\addtocontents{toc}{\protect\thispagestyle{empty}} 
-%	
-%	\tableofcontents
-%	
-%	\cleardoublepage
-%\endgroup
 
 \begingroup
 \linespread{1.2}
@@ -447,43 +351,37 @@ pdftex]
 %	\fancyhf{} % clear all header and footer fields
 %}
 \listoftables
-
 \cleardoublepage
+
 %% ---------------------------------------------------------
 %% CHAPTERS
 %% ---------------------------------------------------------
-
 \pagenumbering{arabic}
 
-\input{overleaf/S1_Introduction}
+\input{overleaf/S4_Introduction}
 \cleardoublepage
 
-\input{overleaf/S2_Literature review}
+\input{overleaf/S5_Literature review}
 \cleardoublepage
 
-\input{overleaf/S3_Methods}
+\input{overleaf/S6_Methods}
 \cleardoublepage
 
-\input{overleaf/S4_Results}
+\input{overleaf/S7_Results}
 \cleardoublepage
 
-\input{overleaf/S5_Conclusion and Outlook}
+\input{overleaf/S8_Conclusion and Outlook}
 \cleardoublepage
-
-%\input{../06_Discussion_of_results/06_Discussion_of_results.tex}
-%\cleardoublepage
 
 %% ---------------------------------------------------------
 %% REFERENCES 
 %% ---------------------------------------------------------
 
-\fancypagestyle{plain}{%
-        \fancyhf{} % clear all header and footer fields. 
-				}
+\fancypagestyle{plain}{\fancyhf{}}  % clear all header and footer fields.
 
-%\bibliographystyle{plainnat}    % set a bibliography style. 
+%\bibliographystyle{plainnat}       % set a bibliography style. 
 
-%\bibliography{../00_References/References}    % bibliography{fileName} imports the the file fileName.bib that contains bibliography sources. 
+% bibliography{fileName} imports the the file fileName.bib that contains bibliography sources. 
 
 \printbibliography[heading=bibintoc]    % heading=bibintoc includes the bibliography in the table of contents. 
 

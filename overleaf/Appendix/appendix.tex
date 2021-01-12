@@ -7,6 +7,7 @@ In this chapter, the extracts from the design drawings relevant to this Thesis a
     \label{fig:general_plan}
 \end{figure}
 
+\newpage
 \section{General notes} \label{app:general_notes}
 The general notes on the materials, the hanger resistance factors and the load combinations for cable loss and tie fracture are presented in Figs. \ref{fig:materials} to \ref{fig:hanger_load_combination}.
 \begin{figure}[H]
@@ -34,72 +35,48 @@ The general notes on the materials, the hanger resistance factors and the load c
 %\end{figure}
 
 \section{Cross-sections} \label{app:cross_sections}
-In this section, the cross-sections are introduced. The dimensions and the resistances were taken from the design verification tables, which are shown in Section \ref{app:design_verifications}. The three characteristic cross-sections in the field are shown in Figs. \ref{fig:cs_arch} to \ref{fig:cs_cable}. 
-\begin{figure}[H]
-\centering
-\begin{subfigure}{0.33\textwidth}
-    \centering
-    \vspace*{0.68cm}
-    \includegraphics[width=0.8\textwidth]{overleaf/Appendix/Pictures/arch_3.PNG}
-    \vspace*{0.68cm}
-    \caption{Arch rib}
-    \label{fig:cs_arch}
-\end{subfigure}%
-\begin{subfigure}{.33\textwidth}
-    \centering
-    \includegraphics[width=\textwidth]{overleaf/Appendix/Pictures/tie_3.PNG}
-    \caption{Tie girder}
-    \label{fig:cs_tie}
-\end{subfigure}%
-\begin{subfigure}{.33\textwidth}
-    \centering
-    \vspace*{1.35cm}
-    \includegraphics[width=0.9\textwidth]{overleaf/Appendix/Pictures/cable_3.PNG}
-    \vspace*{1.35cm}
-    \caption{Cable}
-    \label{fig:cs_cable}
-\end{subfigure}\caption{Cross-sections}
-\label{fig:cross_sections}
-\end{figure}
+In this section, the cross-sections are introduced. The dimensions and the resistances were taken from the design verification tables, which are shown in Section \ref{app:design_verifications}. The materials of the cross-sections are adapted from the design data specified in Figure \ref{fig:materials}. The three characteristic cross-sections in the field are shown in Figures \ref{fig:cs_arch} to \ref{fig:cs_cable}. 
 
-The cross-sectional properties are shown in Tables \ref{tab:cs_arch} to \ref{tab:cs_cable}.
+The cross-sectional properties for the arch rib, the tie girder and the cables are shown in Tables \ref{tab:cs_arch} to \ref{tab:cs_cable}.
 
 \input{overleaf/Appendix/Tables/table_arch}
 \input{overleaf/Appendix/Tables/table_tie}
 \input{overleaf/Appendix/Tables/table_hanger}
 
-
+\newpage
 \section{Weights} \label{app:weight}
 The weights of the structural and non-structural components are estimated from the bridge and steel quantities presented in Fig. \ref{fig:bridge_quantities} and \ref{fig:steel_quantities}. The weights of the arch and the tie is assumed as their steel weights, including half of the anchorage weights for each. Also the upper lateral bracing is assigned to the arch. The weight of the deck is estimated from the concrete quantity and as well as the lower lateral bracing and the stringers. The weight of the utilities is taken as \SI{9388}{kN} fpr the total weight to correspond to the unfactored vertical reaction specified in the pot bearing data. The distributed weights are derived in Table  \ref{tab:weights}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0 0 0},clip, width=0.6\textwidth]{overleaf/Appendix/Design drawings/estimated bridge quantities.PNG}
+    \includegraphics[trim={0 1.4cm 0 0},clip, width=0.55\textwidth]{overleaf/Appendix/Design drawings/estimated bridge quantities.PNG}
     \caption{Summary of estimated bridge quantities}
     \label{fig:bridge_quantities}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0 0 0},clip, width=0.6\textwidth]{overleaf/Appendix/Design drawings/Steel superstructure.PNG}
+    \includegraphics[trim={0 0cm 0 0.2cm},clip, width=0.5\textwidth]{overleaf/Appendix/Design drawings/Steel superstructure.PNG}
     \caption{Estimated steel quantities}
     \label{fig:steel_quantities}
 \end{figure}
 
 \begin{table}[H]
 \centering
+\caption{Estimated weights of the components}
+\label{tab:weights}
+\resizebox{0.55\textwidth}{!}{%
 \begin{tabular}{lccc}
-\hline
+\toprule
 Component & Total weight & Length  & Distributed weight \\
-          & {[}kN{]}     & {[}m{]} & {[}kN/m{]}         \\ \hline
+          & {[}kN{]}     & {[}m{]} & {[}kN/m{]}         \\ \midrule
 Arch      & \SI{17524}{}        & 293.9   & 29.8               \\
 Deck      & \SI{61776}{}        & 267.8   & 115.3              \\
 Tie       & \SI{14116}{}        & 267.8   & 26.4               \\
 Hangers   & \SI{401}{}          & \SI{1132}{}    & 0.35               \\
 Utilities & \SI{9388}{}         & 267.8   & 35.1               \\
-Total     & \SI{93817}{}        & 267.8   & 210.2              \\ \hline
+Total     & \SI{93817}{}        & 267.8   & 210.2              \\ \bottomrule
 \end{tabular}
-\caption{Estimated weights of the components}
-\label{tab:weights}
+}
 \end{table}
 
 \section{Design verifications} \label{app:design_verifications}
@@ -228,157 +205,25 @@ An illustration of the load arrangement for the event of cable loss is presented
 \end{figure}
 
 \newpage
-\section{Verification}
-The model is verified by comparing it to the model of a parallel Master Thesis. For the comparison, the elastic response under the dead loads is compared. The two responses are shown in Figures [] and [].
-
-
-\newpage
-\chapter{Optimisation methods}
-In this chapter, the mathematical background of the used optimisation methods is briefly explained. First, the methods related to the assignment of the permanent hanger forces are introduced in Sec. \ref{app:moment_min} and \ref{app:lsq}. The calculation of the thrust line, including the self weight of the arch, is explained in Sec. \ref{app:thrust_line}.
+\section{Verification} \label{app:model_verification}
+The model is verified by comparing it to the model of a parallel Master Thesis by Moritz Studer. For the comparison, the elastic response under the dead loading is compared. The two responses are shown in Figures \ref{fig:verification_1} and \ref{fig:verification_2} respsectively.
 
 \begin{figure}[H]
-\centering
-\begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[trim={0 0cm 0 0},clip, width=0.9\textwidth]{overleaf/Appendix/Pictures/min_1.PNG}
-    \caption{Model of this Thesis}
+    \includegraphics[trim={12cm 5cm 10cm 5cm},clip, width=\textwidth]{calculations/model comparison/dead_load.png}
+    \caption{Elastic response for dead loading in the model of this Thesis}
     \label{fig:verification_1}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
+\end{figure}
+
+\begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0cm 0 0},clip, width=0.9\textwidth]{model}
-    \caption{Model of a parallel Thesis}
+    \includegraphics[trim={0.3cm 4cm 0.8cm 3.5cm},clip, width=\textwidth]{calculations/model comparison/dead_load_comparison.PNG}
+    \caption{Elastic response for dead loading in the model of a parallel Thesis}
     \label{fig:verification_2}
-\end{subfigure}
-\caption{Elastic response under dead loading}
-\label{fig:verification}
 \end{figure}
 
+The responses in the two models qualitatively agree well. Both of them indicate the strongest moments in the arch and the tie near the knuckle. The respective moments of in the arch are \SI{7618}{kNm} in the used model and \SI{6993}{kNm} in the comparative model. For the tie, the difference is slightly larger at \SI{8959}{kNm} and \SI{7738}{kNm}. The generally larger moment magnitudes in the model of this Thesis can be explained by the assumption of higher dead loads. However, as the distributions visually agree very well, the model is considered to be verified.
 
-\section{Absolute moment minimisation} \label{app:moment_min}
-In a n-times statically indeterminate structure, there are n supernumerary forces or moments. These forces are present in the initial configuration even without any applied loads. The elastic answer of the structure for the different load cases is simply added to obtain the respective effects. It is the goal of an efficient initial configuration to simplify the design verifications by counteracting the effects expected in the various load cases. Here, this is achieved by minimising the permanent moment distribution in the tie and potentially the arch as well. The permanent moment distribution at m points along the considerded component $M \in \mathbb{R}^m$ can be described by Eq. \eqref{eq:perm_mom}. 
-\begin{equation}
-    {\bf M} = {\bf M_0} + \sum_{i=1}^{n} {\bf M_i} \cdot X_i = {\bf M_0} + {\bf M_{sn}} \cdot {\bf X}
-    \label{eq:perm_mom}
-\end{equation}
-where ${\bf M_0} \in \mathbb{R}^m$ is the moment distribution of the permanent loads on the basic system, ${\bf M_i} \in \mathbb{R}^m$ is the moment distribution of the i-th supernumerary unit force, ${X_i} \in \mathbb{R}$ is the i-th supernumerary force. The later two can be combined into the matrix of supernumerary moments ${\bf M_{sn}} \in  \mathbb{R}^{m\times n}$ and the vector of supernumerary forces or moments ${\bf X} \in \mathbb{R}^n$.
-
-\begin{figure}[H]
-\centering
-\begin{subfigure}{0.5\textwidth}
-    \centering
-    \includegraphics[trim={0 0cm 0 0},clip, width=0.9\textwidth]{overleaf/Appendix/Pictures/min_1.PNG}
-    \caption{Basic system and supernumerary force}
-    \label{fig:Minimisation_1}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[trim={0 0cm 0 0},clip, width=0.9\textwidth]{overleaf/Appendix/Pictures/min_2.PNG}
-    \caption{Moments under supernumerary force}
-    \label{fig:Minimisation_2}
-\end{subfigure}
-\caption{Moment distribution of supernumerary force}
-\label{fig:Minimisation}
-\end{figure}
-
-The problem of minimising the absolute maximum moments can be formulated according to Eq. \eqref{eq:minimisation}, where the absolute maximum moment is expressed as the infinity norm.
-\begin{align}
-    \underset{{\bf X}}{\text{Minimize}} \quad & f({\bf X}) = \max({\bf M}, -{\bf M}) = \|{\bf M_0} + {\bf M_{sn}} \cdot {\bf X}\|_{\infty} 
-    \label{eq:minimisation}
-\end{align}
-
-The helper variable $t$ is introduced, which describes the moment magnitude which is larger than the absolute moments in ${\bf M}$. With the help of $t$, the previously stated problem can be formulated as a linear programming problem, as shown in Eq. \eqref{eq:minimisation_2}.
-\begin{align}
-    \underset{t, {\bf X}}{\text{Minimize}} \quad & f(t) = t \label{eq:minimisation_2} \\
-    \text{s.t.} \quad & {\bf M_0} + {\bf M_{sn}} \cdot {\bf X} - t {\bf 1} \leq  0 \nonumber \\
-    \quad & {-\bf M_0} - {\bf M_{sn}} \cdot {\bf X} - t {\bf 1} \leq 0 \nonumber
-\end{align}
-
-Additionally, bounds for the permanent hanger forces can be specified as further inequality conditions. It should be noted that under the consideration of symmetry the amount of variables in the linear problem can be reduced. If only the moment distribution in the tie is optimised, it makes sense to only consider vertical forces at each hanger node. In a second step, the optimised vertical forces are assigned to the two hangers at the node.
-
-\section{Least squares moments} \label{app:lsq}
-As an alternative approach, the supernumerary forces can be determined using the method of least squares. The objective of this method is to find supernumerary forces which counteract a certain moment distribution, for example the moment distribution on the basic system. Using the variables which were introduced in the previous section, the objective is described by Eq. \eqref{eq:lsq_1}.
-\begin{equation}
-    {\bf M_{sn}} \cdot {\bf X} = -{\bf M_0}
-    \label{eq:lsq_1}
-\end{equation}
-As this yields an overdetermined system, the equations cannot be solved simultaneously. Using the method of least squares, the sum of the squared deviations can be minimised by solving the determined system in Eq. \eqref{eq:lsq_2}.
-\begin{equation}
-    ({\bf M_{sn}}^T\,{\bf M_{sn}}) \cdot {\bf X} = -{\bf M_{sn}}^T\,{\bf M_0}
-    \label{eq:lsq_2}
-\end{equation}
-The drawback of this method is that no bounds for the hanger forces can be specified. However, this method is particularly useful, if the hanger forces have been optimised by minimising the moments on the tie girder. At this point, the permanent tension force in the tie girder is still undefined, as it does not affect the moment distribution. It can then be calculated by considering the moment distribution in the arch rib, minimising the squares of its moment distribution. In this case, the approach is fast and can even be solved without using linear algebra as there is only one variable.
-
-\section{Thrust line derivation} \label{app:thrust_line}
-There are two thrust line derivations relevant for this Thesis. In Section \ref{app:continuous}, the thrust line is derived for the hypothetical case of an infinitely dense hanger arrangement. For a discrete hanger arrangement the thrust line can be derived according to the method described in Section \ref{app:discrete}. Both methods take the weight of the arch into account.
-
-\subsection{Continuous hanger arrangement}\label{app:continuous}
-In a first step, the hanger force densities of each hanger set are determined without the consideration of the arch. There are multiple possibilities to do so. For example, they could be calculated to be in equilibrium with the permanent vertical force $q$, depending on their angles of inclination $\alpha$ and $\beta$. However, horizontal equilibrium is an unnecessary condition, as the tie is affected by significant tension forces anyway. Therefore, it is proposed to assign force densities of identical magnitude to hangers on each infinitesimal element, as illustrated in Fig. \ref{fig:continuous_1}. Also the resultant forces $F_L$ and $F_R$ are shown.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{overleaf/Appendix/Pictures/continuous_thrust_line_1.PNG}
-    \caption{Hanger force densitites on an infinitesimal element}
-    \label{fig:continuous_1}
-\end{figure}
-
-The corresponding hanger force densities $f_l$ and $f_r$ can be calculated according to Eq. \eqref{eq:continuous_1}.
-\begin{equation}
-    f_l=f_r=\frac{q}{\sin{\alpha}+ \sin{\beta}}
-    \label{eq:continuous_1}
-\end{equation}
-
-While the thrust line can be described analytically by a differential equation, it is impossible to get an analytical solution for general hanger arrangement patterns. Therefore, the thrust line of the infinitesimal hanger arrangement is calculated in fixed horizontal steps of $dx$ starting from the crown, where a normal force $N_{crown}$ is assumed. If the step $dx$ is small, it can be assumed, that the inclination of the thrust line undergoes small changes in every step. At the beginning of each step the normal force $N_1$ is known, which also corresponds to the inclination of the thrust line. In each step, the change of height of the thrust line $dy$ is determined iteratively. It underlies the condition that the new inclination coincides with the inclination of the new normal force, which can be described by Eq. \ref{eq:continuous_2}.
-\begin{equation}
-    dy = \frac{dx}{2} \cdot \left(\frac{N_{1,y}}{N_{1,x}} + \frac{N_{2,y}}{N_{2,x}} \right)
-    \label{eq:continuous_2}
-\end{equation}
-
-The new normal force $N_2$ is determined from force equilibrium considering the hanger forces and the self weight, both of which depend on $dy$. The self weight is determined from the length of the segment multiplied by the weight per meter. For the hanger forces, the lengths of the two hanger sets on the tie $dl_1$ and $dl_2$ affecting the considered arch segment are determined over geometrical considerations. Using the previously determined hanger force densities the resulting hanger force is determined. The calculation of a single step is illustrated in Fig. \ref{fig:continuous_2}.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{overleaf/Appendix/Pictures/continuous_thrust_line.PNG}
-    \caption{Derivation of the arch thrust line for a continuous hanger arrangement}
-    \label{fig:continuous_2}
-\end{figure}
-
-Ultimately, the normal force in the crown $N_{crown}$ is determined iteratively for the thrust line to intersect the knuckle point. However, this normal force in the crown could also be determined from static considerations involving global longitudinal moment and the hanger force densities without the need of an iteration.
-
-
-\subsection{Discrete hanger arrangement}\label{app:discrete}
-
-Calculating the thrust line of a discrete hanger arrangement is a particular challenge as it is not known in which order the hangers intersect the thrust line beforehand. Therefore it is also calculated in steps. Similar to the continuous calculation, it is started from the crown with an estimated normal force $N_{crown}$ and the inclination at the beginning of every step corresponds to the ratio of the normal force components. Further, the arch's weight per horizontal meter is estimated from Eq. \ref{eq:g_arch}.
-
-\begin{equation}
-    g_{arch,x} = g_{arch} \cdot \sqrt{1+y'^2} = g_{arch} \cdot \sqrt{1+\left( \frac{N_{y}}{N_{x}} \right)^2}
-    \label{eq:g_arch}
-\end{equation}
-
-Using this weight per horizontal meter, the parabolic thrust line can be estimated according to Eq. \ref{eq:discrete}. The height at the beginning of the current step is given by $y_1$ The second term gives the inclination of the normal force, which would continue the thrust line under no additional loading. The weight of the arch causes a slight curvature according to the third quadratic term.
-
-\begin{equation}
-    y(x) = y_1 - \frac{N_y}{N_x} \cdot x - \frac{g_{arch,x}}{2\cdot N_x}\cdot x^2
-    \label{eq:discrete}
-\end{equation}
-
-Unless a hanger intersects the thrust line within the current step, the thrust line is continued by the step length $dx$. An illustration is given in Fig. \ref{fig:discrete_1}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{overleaf/Appendix/Pictures/discrete_thrust_line_1.PNG}
-    \caption{Thrust line derivation step without intersecting hangers}
-    \label{fig:discrete_1}
-\end{figure}
-
-However, if a hanger intersects the thrust line within the current step, this intersection point is added to the thrust line and used as a starting point for the next step. This step is illustrated in Fig. \ref{fig:discrete_2}.
-
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.7\textwidth]{overleaf/Appendix/Pictures/discrete_thrust_line_2.PNG}
-    \caption{Thrust line derivation step connecting to the next hanger}
-    \label{fig:discrete_2}
-\end{figure}
-
-Again, the normal force in the crown $N_{crown}$ is determined iteratively for the thrust line to intersect the knuckle point. Numerically, it would be much easier to calculate it from static considerations.
 
 \chapter{Cost estimation}
 In this chapter, the hanger unit costs are derived. The unit costs for the free length, the detailing and installation and the anchorages were received from a partner in the industry for \SI{150}{mm^2} strands and are given in Table \ref{tab:hanger_unit}.

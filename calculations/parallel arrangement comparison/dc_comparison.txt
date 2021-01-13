@@ -2,10 +2,10 @@
 \hline
 Model & \multicolumn{7}{c}{Demand / Capacity} \\
  & Arch 1 & Arch 2 & Arch 3 & Tie 1 & Tie 2 & Tie 3 & Hangers \\ \hline
-85° Arrangement & 0.84 (S3) & 1.04 (CL) & 1.02 (CL) & 0.98 (TF) & 1.28 (TF) & 1.19 (TF) & 1.13 (FA) \\ 
-75° Arrangement & 0.83 (S3) & 1.10 (CL) & 1.06 (CL) & 0.82 (TF) & 1.00 (TF) & 0.95 (TF) & 0.95 (FA) \\ 
-65° Arrangement & 0.83 (S3) & 1.14 (CL) & 1.10 (CL) & 0.79 (TF) & 0.95 (TF) & 0.91 (TF) & 0.94 (S1) \\ 
-55° Arrangement & 0.84 (CL) & 1.15 (CL) & 1.11 (CL) & 0.76 (TF) & 0.94 (TF) & 0.90 (TF) & 0.99 (CL) \\ 
-45° Arrangement & 0.81 (CL) & 1.21 (CL) & 1.19 (CL) & 0.72 (TF) & 0.94 (TF) & 0.90 (TF) & 1.09 (CL) \\ 
+85\degree Arrangement & 0.84 (S3) & 1.04 (CL) & 1.02 (CL) & 0.98 (TF) & 1.28 (TF) & 1.19 (TF) & 1.13 (FA) \\ 
+75\degree Arrangement & 0.83 (S3) & 1.10 (CL) & 1.06 (CL) & 0.82 (TF) & 1.00 (TF) & 0.95 (TF) & 0.95 (FA) \\ 
+65\degree Arrangement & 0.83 (S3) & 1.14 (CL) & 1.10 (CL) & 0.79 (TF) & 0.95 (TF) & 0.91 (TF) & 0.94 (S1) \\ 
+55\degree Arrangement & 0.84 (CL) & 1.15 (CL) & 1.11 (CL) & 0.76 (TF) & 0.94 (TF) & 0.90 (TF) & 0.99 (CL) \\ 
+45\degree Arrangement & 0.81 (CL) & 1.21 (CL) & 1.19 (CL) & 0.72 (TF) & 0.94 (TF) & 0.90 (TF) & 1.09 (CL) \\ 
 \hline
 \end{tabular}

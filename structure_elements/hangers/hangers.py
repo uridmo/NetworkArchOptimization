@@ -153,7 +153,7 @@ class Hangers(Element):
             ax.plot(x, y, color='black', linewidth=0.7)
         return
 
-    def plot_effects(self, ax, name, label='', c='black', lw=1.0, ls='-', marker='x'):
+    def plot_effects(self, ax, name, dc=True, label='', c='black', lw=1.0, ls='-', marker='x'):
         n = len(self.hanger_sets[0])
         effects = self.effects.get(name, self.get_range(name))['Normal Force']
         if effects.ndim == 1:
@@ -169,6 +169,8 @@ class Hangers(Element):
         if 'Fatigue' in name:
             values -= values[1, :]
             resistances *= 55 / 1675 / 0.65
+        if not dc:
+            resistances = 1000
 
         if effects.ndim == 1:
             ax.plot(tie_node_x, values/resistances, label=label, c=c, lw=lw, ls=ls, marker=marker)
@@ -176,18 +178,3 @@ class Hangers(Element):
             ax.plot(tie_node_x, values[0, :]/resistances, label=label, c=c, lw=lw, ls=ls)
             ax.plot(tie_node_x, values[1, :]/resistances, c=c, lw=lw, ls=ls)
         return
-
-    # def plot_fatigue(self, ax=None, label='', c='black', lw=1.0, ls='-'):
-    #     if not ax:
-    #         pyplot.figure(figsize=(6, 4))
-    #         ax = pyplot.subplot(111)
-    #     n = len(self.hanger_sets[0])
-    #     name = 'Fatigue'
-    #     effects = self.get_range(name)['Normal Force']
-    #     values = effects[:, 0:n]
-    #     tie_node_x = [hanger.tie_node.x for hanger in self.hanger_sets[0]]
-    #     resistances = np.array([hanger.cross_section.normal_force_resistance for hanger in self.hanger_sets[0]])
-    #     resistances *= 55 / 1675 / 0.65
-    #     ax.plot(tie_node_x, values[0, :] / resistances, label=label, c=c, lw=lw, ls=ls)
-    #     ax.plot(tie_node_x, values[1, :] / resistances, c=c, lw=lw, ls=ls)
-    #     return ax

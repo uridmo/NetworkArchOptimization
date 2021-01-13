@@ -185,22 +185,22 @@ class Bridge:
         self.network_arch.hangers.plot_elements(ax)
         return fig, ax
 
-    def plot_effects(self, name, key, fig=None, label='', c='black', lw=1.0, ls='-', marker='x'):
+    def plot_effects(self, name, key, fig=None, dc=True, label='', c='black', lw=1.0, ls='-', marker='x'):
         if not fig:
             fig, axs = pyplot.subplots(2, 2, figsize=(8, 4), dpi=240)
         axs = fig.get_axes()
         self.network_arch.arch.plot_effects(axs[0], name, key, label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[1], name, key, label=label, c=c, lw=lw, ls=ls)
-        self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls, marker=marker)
+        self.network_arch.hangers.plot_effects(axs[2], name, dc=dc, label=label, c=c, lw=lw, ls=ls, marker=marker)
         return fig
 
-    def plot_all_effects(self, name, fig=None, label='', c='black', lw=1.0, ls='-', marker='x'):
+    def plot_all_effects(self, name, fig=None, dc=True, label='', c='black', lw=1.0, ls='-', marker='x'):
         if not fig:
             fig, axs = pyplot.subplots(2, 3, figsize=(12, 4), dpi=240)
         axs = fig.get_axes()
         self.network_arch.arch.plot_effects(axs[0], name, 'Normal Force', label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[1], name, 'Normal Force', label=label, c=c, lw=lw, ls=ls)
-        self.network_arch.hangers.plot_effects(axs[2], name, label=label, c=c, lw=lw, ls=ls,  marker=marker)
+        self.network_arch.hangers.plot_effects(axs[2], name, dc=dc, label=label, c=c, lw=lw, ls=ls,  marker=marker)
         self.network_arch.arch.plot_effects(axs[3], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
         self.network_arch.tie.plot_effects(axs[4], name, 'Moment', label=label, c=c, lw=lw, ls=ls)
         return fig

@@ -1,0 +1,11 @@
+\begin{tabular}{lccccccc}
+\hline
+Model & \multicolumn{7}{c}{Demand / Capacity} \\
+ & Arch 1 & Arch 2 & Arch 3 & Tie 1 & Tie 2 & Tie 3 & Hangers \\ \hline
+105-25 Arrangement & 0.77 (S3) & 1.13 (CL) & 1.08 (CL) & 0.69 (CL) & 0.92 (CL) & 0.93 (TF) & 1.03 (S1) \\ 
+95-35 Arrangement & 0.79 (S3) & 1.12 (CL) & 1.09 (CL) & 0.72 (TF) & 0.91 (TF) & 0.92 (TF) & 0.99 (S1) \\ 
+85-45 Arrangement & 0.80 (S3) & 1.12 (CL) & 1.10 (CL) & 0.74 (TF) & 0.91 (TF) & 0.92 (TF) & 0.96 (S1) \\ 
+75-55 Arrangement & 0.81 (S3) & 1.12 (CL) & 1.10 (CL) & 0.76 (TF) & 0.92 (TF) & 0.91 (TF) & 0.95 (S1) \\ 
+65 Arrangement & 0.83 (S3) & 1.14 (CL) & 1.10 (CL) & 0.79 (TF) & 0.95 (TF) & 0.91 (TF) & 0.94 (S1) \\ 
+\hline
+\end{tabular}

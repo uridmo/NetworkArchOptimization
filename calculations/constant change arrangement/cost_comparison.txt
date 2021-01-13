@@ -1,0 +1,11 @@
+\begin{tabular}{lcccc}
+\hline
+Model & Arch cost & Tie cost & Hanger cost & Total cost \\
+ & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline
+105-25 Arrangement & 5.28 & 3.44 & 1.70 & 10.43 \\ 
+95-35 Arrangement & 5.30 & 3.44 & 1.63 & 10.38 \\ 
+85-45 Arrangement & 5.33 & 3.46 & 1.59 & 10.38 \\ 
+75-55 Arrangement & 5.36 & 3.50 & 1.58 & 10.44 \\ 
+65 Arrangement & 5.40 & 3.57 & 1.59 & 10.56 \\ 
+\hline
+\end{tabular}

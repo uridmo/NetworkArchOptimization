@@ -35,27 +35,29 @@ The general notes on the materials, the hanger resistance factors and the load c
 %\end{figure}
 
 \section{Cross-sections} \label{app:cross_sections}
-In this section, the cross-sections are introduced. The dimensions and the resistances were taken from the design verification tables, which are shown in Section \ref{app:design_verifications}. The materials of the cross-sections are adapted from the design data specified in Figure \ref{fig:materials}. The three characteristic cross-sections in the field are shown in Figures \ref{fig:cs_arch} to \ref{fig:cs_cable}. 
-
-The cross-sectional properties for the arch rib, the tie girder and the cables are shown in Tables \ref{tab:cs_arch} to \ref{tab:cs_cable}.
+In this section, the cross-sections are introduced. The dimensions and the resistances were taken from the design verification tables, which are shown in Section \ref{app:design_verifications}. The materials of the cross-sections are adapted from the design data specified in Figure \ref{fig:materials}.
+The cross-sectional properties of the arch rib and the tie girder are shown in \cref{tab:cs_arch} and \cref{tab:cs_tie}.
 
 \input{overleaf/Appendix/Tables/table_arch}
 \input{overleaf/Appendix/Tables/table_tie}
-\input{overleaf/Appendix/Tables/table_hanger}
 
 \newpage
+The cross-sectional properties of the cables are shown in \cref{tab:cs_cable}.
+
+\input{overleaf/Appendix/Tables/table_hanger}
+
 \section{Weights} \label{app:weight}
-The weights of the structural and non-structural components are estimated from the bridge and steel quantities presented in Fig. \ref{fig:bridge_quantities} and \ref{fig:steel_quantities}. The weights of the arch and the tie is assumed as their steel weights, including half of the anchorage weights for each. Also the upper lateral bracing is assigned to the arch. The weight of the deck is estimated from the concrete quantity and as well as the lower lateral bracing and the stringers. The weight of the utilities is taken as \SI{9388}{kN} fpr the total weight to correspond to the unfactored vertical reaction specified in the pot bearing data. The distributed weights are derived in Table  \ref{tab:weights}.
+The weights of the structural and non-structural components are estimated from the bridge and steel quantities presented in Fig. \ref{fig:bridge_quantities} and \ref{fig:steel_quantities}. The weights of the arch and the tie is assumed as their steel weights, including half of the anchorage weights for each. Also the upper lateral bracing is assigned to the arch. The weight of the deck is estimated from the concrete quantity and as well as the lower lateral bracing and the stringers. The weight of the utilities is taken as \SI{9388}{kN} for the total weight to correspond to the unfactored vertical reaction specified in the pot bearing data. The distributed weights are derived in Table  \ref{tab:weights}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 1.4cm 0 0},clip, width=0.55\textwidth]{overleaf/Appendix/Design drawings/estimated bridge quantities.PNG}
+    \includegraphics[trim={0 1.4cm 0 0},clip, width=0.7\textwidth]{overleaf/Appendix/Design drawings/estimated bridge quantities.PNG}
     \caption{Summary of estimated bridge quantities}
     \label{fig:bridge_quantities}
 \end{figure}
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0cm 0 0.2cm},clip, width=0.5\textwidth]{overleaf/Appendix/Design drawings/Steel superstructure.PNG}
+    \includegraphics[trim={0 0cm 0 0cm},clip, width=0.65\textwidth]{overleaf/Appendix/Design drawings/Steel superstructure.PNG}
     \caption{Estimated steel quantities}
     \label{fig:steel_quantities}
 \end{figure}
@@ -64,19 +66,15 @@ The weights of the structural and non-structural components are estimated from t
 \centering
 \caption{Estimated weights of the components}
 \label{tab:weights}
-\resizebox{0.55\textwidth}{!}{%
-\begin{tabular}{lccc}
+%\resizebox{0.6\columnwidth}{!}{%
+\begin{tabular}{lccccccl}
 \toprule
-Component & Total weight & Length  & Distributed weight \\
-          & {[}kN{]}     & {[}m{]} & {[}kN/m{]}         \\ \midrule
-Arch      & \SI{17524}{}        & 293.9   & 29.8               \\
-Deck      & \SI{61776}{}        & 267.8   & 115.3              \\
-Tie       & \SI{14116}{}        & 267.8   & 26.4               \\
-Hangers   & \SI{401}{}          & \SI{1132}{}    & 0.35               \\
-Utilities & \SI{9388}{}         & 267.8   & 35.1               \\
-Total     & \SI{93817}{}        & 267.8   & 210.2              \\ \bottomrule
+Component          & Arch  & Deck  & Tie   & Hangers & Utilities & Total &      \\ \midrule
+Total weight       & 17524 & 61776 & 14116 & 401     & 9388      & 93817 & [kN]   \\
+Length             & 293.9 & 267.8 & 267.8 & 1132    & 267.8     & 267.8 & [m]    \\
+Distributed weight & 29.8  & 115.3 & 26.4  & 0.35    & 35.1      & 210.2 & [kN/m] \\ \bottomrule
 \end{tabular}
-}
+%}
 \end{table}
 
 \section{Design verifications} \label{app:design_verifications}
@@ -225,7 +223,7 @@ The model is verified by comparing it to the model of a parallel Master Thesis b
 The responses in the two models qualitatively agree well. Both of them indicate the strongest moments in the arch and the tie near the knuckle. The respective moments of in the arch are \SI{7618}{kNm} in the used model and \SI{6993}{kNm} in the comparative model. For the tie, the difference is slightly larger at \SI{8959}{kNm} and \SI{7738}{kNm}. The generally larger moment magnitudes in the model of this Thesis can be explained by the assumption of higher dead loads. However, as the distributions visually agree very well, the model is considered to be verified.
 
 
-\chapter{Cost estimation}
+\chapter{Cost estimation} \label{app:cost}
 In this chapter, the hanger unit costs are derived. The unit costs for the free length, the detailing and installation and the anchorages were received from a partner in the industry for \SI{150}{mm^2} strands and are given in Table \ref{tab:hanger_unit}.
 
 \begin{table}[H]
@@ -252,4 +250,77 @@ The costs per kilogram are determined in Eq. \ref{eq:hanger_unit_cost}, consider
 
 \newpage
 \chapter{Implementation}
+All calculations are implemented using the Python programming language, which was chosen for its simplicity, code readability and its wide range of useful libraries. Besides other programming paradigms it supports object oriented programming, which uses objects as the basic building blocks of software. Objects structure the code by representing real-life entities and containing the corresponding data and functions. A class is a blueprint for a specific object, defining its properties and functions, which can interact with other classes. This blueprint may be used for the fast definition of multiple objects or of extended sub-classes. Generally, this paradigm allows the simple extension or reuse of existing code. Instead of explaining how the results of this Thesis were obtained, an introduction to the classes of the code are given in this chapter. The core functions for the structural analysis were adapted from an earlier project and are not explained in this chapter. For examination of the calculations or for reuse of the programmed code fragments the entire package can be found on \href{https://github.com/uridmo/networkarchoptimization}{GitHub}.
+
+\subsection*{Bridge}
+\begin{itemize}
+    \item {\bf Description:} The bridge class allows the definition, calculation and investigation of a network tied-arch bridge. It is defined by a set of 20 characteristic parameters such as the arch, the distributed live loading, the cross sections, etc. It contains the structural model which is set up in the first part and calculated under all relevant load cases in the second part of its definition. Ultimately, the costs of the relevant cross sections are estimated. Further, it contains functions to display its structure or internal force effects.
+    \item {\bf Properties:} span, rise, amount of floor beams, arch shape, arch optimisation method, curve fitting method, self stress state method and parameters, arch cross sections, tie cross sections, hanger cross section, amount of hangers, hanger arrangement and parameters, knuckle, deck weight, utilities weight, live loads, fatigue loads, extreme events and unit weight and cost of the anchorages.
+    \item {\bf Functions:} (the calculation of the model is conducted in the initiation of the object), plot structure, plot effects, plot effects on structure, create overview tables of costs/dc ratio/internal forces, evaluate the cost function
+\end{itemize}
+
+\subsection*{Blennerhassett Bridge}
+\begin{itemize}
+    \item {\bf Description:} It is a sub-class of the Bridge class and allows the specific definition of models representing the Blennerhassett Island Bridge. The default settings are according to the final design and can be changed individually in the initiation. It defines the cross sections and passes them to the Bridge class.
+    \item {\bf Properties:} same as Bridge class
+    \item {\bf Functions:} same as Bridge class
+\end{itemize}
+
+\subsection*{Network Arch}
+\begin{itemize}
+    \item {\bf Description:} It represents the structural model of a Bridge object. It is defined and composed of the arch, the tie, the hangers and a set of nodes. The different load cases are calculated by invoking the respective function with the corresponding parameters. It also features the calculations of the extreme events and the respective assignment of internal force effects.
+    \item {\bf Properties:} arch, tie, hangers, nodes
+    \item {\bf Functions:} create model, set effects, get effects, set effect range, calculate load cases, assign wind effects, calculate strength limit state, calculate tie fracture, calculate cable loss
+\end{itemize}
+
+\subsection*{Nodes}
+\begin{itemize}
+    \item {\bf Description:} It is a collection of the nodes of a specific model. It allows adding nodes to the set while maintaining a specified minimum spacing between them. If a node is added too close to an existing one, no new node is created and the existing one is returned instead. Thereby, the stiffness matrix remains well determined as the structural element retain a minimum length. Each node has x- and y-components and an ordered index.
+    \item {\bf Properties:} nodes list, amount, minimum spacing
+    \item {\bf Functions:} add node, order node, get structural nodes
+\end{itemize}
+
+\subsection*{Element}
+\begin{itemize}
+    \item {\bf Description:}  It describes the individual components of the structural model, namely the arch, the tie and the hangers, rely on this class which saves and orders the effects for the load cases and limit states. Further this class gives functions for adding, multiplying and merging effects and effect ranges.
+    \item {\bf Properties:} effects
+    \item {\bf Functions:} set effects, get effects, get range, merge ranges, add ranges
+\end{itemize}
+
+\subsection*{Line Element}
+\begin{itemize}
+    \item {\bf Description:} It expands the element class for the components of the arch rib and the tie girder. It contains the ordered nodes of each component and the assigned cross sections between them. 
+    \item {\bf Properties:} same as Element, nodes, cross sections
+    \item {\bf Functions:} self weight, permanent loads, distributed loads, concentrated loads, get coordinates, plot elements, plot effects, assign permanent effects
+\end{itemize}
+
+\subsection*{Cross Sections}
+\begin{itemize}
+    \item {\bf Description:} This class contains the information related to the structural properties, the internal force effects and the cost estimation of each cross section. After the internal forces of the limit states are defined, they are assigned to the respective cross section which determines the maximum degree of compliance. The effects under wind loading are assigned to the respective cross section directly. This allows the estimation of the costs. Further, it calculates the stress in a fractured cross section.
+    \item {\bf Properties:} name, weight, stiffness, unit costs, unit weight, length, cost, effects, degrees of compliance, resistances, wind effects, tie fractures
+    \item {\bf Functions:} get self weight, get extreme internal forces, assign wind effects, calculate maximum d/c ratio, calculate tie fracture stress, calculate cost
+\end{itemize}
+
+\subsection*{Arch}
+\begin{itemize}
+    \item {\bf Description:} An extension of the Line Element class specifically for the arch rib. Additionally it allows the determination of the connection nodes of the hangers and the calculation of an optimal permanent tie tension force. It features sub-classes for the definition of the different arch shapes.
+    \item {\bf Properties:} same as Line Element class, rise span, tie tension
+    \item {\bf Functions:} connect nodes, assign tension by crown moment, assign tension by least squares
+\end{itemize}
+
+\subsection*{Tie}
+\begin{itemize}
+    \item {\bf Description:} Is is the extension of the line element class for the tie girder. It gives the loads for the different load cases and calculates the respective stresses for a fractured tie. Further it contains the elaborate methods for the definition of the self-equilibrium stress state. 
+    \item {\bf Properties:} same as Line Element class, span, amount of floor beams, floor beam nodes, deck weight, utilities weight
+    \item {\bf Functions:} assign hangers, self weight, non-structural loading, zero-displacement method, calculate fracture stresses
+\end{itemize}
+
+\subsection*{Hangers}
+\begin{itemize}
+    \item {\bf Description:} This class extends the element class for the specific use for the hanger component of the structural model. The hangers and also the knuckles are grouped into hanger sets which allow the addition of hangers or the plotting of the internal force effects. Each hanger is defined by the connection nodes, inclination, prestressing force and cross-section. Further, there are sub-classes for creating specific hanger arrangements.
+    \item {\bf Properties:} same as Element class, hanger sets, hangers
+    \item {\bf Functions:} get connection nodes, set effects, set prestressing forces, define knuckles, plot elements, plot effects
+\end{itemize}
+
+
 

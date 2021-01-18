@@ -1,12 +1,64 @@
 \chapter{Methods}\label{sec:methods}
-In this chapter, the methods for investigating a bridge design, verifying its structural safety and estimating its cost are introduced. In Section \ref{sec:met_ref} the Blennerhassett Island Bridge, as well as other reference bridges, are presented.
-Section \ref{sec:met_str} introduces the structural model and briefly assesses its underlying assumptions. Further, an overview of the investigated load cases is given in Section \ref{sec:met_loads}. The determination of the self-equilibrium stress state is of critical importance. The designer can freely assign it to the structure, contrary to the load cases, whose effects are determined by the elastic response of the structure. Section \ref{sec:met_seq} describes different methods to obtain this state which also includes the choice of the arch shape. The limit states for the design criteria as well as the corresponding verifications are specified in Section \ref{sec:met_ver}, combining the self-equilibrium stress state with the factored load cases. Based on these verifications, the cost of an investigated design is estimated according to Section \ref{sec:met_cost}. The methods presented in this chapter are exemplified by the final design of the Blennerhassett Island Bridge based on the design drawings.
+In this chapter, the methods for investigating a bridge design, verifying its structural safety and estimating its cost are introduced. In \cref{sec:met_ref} the Blennerhassett Island Bridge and other reference bridges are presented.
+\cref{sec:met_str} introduces the structural model and briefly assesses its underlying assumptions. 
+Further, an overview of the investigated load cases is given in \cref{sec:met_loads}. 
+The self-equilibrium stress state is a fundamental factor for designing an optimised network tied-arch bridge and is presented in \cref{sec:met_seq}.
+It partially overlaps with the choice of an efficient arch shape presented in \cref{sec:met_arch}.
+The limit states for the design criteria and the corresponding verifications are specified in \cref{sec:met_ver}, combining the self-equilibrium stress state with the factored load cases. Based on these verifications, an investigated design's cost is estimated according to \cref{sec:met_cost}. The methods are exemplified by the final design of the Blennerhassett Island Bridge.
 
 \section{Reference bridges} \label{sec:met_ref}
+The main focus of this Thesis lies in the investigation of the Blennerhassett Island Bridge. It is introduced in detail in \cref{sec:Blennerhassett}. Further, other network tied-arch bridges are summarised in \cref{sec:other_bridges} to enhance the understanding of the Blennerhassett Island Bridge's particularities. This will allow evaluating the results in a broader perspective.
+\subsection{Blennerhassett Island Bridge}\label{sec:Blennerhassett}
+The Blennerhassett Island Bridge overpasses the Ohio River near Parkersburg (West Virginia) and was completed in 2008. Along with the Providence River Bridge, it was the first network tied-arch bridge built in the United States. The entire bridge is \SI{1222}{m} long of which the tied-arch spans \SI{267.8}{m} across the navigable channel of the Ohio River as shown in \cref{fig:Blennerhassett_2_5}. This made it the second-longest bridge of this type at the time. 
+The network arrangement, shown in \cref{fig:Blennerhassett_1}, was chosen over the traditional vertical arrangement for it increases stiffness, strength and redundancy of the structure \cite{Wollmann}.
+
+\begin{figure}[H]
+\centering
+\begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[trim={0 0.4cm 0 0},clip, width=0.9\textwidth]{overleaf/Pictures/Blennerhassett_3.jpg}
+    \caption{Construction site (adapted from \cite{Blennerhassett})}
+    \label{fig:Blennerhassett_2_5}
+\end{subfigure}%
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[trim={0 0 0 0},clip, width=0.9\textwidth]{overleaf/Pictures/Blennerhassett_2_1.jpg}
+    \caption{Main span (adapted from \cite{Blennerhassett_2})}
+    \label{fig:Blennerhassett_1}
+\end{subfigure}%
+\caption{Blennerhassett Island Bridge}
+\label{fig:Blennerhassetts}
+\end{figure}
+
+The bridge deck is \SI{30.6}{m} wide giving room for two roadways supporting three lanes.
+While a composite deck was chosen for the approach spans, a floating deck system with depth of \SI{0.24}{m} was arranged on the main span. However, also the floating deck relies on composite action with the stringers instead of the tie girder. These stringers are supported on sliding bearings on the floor beams to prevent the introduction of normal forces into the deck. 13 floor beams are arranged at \SI{19.1}{m} spacing spanning the entire width of the deck of \SI{31.4}{m}, where they are fixed into the tie girders. The arch rib and the tie girders are simply supported on the piers with sliding bearings on one side. The hangers are based on the technology for stay cables. At each floor beam, two cables composed of 27 strands are connected to the tie girder. % at angles of \SI{64}{\degree}. 
+The resulting hanger spacing on the tie of \SI{19.1}{m} is by this date still the longest. Each cable is protected by a duct and anchored inside the cross section of the arch and the tie to allow for simple installation. The tied-arch was erected in place and two halves. It was closed by jacking at the sliding bearing to overcome the initial offset of \SI{150}{mm} and to introduce the tie tensile action. Further design data relying on the design drawings are presented in \cref{tab:Blennerhassett_design_data}. More details on the cross sections are given in \cref{sec:met_str}.
+\begin{table}[H]
+    \caption{Design data of the Blennerhassett Island Bridge}
+    \label{tab:Blennerhassett_design_data}
+    \centering
+    \begin{tabular}{cccccc}
+    \toprule
+    Dead loads & Live loads & Arch geometry & Arch bracing & Hanger pattern & Hanger inclination \\ \midrule
+    \SI{210}{kN/m} & \SI{30}{kN/m} & Parabolic & Diamond & Parallel & \SI{64}{\degree}  \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+\subsection{Other network-tied arch bridges}\label{sec:other_bridges}
+For comparative purposes, the design data of a few similar network tied-arch bridges is specified. These are the Amelia Earhart Bridge (Missouri/Kansas), the Wellsburg Bridge (West Virginia/Ohio), the Kentucky Lake Bridge (Kentucky) and the Lake Champlain Bridge (New York/Vermont). The relevant design data is presented in \cref{tab:other_design_data}.
+
+\begin{table}[H]
+    \centering    
+    \caption{Design data of comparable network tied-arch bridges}
+    \label{tab:other_design_data}
+    \resizebox{\columnwidth}{!}{%
+    \input{overleaf/Tables/other_bridges}
+    }
+\end{table}
 
 \newpage
 \section{Structural model} \label{sec:met_str}
-A defining feature of the Blennerhassett Island Bridge is the floating deck. It is supported only at the 13 floor beams and acts almost structurally independent and resembles a bridge by itself. Compared to a composite deck, it causes a certain inefficiency in material use and the additional arrangement of many bearings. On the other hand, it allows for a replacement of the deck in the future and it simplifies the investigation of the flow of forces. It carries the loads over a span of 20 meters to the adjacent floor beams. There, the forces are mainly carried by the respective hanger pair and partially by the tie girder. This feature allows for a separation of the behaviour of the remaining network arch from the deck. As it is not the objective of this Thesis to investigate and optimise the deck system it is not further considered. The structural model of the network tied-arch bridge is therefore composed of the tie, the arch and the hangers. According to Smit, the behaviour of the two planes of the arch can be considered decoupled from each other \cite{Smit}. Therefore, the behaviour of the arch is analysed in a single arch plane. In the design drawings, the structure is divided into segments for the arch and the tie. Each of these segments is verified independently in the design verifications. This segmentation, which is shown along with the bridge in Figures \ref{fig:Blennerhassett2_a} and \ref{fig:fig:Blennerhassett2_b}, is also used for the analysis in this Thesis.
+A defining feature of the Blennerhassett Island Bridge is the floating deck. It is responsible for the majority of the structure's weight and is the live loading application point. It is supported only at the 13 floor beams and acts almost structurally independent resembling a bridge by itself. Compared to a composite deck, it causes a certain inefficiency in material use and the additional arrangement of many bearings. On the other hand, it allows for a future replacement of the deck and simplifies the investigation of the flow of forces. It carries the loads over a span of nearly \SI{20}{m} to the adjacent floor beams. There, the forces are carried by the respective hanger pair and partially by the tie girder. This feature allows for a separation of the behaviour of the remaining network arch from the deck. As it is not the objective of this Thesis to investigate and optimise the deck system, it is not further considered. According to Smit, the behaviour of the two planes of the arch can be considered decoupled from each other \cite{Smit}. Therefore, the network arch's behaviour is analysed in a single arch plane considering the arch rib, the tie girder and the hangers. In the design drawings, the structure is further divided into segments for the arch and the tie. Each of these segments is verified independently in the design verifications. The respective segmentation, shown along with the bridge in \cref{fig:Blennerhassett2_a} and \cref{fig:Blennerhassett2_b}, is also used for the investigation in this Thesis.
 
 \begin{figure}[H]
 \centering
@@ -22,13 +74,13 @@ A defining feature of the Blennerhassett Island Bridge is the floating deck. It 
     \includegraphics[width=0.9\textwidth]{illustrations/figures/segments.png}
     \vspace*{0.67cm}
     \caption{Structural model and segments}
-    \label{fig:fig:Blennerhassett2_b}
+    \label{fig:Blennerhassett2_b}
 \end{subfigure}
 \caption{Blennerhassett Island Bridge}
 \label{fig:Blennerhassett2}
 \end{figure}
 
-Both the arch and the tie girder feature are a box cross-section with a width of \SI{1.2}{m}. The one of the arch is \SI{1.7}{m} high and offers similar bending resistances around both axes. Additionally, it is reinforced by a web stiffener to prevent local buckling. The cross-section of the tie girder is \SI{2.2}{m} high and offers more resistance for longitudinal than transverse bending moments. Both the arch rib and the tie girder feature a stronger cross-section in the knuckle region, where the highest internal force effects are expected. The segments Arch 0 and Tie 0 form the knuckle and are assigned the strongest cross-sections, with resistances about 50\% higher than in the field. They are not subject to the optimisation in this Thesis as they cannot accurately be dimensioned as beam elements. Also the next segments Arch 1 and Tie 1 have a slightly enhanced cross-section with thicker plates. The remaining segments in the field feature identical cross-sections for the tie girder and the arch rib respectively. They are considered the characteristic cross-sections and are shown in Figures \ref{fig:cs_arch} and \ref{fig:cs_tie}. All cables have identical cross-sections with 29 high-strength strands of \SI{140}{mm^2}. The respective lengths range from \SI{11}{m} to \SI{59}{m}. The corresponding cross-section including its tube is shown in Figure \ref{fig:cs_cable}. The most important properties are specified in Table \ref{tab:cs_properties}. More detailed specifications on the cross-sections are found in the Appendix \ref{app:cross_sections}.
+Both the arch and the tie girder feature a box cross-section with a width of \SI{1.2}{m}. The arch is \SI{1.7}{m} high and offers similar bending resistances around both axes. Additionally, it is reinforced by a web stiffener to prevent local buckling. The cross section of the tie girder is \SI{2.2}{m} high and offers more resistance for longitudinal than transverse bending moments. The arch rib and the tie girder feature a stronger cross-section in the knuckle region, where the highest internal force effects are expected. The segments Arch 0 and Tie 0 form the knuckle and are assigned the strongest cross-sections, with resistances roughly 50\% higher than in the field. They are not subject to the optimisation in this Thesis as they cannot accurately be dimensioned as beam elements. The next segments, Arch 1 and Tie 1, also have a slightly enhanced cross-section with thicker plates. The remaining segments in the field feature identical cross-sections for the tie girder and the arch rib respectively. They are considered the characteristic cross-sections and are shown in \cref{fig:cs_arch} and \cref{fig:cs_tie}. All cables have identical cross-sections with 27 high-strength strands of \SI{140}{mm^2}. The respective lengths range from \SI{11}{m} to \SI{59}{m}. The corresponding cross-section including its tube is shown in \cref{fig:cs_cable}. The most important properties of the characteristic cross sections are specified in \cref{tab:cs_properties}. More detailed specifications are found in \cref{app:cross_sections}.
 
 \begin{figure}[H]
 \centering
@@ -65,29 +117,28 @@ Both the arch and the tie girder feature are a box cross-section with a width of
     \toprule
     Cross-section & $EA$ & $EI$ & $N_{Rd}$ & $M_{Rd,z}$ & $M_{Rd,y}$ \\
                   & [\SI{}{GN}]   & [\SI{}{GNm^2}]   & [\SI{}{MN}]  & [\SI{}{MNm}]  & [\SI{}{MNm}] \\ \midrule
-    Arch 2 \& Arch 3 & 61.8 & 28.1 & 82.3 & 50.0 & 42.7 \\
-    Tie 2 \& Tie 3  & 53.7 & 42.8 & 100.5 & 76.2 & 45.8 \\
+    Arch 2 \& 3 & 61.8 & 28.1 & 82.3 & 50.0 & 42.7 \\
+    Tie 2 \& 3  & 53.7 & 42.8 & 100.5 & 76.2 & 45.8 \\
     Cables        & 0.8 &  - & 6.8 & - & - \\ \bottomrule
     \end{tabular}
 \end{table}
 
-Considering their slenderness, the arch and the tie can be accurately modelled as beam elements. On the other hand, secondary effects cannot always be neglected for the hangers because of their low bending stiffness. However, a brief investigation, given in Appendix \ref{Appendix_A_Hangers}, shows that above \SI{100}{MPa} these effects are irrelevant. Therefore, the hangers are modelled as beams with rotational end releases and their self-weight is neglected. Additionally, two web plates connecting the tie girder and the arch rib in the knuckle region are arranged to obtain a more accurate representation of this detail. Each web plate has a cross section of \SI{6.3}{cm} x \SI{1.07}{m} and is arranged \SI{4.1}{m} for the idealised node at an angle of 80\degree. The web plates are illustrated in Figure \ref{fig:knuckle_region}.
-
+The arch and the tie are accurately modelled as Bernoulli beam elements, considering their slenderness. The curvature of the arch rib is neglected and modelled by a series of straight elements, as the difference is practically negligible ($r>10\,h$) \cite{MARTI}. On the other hand, secondary effects cannot always be neglected for the hangers because of their low bending stiffness. However, a brief investigation, given in \cref{Appendix_A_Hangers}, shows that above \SI{100}{MPa} these effects are irrelevant. Therefore, the hangers are modelled as beam elements with rotational end releases and their self-weight is neglected. Hence, they only carry normal forces. Additionally, two web plates connecting the tie girder and the arch rib in the knuckle region are arranged to obtain a more accurate representation of this detail. Each web plate has a cross section of \SI{6.3}{cm} x \SI{1.07}{m} and is arranged \SI{4.1}{m} for the idealised node at an angle of 80\degree. The arrangement of the web plates is illustrated in \cref{fig:knuckle_region}.
 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.5\textwidth]{overleaf/Pictures/Knuckle region.png}
+    \includegraphics[width=0.42\textwidth]{overleaf/Pictures/Knuckle region.png}
     \caption{Plan and structural model of the knuckle region}
     \label{fig:knuckle_region}
 \end{figure}
 
-The structure is analysed in the framework of two-dimensional and linear elastic beam statics. Therefor, a python package written by the author in an earlier project is used. It is verified with the Sofistik model of a parallel Master Thesis in Appendix \ref{app:model_verification}. To judge the dependency of the resulting internal force effects on the described modelling, the structure is first analysed using different simplified models. In the first simplistic model, the field cross-sections are used everywhere and also no web member is considered. In a second model, the previously described web plated are introduced. Additionally, the actual cross-sections are assigned to the arch and the tie in a third model. The elastic effects under dead loads are compared in Figure \ref{fig:model_comparison}.
+The structure is analysed in the framework of two-dimensional and linear elastic beam statics. Therefor, a python package written by the author in an earlier project is used. It is verified with the Sofistik model of a parallel Master Thesis in \cref{app:model_verification}. To judge the dependency of the resulting internal force effects on the described modelling, the structure is first analysed using different simplified models. In the first simplistic model, the field cross-sections are used everywhere and also no web member is considered. In a second model, the previously described web plated are introduced. Additionally, the actual cross-sections are assigned to the arch and the tie in a third model. The elastic effects under dead loads are compared in \cref{fig:model_comparison}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.9\textwidth]{calculations/model comparison/live_loading.png}
-    \caption{Comparison of the elastic responses under live loading for different models}
+    \includegraphics[width=0.9\textwidth]{calculations/model comparison/dead_loading.png}
+    \caption{Comparison of the elastic responses under dead loading for different models}
     \label{fig:model_comparison}
 \end{figure}
 
@@ -98,7 +149,7 @@ The structure is analysed in the framework of two-dimensional and linear elastic
 The load cases relevant to this investigation are the dead loading (DL), the live loading (LL) and the wind loading (WS). The dead loading is further subdivided into the weight of the structural components and non-structural attachments (DC) and the weight of the future wearing surfaces and utilities (DW).
 
 \subsection{Dead loading}
-The dead loads for the Blennerhassett Island Bridge were derived from the estimated bridge quantities of the design drawings. The detailed derivation is given in Appendix \ref{app:weight} and the final results are presented in Table \ref{tab:dead_loads}. The weight of the arch and the tie girder are distributed as a constant load along the respective elements. A particularly detailed weight distribution by assigning more weight to the stronger cross-sections near the knuckle is disregarded for. Also the weight of the lateral arch bracing is distributed along the entire arch for simplicity. The deck weight and its non-structural components make up for the main contribution to the dead loading. The weight of the deck is applied as a concentrated force at the locations of the floor beams. The weight of the hangers and its resulting bending moment is relatively small and neglected to facilitate some of the used optimisation methods. An illustration of all dead loads applied to the structural model is shown in Figure \ref{fig:dead_loads}.
+The dead loads for the Blennerhassett Island Bridge were derived from the estimated bridge quantities of the design drawings. The detailed derivation is given in \cref{app:weight} and the final results are presented in \cref{tab:dead_loads}. The weight of the arch and the tie girder are distributed as a constant load along the respective elements. A particularly detailed weight distribution by assigning more weight to the stronger cross-sections near the knuckle is disregarded for. Also the weight of the lateral arch bracing is distributed along the entire arch for simplicity. The deck weight and its non-structural components make up for the main contribution to the dead loading. The weight of the deck is applied as a concentrated force at the locations of the floor beams. The weight of the hangers and its resulting bending moment is relatively small and neglected to facilitate some of the used optimisation methods. An illustration of all dead loads applied to the structural model is shown in \cref{fig:dead_loads}.
 
 \begin{table}[H]
     \centering
@@ -120,13 +171,13 @@ The dead loads for the Blennerhassett Island Bridge were derived from the estima
 \end{figure}
 
 \subsection{Live loading} \label{sec:met_loads_live}
-The load case of live loading is taken into account according to the AASHTO Bridge Design Specifications (1998) \cite{AASHTO}. It is a combination of two separate components: A lane-wise distributed load is applied along the entire or partial length of the bridge and a concentrated truck load is applied at a single longitudinal point. Both loads are factored by a multiple presence factor (MPF) depending on how many lanes are loaded. In a detailed calculation in Appendix \ref{Appendix_Liveloading}, six loaded lanes were found to cause the highest load in the considered arch plane. This conclusion also applies to the truck loads, which are also applied simultaneously on six lanes. An overview of the design loads is given in Table \ref{tab:live_load_overview}. 
+The load case of live loading is taken into account according to the AASHTO Bridge Design Specifications (1998) \cite{AASHTO}. It is a combination of two separate components: A lane-wise distributed load is applied along the entire or partial length of the bridge and a concentrated truck load is applied at a single longitudinal point. Both loads are factored by a multiple presence factor (MPF) depending on how many lanes are loaded. In a detailed calculation in \cref{Appendix_Liveloading}, six loaded lanes were found to cause the highest load in the considered arch plane. This conclusion also applies to the truck loads, which are also applied simultaneously on six lanes. An overview of the design loads is given in \cref{tab:live_load_overview}. 
 
 \input{overleaf/Tables/Live_loading_overview}
 
-The live loads are applied on the deck, which is not part of the structural model. Therefore, the live loads act as concentrated forces on the floor beams, where the deck is supported, as illustrated in Figures \ref{fig:Live_load_1} for the fully loaded deck. To find the worst arrangement of the live loads, the concentrated forces are applied individually. For each point of interest in the model, the partially distributed lane load and the concentrated truck force are then combined to produce maximum effects. The concentrated force is thereby only applied at one cross-girder exclusively, as shown in Figure \ref{fig:Live_load_2}. 
+The live loads are applied on the deck, which is not part of the structural model. Therefore, the live loads act as concentrated forces on the floor beams, where the deck is supported, as illustrated in \cref{fig:Live_load_1} for the fully loaded deck. To find the worst arrangement of the live loads, the concentrated forces are applied individually. For each point of interest in the model, the partially distributed lane load and the concentrated truck force are then combined to produce maximum effects. The concentrated force is thereby only applied at one cross-girder exclusively, as shown in \cref{fig:Live_load_2}. 
 
-%It yields a range of possible effects for each point on the structural elements. The resulting ranges for the Blennerhassett Island Bridge are presented in Figure [], where the ranges of the concentrated load and the distributed loads are also shown individually. These results agree well with the effects specified on the design drawings.\bigskip
+%It yields a range of possible effects for each point on the structural elements. The resulting ranges for the Blennerhassett Island Bridge are presented in [], where the ranges of the concentrated load and the distributed loads are also shown individually. These results agree well with the effects specified on the design drawings.\bigskip
 
 \begin{figure}[H]
 \centering
@@ -146,16 +197,16 @@ The live loads are applied on the deck, which is not part of the structural mode
 \label{fig:Live_load}
 \end{figure}
 
-For the extreme events of cable loss and cable replacement, special circumstances apply to the live loading. For cable loss, it is assumed that only the actually marked lanes are loaded. For cable replacement, one lane is shifted away from the replaced hanger. The determining live load arrangement is also calculated and illustrated in the Appendix \ref{Appendx_A_Live_loading_2}. The resulting loads on the tie are given in Table \ref{tab:live_load_extreme}. For the event of tie fracture, the same live loading as in the ultimate limit states is applied.
+For the extreme events of cable loss and cable replacement, special circumstances apply to the live loading. For cable loss, it is assumed that only the actually marked lanes are loaded. For cable replacement, one lane is shifted away from the replaced hanger. The determining live load arrangement is also calculated and illustrated in the \cref{Appendx_A_Live_loading_2}. The resulting loads on the tie are given in \cref{tab:live_load_extreme}. For the event of tie fracture, the same live loading as in the ultimate limit states is applied.
 
 \input{overleaf/Tables/Live loading - extreme events}
 
-For the fatigue limit state, the loading according to the PTI specifications is used \cite{PTI}. It consists of a single design truck without taking into account the dynamic multiplier. The resulting force, which is derived in the Appendix \ref{Appendx_A_Live_loading_2}, is equal to \SI{296}{kN}.
+For the fatigue limit state, the loading according to the PTI specifications is used \cite{PTI}. It consists of a single design truck without taking into account the dynamic multiplier. The resulting force, which is derived in the \cref{Appendx_A_Live_loading_2}, is equal to \SI{296}{kN}.
 
 
 
 \subsection{Wind loading}
-The load case of wind loading is not calculated in this investigation as the loads are particular to a specific design and require a 3-dimensional model and a very detailed investigation. However, the effects specified on the design drawings, shown in the Appendix \ref{app:design_verifications}, are taken to allow for an integral design verification. The respective characteristic internal force effects under wind loading are shown for each segment in Table \ref{tab:effects_wind_load}.
+The load case of wind loading is not calculated in this investigation as the loads are particular to a specific design and require a 3-dimensional model and a very detailed investigation. However, the effects specified on the design drawings, shown in the \cref{app:design_verifications}, are taken to allow for an integral design verification. The respective characteristic internal force effects under wind loading are shown for each segment in \cref{tab:effects_wind_load}.
 
 \input{overleaf/Tables/Effects - Wind loading}
 
@@ -164,7 +215,7 @@ The load case of wind loading is not calculated in this investigation as the loa
 \newpage
 \section{Self-equilibrium stress state} \label{sec:met_seq}
 % Permanent state
-In a n-times statically indeterminate structure, there are n supernumerary forces or moments. These forces are present in the initial configuration even without any applied loads and form the residual stresses. In the case of a network tied-arch bridge these residual stresses can be controlled during the construction by prestressing the hangers and by applying forces to the arch and the tie when the two are closed and locked. The created self stress state is in equilibrium with itself and will be present under all following load cases. Therefore, it can counteract the effects expected in the strength limit states and simplify the design verifications. This self-equilibrium stress state is described by any set of supernumerary forces. For the investigation in this Thesis, the supernumerary forces presented in Figure \ref{fig:super_forces} are used. Besides the normal forces in the hangers also the moments between the arch and the tie as well as the horizontal force at the right knuckle are part of the supernumerary set.
+In a n-times statically indeterminate structure, there are n supernumerary forces or moments. These forces are present in the initial configuration even without any applied loads and form the residual stresses. In the case of a network tied-arch bridge these residual stresses can be controlled during the construction by prestressing the hangers and by applying forces to the arch and the tie when the two are closed and locked. The created self stress state is in equilibrium with itself and will be present under all following load cases. Therefore, it can counteract the effects expected in the strength limit states and simplify the design verifications. This self-equilibrium stress state is described by any set of supernumerary forces. For the investigation in this Thesis, the supernumerary forces presented in \cref{fig:super_forces} are used. Besides the normal forces in the hangers also the moments between the arch and the tie as well as the horizontal force at the right knuckle are part of the supernumerary set.
 
 \begin{figure}[H]
     \centering
@@ -179,7 +230,7 @@ For general circumstances, including unsuitable arch shapes and hanger arrangeme
 
 
 \subsection{Zero-displacement method}
-The zero-displacement method gives a first estimation of the hanger forces and is often used for the more popular cable-stayed bridge type. The permanent hanger forces are determined from a structural analysis of the tie girder where at every hanger connection a vertical support is introduced. In this way, the moment distribution in the tie is adequately balanced and creeping effects do not change the moment distribution. For a network tied-arch bridge, additionally to the supports at the connection nodes, a fully fixed support can be introduced at the knuckle. It represents the connection of the tie girder to the arch rib and gives the permanent moment between the two, which has also been considered part of the supernumerary set. The model of the tie resembles a multi span beam, as shown in Figure \ref{fig:zero_disp}. For the case of a network tied-arch bridge, multiple hangers can connect to the tie at a particular node and the vertical forces have to be distributed between the respective hangers. One option is to assign forces of equal magnitude to each of the hangers resulting in the intended vertical force. 
+The zero-displacement method gives a first estimation of the hanger forces and is often used for the more popular cable-stayed bridge type. The permanent hanger forces are determined from a structural analysis of the tie girder where at every hanger connection a vertical support is introduced. In this way, the moment distribution in the tie is adequately balanced and creeping effects do not change the moment distribution. For a network tied-arch bridge, additionally to the supports at the connection nodes, a fully fixed support can be introduced at the knuckle. It represents the connection of the tie girder to the arch rib and gives the permanent moment between the two, which has also been considered part of the supernumerary set. The model of the tie resembles a multi span beam, as shown in \cref{fig:zero_disp}. For the case of a network tied-arch bridge, multiple hangers can connect to the tie at a particular node and the vertical forces have to be distributed between the respective hangers. One option is to assign forces of equal magnitude to each of the hangers resulting in the intended vertical force. 
 
 \begin{figure}[H]
     \centering
@@ -188,7 +239,7 @@ The zero-displacement method gives a first estimation of the hanger forces and i
     \label{fig:zero_disp}
 \end{figure}
 
-In a second step, the hanger forces and the constraint moment at the knuckle are applied to the arch to determine its permanent state. Thereby the arch is affected by a significant moment distribution with the peak at the crown of $M_{p,crown}$. Additionally, the permanent tie tension force, which has a decisive influence on the arch, can be chosen freely at this point as it was neglected in the investigation of the tie girder. As a simplistic approach, the permanent tie tension force $N_{p,Tie}$ can be calculated to cause a disappearing moment at the crown of the arch according to Equation \ref{eq:M_0}. Otherwise, the more elaborate methods in the followings Sections can be used to determine this last supernumerary force.
+In a second step, the hanger forces and the constraint moment at the knuckle are applied to the arch to determine its permanent state. Thereby the arch is affected by a significant moment distribution with the peak at the crown of $M_{p,crown}$. Additionally, the permanent tie tension force, which has a decisive influence on the arch, can be chosen freely at this point as it was neglected in the investigation of the tie girder. As a simplistic approach, the permanent tie tension force $N_{p,Tie}$ can be calculated to cause a disappearing moment at the crown of the arch according to Equation \cref{eq:M_0}. Otherwise, the more elaborate methods in the followings Sections can be used to determine this last supernumerary force.
 
 \begin{equation}
     N_{p,Tie} = \frac{M_{p,crown}}{r}
@@ -203,7 +254,7 @@ It is the goal of an efficient initial configuration to simplify the design veri
     {\bf M} = {\bf M_0} + \sum_{i=1}^{n} {\bf M_i} \cdot X_i = {\bf M_0} + {\bf M_{sn}} \cdot {\bf X}
     \label{eq:perm_mom}
 \end{equation}
-where ${\bf M_0} \in \mathbb{R}^m$ is the moment distribution of the permanent loads on the basic system, ${\bf M_i} \in \mathbb{R}^m$ is the moment distribution of the i-th supernumerary unit force, ${X_i} \in \mathbb{R}$ is the i-th supernumerary force. The latter two can be combined into the matrix of supernumerary moment distributions ${\bf M_{sn}} \in  \mathbb{R}^{m\times n}$ and the vector of supernumerary forces or moments ${\bf X} \in \mathbb{R}^n$. An example of a supernumerary hanger force and its moment distribution is shown in Figure \ref{fig:Minimisation}.
+where ${\bf M_0} \in \mathbb{R}^m$ is the moment distribution of the permanent loads on the basic system, ${\bf M_i} \in \mathbb{R}^m$ is the moment distribution of the i-th supernumerary unit force, ${X_i} \in \mathbb{R}$ is the i-th supernumerary force. The latter two can be combined into the matrix of supernumerary moment distributions ${\bf M_{sn}} \in  \mathbb{R}^{m\times n}$ and the vector of supernumerary forces or moments ${\bf X} \in \mathbb{R}^n$. An example of a supernumerary hanger force and its moment distribution is shown in \cref{fig:Minimisation}.
 
 \begin{figure}[H]
 \centering
@@ -254,10 +305,10 @@ The drawback of this method is that no bounds for the hanger forces can be speci
 
 \newpage
 \section{Arch shape} \label{sec:met_arch}
-The optimisation methods which were introduced in the previous chapter allow finding an efficient self-equilibrium stress state for a given arch shape. This corresponds to finding hanger forces with a resulting thrust line close to the predefined arch shape. However, a more elegant solution would be an adaptation of the arch shape to the thrust line under permanent loads. There are two thrust line derivations relevant for this Thesis. In Section \ref{app:continuous}, the thrust line is derived for the hypothetical case of an infinitely dense hanger arrangement. For a discrete hanger arrangement the thrust line can be derived according to the method described in Section \ref{app:discrete}. Both methods take the weight of the arch into account.
+The optimisation methods which were introduced in the previous chapter allow finding an efficient self-equilibrium stress state for a given arch shape. This corresponds to finding hanger forces with a resulting thrust line close to the predefined arch shape. However, a more elegant solution would be an adaptation of the arch shape to the thrust line under permanent loads. There are two thrust line derivations relevant for this Thesis. In \cref{app:continuous}, the thrust line is derived for the hypothetical case of an infinitely dense hanger arrangement. For a discrete hanger arrangement the thrust line can be derived according to the method described in \cref{app:discrete}. Both methods take the weight of the arch into account.
 
 \subsection{Thrust line of continuous hanger arrangement}\label{app:continuous}
-In a first step, the hanger force densities of each hanger set are determined without the consideration of the arch. There are multiple possibilities to do so. For example, they could be calculated to be in equilibrium with the permanent vertical force $q$, depending on their angles of inclination $\alpha$ and $\beta$. However, horizontal equilibrium is an unnecessary condition, as the tie is affected by significant tension forces anyway. Therefore, it is proposed to assign force densities of identical magnitude to hangers on each infinitesimal element, as illustrated in Fig. \ref{fig:continuous_1}. Also the resultant forces $F_L$ and $F_R$ are shown.
+In a first step, the hanger force densities of each hanger set are determined without the consideration of the arch. There are multiple possibilities to do so. For example, they could be calculated to be in equilibrium with the permanent vertical force $q$, depending on their angles of inclination $\alpha$ and $\beta$. However, horizontal equilibrium is an unnecessary condition, as the tie is affected by significant tension forces anyway. Therefore, it is proposed to assign force densities of identical magnitude to hangers on each infinitesimal element, as illustrated in Fig. \cref{fig:continuous_1}. Also the resultant forces $F_L$ and $F_R$ are shown.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.8\textwidth]{overleaf/Appendix/Pictures/continuous_thrust_line_1.PNG}
@@ -271,13 +322,13 @@ The corresponding hanger force densities $f_l$ and $f_r$ can be calculated accor
     \label{eq:continuous_1}
 \end{equation}
 
-While the thrust line can be described analytically by a differential equation, it is impossible to get an analytical solution for general hanger arrangement patterns. Therefore, the thrust line of the infinitesimal hanger arrangement is calculated in fixed horizontal steps of $dx$ starting from the crown, where a normal force $N_{crown}$ is assumed. If the step $dx$ is small, it can be assumed, that the inclination of the thrust line undergoes small changes in every step. At the beginning of each step the normal force $N_1$ is known, which also corresponds to the inclination of the thrust line. In each step, the change of height of the thrust line $dy$ is determined iteratively. It underlies the condition that the new inclination coincides with the inclination of the new normal force, which can be described by Eq. \ref{eq:continuous_2}.
+While the thrust line can be described analytically by a differential equation, it is impossible to get an analytical solution for general hanger arrangement patterns. Therefore, the thrust line of the infinitesimal hanger arrangement is calculated in fixed horizontal steps of $dx$ starting from the crown, where a normal force $N_{crown}$ is assumed. If the step $dx$ is small, it can be assumed, that the inclination of the thrust line undergoes small changes in every step. At the beginning of each step the normal force $N_1$ is known, which also corresponds to the inclination of the thrust line. In each step, the change of height of the thrust line $dy$ is determined iteratively. It underlies the condition that the new inclination coincides with the inclination of the new normal force, which can be described by Eq. \cref{eq:continuous_2}.
 \begin{equation}
     dy = \frac{dx}{2} \cdot \left(\frac{N_{1,y}}{N_{1,x}} + \frac{N_{2,y}}{N_{2,x}} \right)
     \label{eq:continuous_2}
 \end{equation}
 
-The new normal force $N_2$ is determined from force equilibrium considering the hanger forces and the self weight, both of which depend on $dy$. The self weight is determined from the length of the segment multiplied by the weight per meter. For the hanger forces, the lengths of the two hanger sets on the tie $dl_1$ and $dl_2$ affecting the considered arch segment are determined over geometrical considerations. Using the previously determined hanger force densities the resulting hanger force is determined. The calculation of a single step is illustrated in Fig. \ref{fig:continuous_2}.
+The new normal force $N_2$ is determined from force equilibrium considering the hanger forces and the self weight, both of which depend on $dy$. The self weight is determined from the length of the segment multiplied by the weight per meter. For the hanger forces, the lengths of the two hanger sets on the tie $dl_1$ and $dl_2$ affecting the considered arch segment are determined over geometrical considerations. Using the previously determined hanger force densities the resulting hanger force is determined. The calculation of a single step is illustrated in Fig. \cref{fig:continuous_2}.
 \begin{figure}[H]
     \centering
     \includegraphics[width=0.6\textwidth]{overleaf/Appendix/Pictures/continuous_thrust_line.PNG}
@@ -290,21 +341,21 @@ Ultimately, the normal force in the crown $N_{crown}$ is determined iteratively 
 
 \subsection{Thrust line of discrete hanger arrangement}\label{app:discrete}
 
-Calculating the thrust line of a discrete hanger arrangement is a particular challenge as it is not known in which order the hangers intersect the thrust line beforehand. Therefore it is also calculated in steps. Similar to the continuous calculation, it is started from the crown with an estimated normal force $N_{crown}$ and the inclination at the beginning of every step corresponds to the ratio of the normal force components. Further, the arch's weight per horizontal meter is estimated from Eq. \ref{eq:g_arch}.
+Calculating the thrust line of a discrete hanger arrangement is a particular challenge as it is not known in which order the hangers intersect the thrust line beforehand. Therefore it is also calculated in steps. Similar to the continuous calculation, it is started from the crown with an estimated normal force $N_{crown}$ and the inclination at the beginning of every step corresponds to the ratio of the normal force components. Further, the arch's weight per horizontal meter is estimated from Eq. \cref{eq:g_arch}.
 
 \begin{equation}
     g_{arch,x} = g_{arch} \cdot \sqrt{1+y'^2} = g_{arch} \cdot \sqrt{1+\left( \frac{N_{y}}{N_{x}} \right)^2}
     \label{eq:g_arch}
 \end{equation}
 
-Using this weight per horizontal meter, the parabolic thrust line can be estimated according to Eq. \ref{eq:discrete}. The height at the beginning of the current step is given by $y_1$ The second term gives the inclination of the normal force, which would continue the thrust line under no additional loading. The weight of the arch causes a slight curvature according to the third quadratic term.
+Using this weight per horizontal meter, the parabolic thrust line can be estimated according to Eq. \cref{eq:discrete}. The height at the beginning of the current step is given by $y_1$ The second term gives the inclination of the normal force, which would continue the thrust line under no additional loading. The weight of the arch causes a slight curvature according to the third quadratic term.
 
 \begin{equation}
     y(x) = y_1 - \frac{N_y}{N_x} \cdot x - \frac{g_{arch,x}}{2\cdot N_x}\cdot x^2
     \label{eq:discrete}
 \end{equation}
 
-Unless a hanger intersects the thrust line within the current step, the thrust line is continued by the step length $dx$. An illustration is given in Fig. \ref{fig:discrete_1}.
+Unless a hanger intersects the thrust line within the current step, the thrust line is continued by the step length $dx$. An illustration is given in Fig. \cref{fig:discrete_1}.
 
 \begin{figure}[H]
     \centering
@@ -313,7 +364,7 @@ Unless a hanger intersects the thrust line within the current step, the thrust l
     \label{fig:discrete_1}
 \end{figure}
 
-However, if a hanger intersects the thrust line within the current step, this intersection point is added to the thrust line and used as a starting point for the next step. This step is illustrated in Fig. \ref{fig:discrete_2}.
+However, if a hanger intersects the thrust line within the current step, this intersection point is added to the thrust line and used as a starting point for the next step. This step is illustrated in Fig. \cref{fig:discrete_2}.
 
 \begin{figure}[H]
     \centering
@@ -328,10 +379,10 @@ Again, the normal force in the crown $N_{crown}$ is determined iteratively for t
 
 \newpage
 \section{Design verifications} \label{sec:met_ver}
-To ensure a safe and reliable structure, the limit states for strength, extreme events and fatigue are considered \cite{AASHTO}.  The resulting demand over capacity ratios (D/C) will also be used in Section \ref{sec:met_cost} for an estimation of the cost function.
+To ensure a safe and reliable structure, the limit states for strength, extreme events and fatigue are considered \cite{AASHTO}.  The resulting demand over capacity ratios (D/C) will also be used in \cref{sec:met_cost} for an estimation of the cost function.
 
 \subsection{Strength limit states}
-The strength limit states are considered to ensure that the design of the structure guarantees enough strength and stability for the highest expected loads in its life cycle. The load combinations considered in this investigation are related to the main actions of vehicular use (Strength-I), wind exposure (Strength-III) and a load combination for heavy bridges (Strength-IV). The load factors used for each strength limit state are presented in Table \ref{tab:uls_combination}. For the permanent loads DC and DW, two factors are given out of which the one impeding to the verification is taken. For the locked-in erection stresses no variability is taken into account.
+The strength limit states are considered to ensure that the design of the structure guarantees enough strength and stability for the highest expected loads in its life cycle. The load combinations considered in this investigation are related to the main actions of vehicular use (Strength-I), wind exposure (Strength-III) and a load combination for heavy bridges (Strength-IV). The load factors used for each strength limit state are presented in \cref{tab:uls_combination}. For the permanent loads DC and DW, two factors are given out of which the one impeding to the verification is taken. For the locked-in erection stresses no variability is taken into account.
 
 \input{overleaf/Tables/Load combinations ULS}
 
@@ -346,11 +397,11 @@ For simplicity, the value given by the left side of this condition is also refer
 %For the Blennerhassett Island Bridge, the DOC is evaluated according to this simplified verification. The obtained values are presented in Table [], along with the ratios taken from the design drawings in parenthesis. 
 
 \subsection{Extreme event limit states}
-Extreme events are unique circumstances whose return periods can be significantly greater than the life expectancy of the structure. In these events, the requirement for the bridge is its structural survival. In this investigation the extreme events of cable loss, cable replacement and tie fracture are examined. The load factors for each event is taken from the design drawings and presented in Table \ref{tab:extreme_combination}. For the events of cable loss and cable replacement, specific live loading arrangements (LL*) apply.
+Extreme events are unique circumstances whose return periods can be significantly greater than the life expectancy of the structure. In these events, the requirement for the bridge is its structural survival. In this investigation the extreme events of cable loss, cable replacement and tie fracture are examined. The load factors for each event is taken from the design drawings and presented in \cref{tab:extreme_combination}. For the events of cable loss and cable replacement, specific live loading arrangements (LL*) apply.
 
 \input{overleaf/Tables/Load combinations - Extreme events}
 
-For both hanger-related extreme events, each hanger is investigated individually according to the PTI (static) approach [cite PTI]. In a first step, the longitudinal live load arrangement, which maximises the respective hanger force, is determined. Therefor, The concentrated live load is always applied at the cross-girder closest to the considered hanger. The forces from the distributed live load are also arranged on a certain amount of neighbouring cross-girders, as illustrated in Figure \ref{fig:Cable_Loss_1}. The assumed hanger force before its replacement or loss is thereby determined. In a second step, the structural system is modified by removing the considered hanger. The hanger force is applied in opposite direction on the modified system, as shown in Figure \ref{fig:Cable_Loss_2}. The resulting effects are multiplied by a dynamic amplification factor (DAF) and superimposed on the effects from the state of maximised hanger force. The DAF for the event of cable loss is assumed to be 1.75.
+For both hanger-related extreme events, each hanger is investigated individually according to the PTI (static) approach [cite PTI]. In a first step, the longitudinal live load arrangement, which maximises the respective hanger force, is determined. Therefor, The concentrated live load is always applied at the cross-girder closest to the considered hanger. The forces from the distributed live load are also arranged on a certain amount of neighbouring cross-girders, as illustrated in \cref{fig:Cable_Loss_1}. The assumed hanger force before its replacement or loss is thereby determined. In a second step, the structural system is modified by removing the considered hanger. The hanger force is applied in opposite direction on the modified system, as shown in \cref{fig:Cable_Loss_2}. The resulting effects are multiplied by a dynamic amplification factor (DAF) and superimposed on the effects from the state of maximised hanger force. The DAF for the event of cable loss is assumed to be 1.75.
 
 \begin{figure}[H]
 \centering
@@ -376,4 +427,23 @@ For both hanger-related extreme events, each hanger is investigated individually
 
 \input{overleaf/Tables/Resistances}
 
-\section{Estimation of cost function} \label{sec:met_cost}
+\newpage
+\section{Cost estimation} \label{sec:met_cost}
+The estimation of the costs associated with particular designs allows their overall comparison despite the various relevant aspects. Therefor, the individual demand over capacity ratios, which are determined according to the previous chapter, are related to a global objective. In other investigations the objective was set to minimise the total structural weight, which favors the arrangement of strong hangers. In order to obtain a more realistic objective a further step is taken by accounting for the different unit costs of the respective components. The individual costs are ultimately summed up to give a single comparable value, which allows putting changes in the structural behaviour into perspective. \medskip
+
+In this Thesis only the arch rib, the tie girder and the hangers are considered in depth. Therefore, only the respective costs are taken into account for the objective cost function. However, it is still impossible to consider all the costs associated with a particular design as it requires the consideration of many details, such as the respective manufacturing and construction process. To facilitate the comparison only the costs which can be well determined are considered. For the arch rib and the tie girder these costs involve the material costs, the cutting and the welding. The respective unit costs are estimated to \SI{4.0}{\$/kg} and \SI{3.5}{\$/kg}. For the hangers, the estimation is trickier. Based on a more detailed cost analysis involving also the installation, the hanger unit costs are estimated to \SI{16.9}{\$/kg} in \cref{app:cost}. Additionally, the anchorages are priced at \SI{9}{\$/kg} plus a lump sum of \SI{50000}{\$} for testing incurs. The costs for the final design of the Blennerhassett Island Bridge are estimated in \cref{tab:cost_example} based on the weights found in the summary of estimated bridge quantities in \cref{app:weight}.
+
+\begin{table}[H]
+    \centering
+    \caption{Estimated costs of the Blennerhassett Island Bridge}
+    \label{tab:cost_example}
+    \begin{tabular}{lccccl}
+    \toprule
+    Component & Arch rib & Tie girder & Hangers & Anchorages &  \\ \midrule
+    Weight & \SI{1332}{} & \SI{1066}{} & \SI{70.7}{} & \SI{121}{} & {[}t{]} \\
+    Unit cost & \SI{4.0}{} & \SI{3.5}{} & \SI{16.9}{} & \SI{9.0}{} & {[}\$/kg{]} \\
+    Total cost & \SI{5.33}{} & \SI{3.73}{} & \SI{1.19}{} & \SI{1.09}{} & [\$ Mio.] \\ \bottomrule
+    \end{tabular}
+\end{table}
+
+The summed costs mount up to \SI{11.34}{\$\,Mio.}, of which almost half can be accounted to the arch rib. For a comparison, the entire costs of the Blennerhassett Island Bridge including the approach spans amounted up to \SI{120}{\$\,Mio}. In the investigation of different designs, the cross sections of the arch and the tie are left unmodified. Only if the amount of hangers changes, the respective cross section is modified to yield an identical total resistance of all hangers. Also the weight of each anchorage is assumed to diminish proportionally to the increase of hangers. Only at a minimum of 12 strands per cable the weight of the anchorages are not further reduced. Considering all components, the costs of a modified design cannot be estimated directly from the cross sections. Therefor, the change in the maximum demand over capacity ratio of each segment is analysed. It is estimated that the reduction of the costs correlates proportionally to the respective maximum ratio. This approach is exemplified by the estimation of the costs for a random modified design in Table []. The reference demand over capacity ratio are determined from a model reflecting the final design which is shown in \ref{sec:base_case}

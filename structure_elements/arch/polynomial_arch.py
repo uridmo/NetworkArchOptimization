@@ -10,21 +10,26 @@ class PolynomialArch(Arch):
         super().__init__(nodes, span, rise)
 
         a = []
-        b_1 = []
-        b_2 = []
+        y_ref = []
+        c = []
         for node in arch.nodes:
             x = node.x - span/2
-            y = node.y - rise
-            a.append([x**2 - x**4/((span/2)**2)])
-            b_1.append(y)
-            b_2.append(-rise/((span/2)**4)*(x**4))
+            y_ref.append(node.y)
+            c.append(rise*(1-(2*x/span)**4))
+            a.append([rise*(-(2*x/span)**2 + (2*x/span)**4)])
         a = np.array(a)
-        b_1 = np.array(b_1)
-        b_2 = np.array(b_2)
-        b = np.linalg.solve(a.transpose()@a, a.transpose()@(b_1 - b_2))
-        c = (-rise-b*(span/2)**2)/(span/2)**4
+        c = np.array(c)
+        y_ref = np.array(y_ref)
+        b = np.linalg.solve(a.transpose()@a, a.transpose()@(y_ref - c))
+        self.b = float(b)
+
         x_arch = list(np.linspace(0, span, 2 * n + 1))
-        y_arch = [float(rise + b*(x-span/2)**2 + c*(x-span/2)**4) for x in x_arch]
+        y_arch = [float(rise*(1 - b*(2*(x-span/2)/span)**2 - (1-b)*(2*(x-span/2)/span)**4)) for x in x_arch]
+
+        y_2 = np.interp(x_arch, [node.x for node in arch.nodes], [node.y for node in arch.nodes])
+
+        self.d = max(max(y_arch-y_2), -min(y_arch-y_2))
+
 
         for i in range(len(x_arch)):
             self.insert_node(nodes, x_arch[i], y_arch[i])

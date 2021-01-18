@@ -6,10 +6,10 @@ from plotting.general import colors
 from plotting.plots import make_plots
 from plotting.tables import small_cost_overview_table, big_cost_overview_table, dc_overview_table
 
-bridge_10 = BlennerhassettBridge(n_hangers=10, n_cross_girders=10)
+bridge_10 = BlennerhassettBridge(n_hangers=10, n_floor_beams=10)
 bridge_13 = BlennerhassettBridge(curve_fitting='Polynomial')
-bridge_20 = BlennerhassettBridge(n_hangers=20, n_cross_girders=20, curve_fitting='Polynomial')
-bridge_27 = BlennerhassettBridge(n_hangers=40, n_cross_girders=40, curve_fitting='Polynomial')
+bridge_20 = BlennerhassettBridge(n_hangers=20, n_floor_beams=20, curve_fitting='Polynomial')
+bridge_27 = BlennerhassettBridge(n_hangers=40, n_floor_beams=40, curve_fitting='Polynomial')
 
 bridges_dict = {'10 Floor beams': bridge_10, '13 Floor beams': bridge_13, '20 Floor beams': bridge_20,
                 '27 Floor beams': bridge_27}
@@ -27,7 +27,7 @@ if cost_table:
     cost_label = ['Total cost', 'Tie cost', 'Hanger cost', 'Arch cost']
     costs = []
     for n in [1, 2, 3, 4, 5, 6, 8, 9, 10, 11, 13, 16, 19, 22, 25, 30, 35, 50]:
-        bridge = BlennerhassettBridge(n_hangers=n, n_cross_girders=n)
+        bridge = BlennerhassettBridge(n_hangers=n, n_floor_beams=n)
         cost_arch = sum(bridge.costs[0:3]) / 10 ** 6
         cost_tie = sum(bridge.costs[3:6]) / 10 ** 6
         cost_hangers = sum(bridge.costs[6:9]) / 10 ** 6

@@ -142,7 +142,7 @@ class Hangers(Element):
         knuckle.hangers[0].cross_section = cs_knuckle
         knuckles = Hangers(nodes, knuckle, span)
         tie.assign_hangers(knuckles)
-        arch.arch_connection_nodes(nodes, knuckles)
+        arch.connect_nodes(nodes, knuckles)
         self.hanger_sets.extend(knuckles.hanger_sets)
         return knuckles, dn_0
 

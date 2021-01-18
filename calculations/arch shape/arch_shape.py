@@ -14,7 +14,7 @@ bridge_ref = pickle.load(f)
 f.close()
 cable_loss = False
 for n in [13, 26]:
-    bridge_thrust = BlennerhassettBridge(n_hangers=n, n_cross_girders=n, cable_loss=cable_loss)
+    bridge_thrust = BlennerhassettBridge(n_hangers=n, n_floor_beams=n, cable_loss=cable_loss)
 
     print('Potential for permanent moment distribution optimisation (n=' + str(n) + ')')
     for cs in bridge_thrust.cost_cross_sections[0:3]:
@@ -25,9 +25,9 @@ for n in [13, 26]:
         dc_dif = 8/9 * m_dif / cs.moment_z_resistance
         print([m_max, m_min, m_dif, dc_dif])
 
-    bridge_polynomial = BlennerhassettBridge(curve_fitting='Polynomial-n', n_hangers=n, n_cross_girders=n, cable_loss=cable_loss)
-    bridge_spline = BlennerhassettBridge(curve_fitting='Spline-n', n_hangers=n, n_cross_girders=n, cable_loss=cable_loss)
-    bridge_continuous = BlennerhassettBridge(arch_shape='Continuous optimisation', arch_optimisation=False, n_hangers=n, n_cross_girders=n, cable_loss=cable_loss)
+    bridge_polynomial = BlennerhassettBridge(curve_fitting='Polynomial-n', n_hangers=n, n_floor_beams=n, cable_loss=cable_loss)
+    bridge_spline = BlennerhassettBridge(curve_fitting='Spline-n', n_hangers=n, n_floor_beams=n, cable_loss=cable_loss)
+    bridge_continuous = BlennerhassettBridge(arch_shape='Continuous optimisation', arch_optimisation=False, n_hangers=n, n_floor_beams=n, cable_loss=cable_loss)
 
     bridges_dict = {'Thrust line arch': bridge_thrust}
     load_groups = {'strength-I_'+str(n): 'Strength-I'}

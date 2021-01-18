@@ -159,7 +159,7 @@ class NetworkArch:
         self.hangers.set_effects(effects, 'WS')
         return
 
-    def calculate_ultimate_limit_states(self):
+    def calculate_strength_limit_states(self):
         self.set_range('EL, 1.25 DC/0.9 DC, 1.5 DW/0.65 DW, 0/1.75 LL', 'Strength-I')
         self.add_key('Strength-I', 'Moment y', 0)
 

@@ -5,14 +5,14 @@ from structure_elements.line_element import LineElement
 
 
 class Tie(LineElement):
-    def __init__(self, nodes, span, n, g_deck, g_wearing):
+    def __init__(self, nodes, span, n, g_deck, g_utilities):
         super().__init__()
         self.span = span
         self.cross_girders_amount = n
         self.cross_girders_nodes = [nodes.add_node(span*(i+1)/(n+1), 0) for i in range(n)]
         self.nodes = [nodes.add_node(0, 0)] + self.cross_girders_nodes + [nodes.add_node(span, 0)]
         self.weight_deck = g_deck
-        self.weight_utilities = g_wearing
+        self.weight_utilities = g_utilities
 
         self.force_deck = self.weight_deck * self.span / (self.cross_girders_amount + 1)
         self.force_utilities = self.weight_utilities * self.span / (self.cross_girders_amount + 1)

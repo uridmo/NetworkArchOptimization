@@ -10,7 +10,7 @@ class LineElement(Element):
         super().__init__()
         self.nodes = []
         self.cross_sections = []
-        self.regions = []
+        # self.regions = []
         return
 
     def __len__(self):

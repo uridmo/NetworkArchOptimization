@@ -12,7 +12,7 @@ class Arch(LineElement):
         self.tie_tension = 0
         return
 
-    def arch_connection_nodes(self, nodes, hangers):
+    def connect_nodes(self, nodes, hangers):
         for hanger in hangers:
             x_tie = hanger.tie_node.x
             angle = hanger.inclination

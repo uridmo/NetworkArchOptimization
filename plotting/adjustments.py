@@ -2,7 +2,7 @@ import numpy as np
 from matplotlib import pyplot
 
 
-def adjust_overview_plots(fig, labels=False):
+def adjust_overview_plots(fig, labels=False, dc=True):
     axs = fig.get_axes()
 
     axs[0].set_title('Arch')
@@ -15,8 +15,13 @@ def adjust_overview_plots(fig, labels=False):
     adjust_plot(axs[1])
 
     axs[2].set_title('Hangers')
-    axs[2].set_ylabel('D/C [-]')
-    adjust_plot(axs[2], step=0.2, min_0=True)
+    if dc:
+        axs[2].set_ylabel('D/C [-]')
+        adjust_plot(axs[2], step=0.2, min_0=True)
+    else:
+        axs[2].set_ylabel('N [MN]')
+        adjust_plot(axs[2], step=1, min_0=True)
+
 
     axs[3].set_ylabel('M [MNm]')
     if labels:
@@ -35,7 +40,7 @@ def adjust_overview_plots(fig, labels=False):
     return
 
 
-def adjust_effects_plots(fig, key='Moment'):
+def adjust_effects_plots(fig, key='Moment', dc=True):
     axs = fig.get_axes()
 
     axs[0].set_title('Arch')
@@ -50,8 +55,12 @@ def adjust_effects_plots(fig, key='Moment'):
     adjust_plot(axs[1])
 
     axs[2].set_title('Hangers')
-    axs[2].set_ylabel('D/C [-]')
-    adjust_plot(axs[2], step=0.2, min_0=True)
+    if dc:
+        axs[2].set_ylabel('D/C [-]')
+        adjust_plot(axs[2], step=0.2, min_0=True)
+    else:
+        axs[2].set_ylabel('N [MN]')
+        adjust_plot(axs[2], step=1, min_0=True)
 
     axs[3].remove()
     handles, labels = axs[1].get_legend_handles_labels()

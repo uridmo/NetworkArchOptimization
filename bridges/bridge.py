@@ -20,14 +20,14 @@ from structure_elements.tie import Tie
 
 
 class Bridge:
-    def __init__(self, span, rise, n_cross_girders, g_deck, g_wearing, qd_live_load, qc_live_load, qc_fatigue,
+    def __init__(self, span, rise, n_floor_beams, g_deck, g_utilities, q_ll_d, q_ll_c, qc_fatigue,
                  arch_shape, arch_optimisation, curve_fitting, self_stress_state, self_stress_state_params, cs_arch_x,
                  cs_arch, cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers, knuckle,
                  cable_loss_events, cost_cross_sections, unit_weight_anchorages, unit_price_anchorages):
 
-        self.input = {'span': span, 'rise': rise, 'cross_girder_amount': n_cross_girders, 'weight_deck': g_deck,
-                      'weight_surface_utilities': g_wearing, 'distributed_live_load': qd_live_load,
-                      'concentrated_live_load': qc_live_load, 'self_stress_state': self_stress_state,
+        self.input = {'span': span, 'rise': rise, 'cross_girder_amount': n_floor_beams, 'weight_deck': g_deck,
+                      'weight_surface_utilities': g_utilities, 'distributed_live_load': q_ll_d,
+                      'concentrated_live_load': q_ll_c, 'self_stress_state': self_stress_state,
                       'arch_shape': arch_shape, 'arch_optimisation': arch_optimisation, 'arch_cross_sections': cs_arch,
                       'arch_cross_sections_x': cs_arch_x, 'tie_cross_sections': cs_tie, 'tie_cross_sections_x': cs_tie_x,
                       'hangers_amount': n_hangers, 'hangers_arrangement': hanger_arrangement,
@@ -55,7 +55,7 @@ class Bridge:
             raise Exception('Hanger arrangement type "' + hanger_arrangement + '" is not defined')
 
         # Create the tie and the hangers
-        tie = Tie(nodes, span, n_cross_girders, g_deck, g_wearing)
+        tie = Tie(nodes, span, n_floor_beams, g_deck, g_utilities)
         hangers = Hangers(nodes, hanger_set, span)
 
         # Define the arch shape (thrust line is obtained later)
@@ -65,14 +65,14 @@ class Bridge:
             arch = CircularArch(nodes, span, rise)
         elif arch_shape == 'Continuous optimisation':
             g_arch = cs_arch[1].weight
-            g_tie = g_deck + g_wearing + cs_tie[1].weight
+            g_tie = g_deck + g_utilities + cs_tie[1].weight
             arch = ContinuousArch(nodes, hanger_set, g_arch, g_tie, span, rise)
         else:
             raise Exception('Arch shape "' + arch_shape + '" is not defined.')
 
         # Connect the hangers to the tie and the arch
         tie.assign_hangers(hangers)
-        arch.arch_connection_nodes(nodes, hangers)
+        arch.connect_nodes(nodes, hangers)
 
         # Define cross-sections
         arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
@@ -86,12 +86,6 @@ class Bridge:
         if self_stress_state == 'Zero-displacement':
             mz_0 = tie.zero_displacement(nodes, hangers, *self_stress_state_params[0:1])
             n_0 = arch.define_n_by_peak_moment(nodes, hangers, mz_0, *self_stress_state_params[1:])
-
-        # elif self_stress_state == 'Embedded-beam':
-        #     k_y = self_stress_state_params[0]
-        #     peak_moment = self_stress_state_params[1]
-        #     mz_0 = embedded_beam(tie, nodes, hangers, k_y)
-        #     n_0 = arch.define_n_by_peak_moment(nodes, hangers, mz_0, peak_moment=peak_moment)
 
         elif self_stress_state == 'Tie-optimisation':
             mz_0 = optimize_self_stresses_tie_1(tie, nodes, hangers, *self_stress_state_params[1:2])
@@ -113,7 +107,7 @@ class Bridge:
             nodes.pop_nodes(arch.nodes[1:-1])
             g_arch = cs_arch[0].weight
             arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)
-            arch.arch_connection_nodes(nodes, hangers)
+            arch.connect_nodes(nodes, hangers)
             arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
             n_0 = arch.define_n_by_least_squares(nodes, hangers, mz_0)
             network_arch.arch = arch
@@ -124,7 +118,7 @@ class Bridge:
                 arch = PolynomialArch(nodes, arch)
             if curve_fitting.startswith('Spline'):
                 arch = SplineArch(nodes, arch, hangers)
-            arch.arch_connection_nodes(nodes, hangers)
+            arch.connect_nodes(nodes, hangers)
             arch.define_cross_sections(nodes, cs_arch_x, cs_arch)
             if not curve_fitting.endswith('-n'):
                 n_0 = arch.define_n_by_least_squares(nodes, hangers, mz_0)
@@ -140,13 +134,13 @@ class Bridge:
         tie.assign_permanent_effects(nodes, hangers, -n_0, mz_0)
 
         # Calculate the load cases
-        network_arch.calculate_load_cases(qd_live_load, qc_live_load, qc_fatigue)
+        network_arch.calculate_load_cases(q_ll_d, q_ll_c, qc_fatigue)
         network_arch.assign_wind_effects()
-        network_arch.calculate_ultimate_limit_states()
+        network_arch.calculate_strength_limit_states()
 
         network_arch.calculate_cable_loss(cable_loss_events)
 
-        network_arch.calculate_tie_fracture(qd_live_load, qc_live_load)
+        network_arch.calculate_tie_fracture(q_ll_d, q_ll_c)
 
         self.nodes = nodes
         self.network_arch = network_arch

@@ -101,13 +101,6 @@ class CrossSection:
         self.effects[name]['Moment y'] = -m_y
         return
 
-    # def max_doc(self):
-    #     doc_max = 0.01
-    #     for name in self.degree_of_compliance:
-    #         if doc_max < self.degree_of_compliance[name]:
-    #             doc_max = self.degree_of_compliance[name]
-    #     return doc_max
-
     def calculate_cost(self):
         weight = 2 * self.length * self.unit_weight
         for name in self.degree_of_compliance:

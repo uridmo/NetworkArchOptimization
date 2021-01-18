@@ -7,8 +7,8 @@ from structure_elements.cross_section import CrossSection, TieFracture
 
 
 class BlennerhassettBridge(Bridge):
-    def __init__(self, span=267.8, rise=53.5, n_cross_girders=13, g_deck=115.3, g_utilities=35.1, n_hangers=13,
-                 hanger_arrangement='Parallel', hanger_params=(1.117,), qd_live_load=22.9, qc_live_load=1063,
+    def __init__(self, span=267.8, rise=53.5, n_floor_beams=13, g_deck=115.3, g_utilities=35.1, n_hangers=13,
+                 hanger_arrangement='Parallel', hanger_params=(1.117,), q_ll_d=22.9, q_ll_c=1063,
                  qc_fatigue=311, cable_loss=True, arch_shape='Parabolic', arch_optimisation=True, curve_fitting='',
                  self_stress_state='Tie-optimisation', self_stress_state_params=(), exact_stiffness=True,
                  knuckles=True):
@@ -25,7 +25,7 @@ class BlennerhassettBridge(Bridge):
 
         unit_price_arch = 4
         unit_price_tie = 3.5
-        unit_price_hanger = 17
+        unit_price_hanger = 16.9
         unit_price_anchorages = 9
 
         # Load the demand / capacity ratios from the base case
@@ -149,7 +149,7 @@ class BlennerhassettBridge(Bridge):
                  'Factor LL': 0.75, 'Dynamic Amplification Factor': 1.75}]
         else:
             cable_loss_events = []
-        super().__init__(span, rise, n_cross_girders, g_deck, g_utilities, qd_live_load, qc_live_load, qc_fatigue,
+        super().__init__(span, rise, n_floor_beams, g_deck, g_utilities, q_ll_d, q_ll_c, qc_fatigue,
                          arch_shape, arch_optimisation, curve_fitting, self_stress_state, self_stress_state_params,
                          cs_arch_x, cs_arch, cs_tie_x, cs_tie, n_hangers, hanger_arrangement, hanger_params, cs_hangers,
                          knuckle, cable_loss_events, cost_cross_sections,

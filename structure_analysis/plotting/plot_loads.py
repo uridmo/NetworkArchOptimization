@@ -322,10 +322,7 @@ def plot_loads_old(model, load_group, title, save_plot=False):
     #plotLegend(ax)
     adjustPlot(ax)
     plt.show()
-
     if save_plot:
-        if not os.path.isdir('Plots ' + title):
-            os.makedirs('Plots ' + title)
-        plt.savefig('Plots ' + title + '/Loadgroup ' + str(load_group) + '_Forces.png', dpi=300, bbox_inches='tight')
+        fig.savefig(title+'.png')
 
     return ax

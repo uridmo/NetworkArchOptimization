@@ -407,46 +407,46 @@ Each step solves for the change of height of the thrust line $dy$. It underlies 
 Unless the arch's weight is neglected, the normal force in the crown $N_{crown}$ is determined iteratively for the thrust line to intersect the knuckle point. Another possibility is its determination from static considerations similar to the ones in the previous section.
 
 \subsection{Polynomial approximation} \label{sec:polynomial_approximation}
-While the previously derived discrete hanger arrangement thrust line is certainly efficient it lacks constructability. The kinks resulting from the hanger forces do not comply with the cutting and welding methods used for building the cross section. Further, a kinked arch would look particularly unaesthetic. Therefore, the arch shape specified by the discrete arch nodes is approximated by a function with a continuous curvature. The parabola and the circular arc lack a parameter to fit the curve to the obtained nodes. As the cubic polynomial is not symmetric and therefore unsuitable, the quartic polynomial is the apparent choice. It is expressed by \cref{eq:polynomial_shape} with the origin at midspan in the tie girder.
+While the previously derived discrete hanger arrangement thrust line is undoubtedly efficient, it lacks constructability. The kinks resulting from the hanger forces do not comply with the cutting and welding methods used for building the cross section. Further, a kinked arch would look particularly unaesthetic. Therefore, the arch shape specified by the discrete arch nodes is approximated by a function with continuous curvature. The parabola and the circular arc lack a parameter to fit the curve to the obtained nodes. As the cubic polynomial is not symmetric and therefore unsuitable, the quartic polynomial is the apparent choice. It is expressed by \cref{eq:polynomial_shape} with the origin at midspan in the tie girder.
 \begin{equation}
     y(x)=r \cdot \left(1 - b \cdot \left(\frac{2\,x}{s}\right)^2 - (1-b) \left(\frac{2\,x}{s}\right)^4 \right)
     \label{eq:polynomial_shape}
 \end{equation}
 
-It fulfills the conditions $y(0)=r$ and $y(s/2)=y(-s/2)=0$. The shape parameter $b$ determines the shape between these points. A value of $b=1$ yields a parabola whereas a value of $b=0$ yields a purely quartic shape function. A comparison of the shapes for the case of the Blennerhassett Island Bridge is given in 
+It fulfills the conditions $y(0)=r$ and $y(s/2)=y(-s/2)=0$. The shape parameter $b$ determines the shape between these points. A value of $b=1$ yields a parabola whereas a value of $b=0$ yields a purely quartic shape function. A comparison of the shapes for the case of the Blennerhassett Island Bridge is given in \cref{fig:polynomial_shapes}. To make the differences visible, the deviation from the parabola is given.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={1cm 0 3cm 0},clip, width=0.76\textwidth]{calculations/arch shape/arch_shapes_13.png}
+    \includegraphics[trim={1cm 0 3cm 0},clip, width=0.70\textwidth]{illustrations/polynomial shapes.png}
     \caption{Deviation of the polynomial approximations to the parabola}
-    \label{fig:arch_shapes_13}
+    \label{fig:polynomial_shapes}
 \end{figure}
 
-\newpage
-\section{Design verifications} \label{sec:met_ver}
-To ensure a safe and reliable structure, the limit states for strength, extreme events and fatigue are considered \cite{AASHTO}.  The resulting demand over capacity ratios (D/C) will also be used in \cref{sec:met_cost} for an estimation of the cost function.
+In the expected range between the parabolic and the circular arch, the parameter $b$ ranges from 1.00 to 0.85. However, the quartic function cannot provide an adequate fit for a circular shape differing by more than \SI{10}{cm}. For values below 0.85, the shape function lies outside of the circular shape. The value for $b$ is determined from a least-squares fitting of the given nodes to approximate a given discrete arch shape.
 
-\subsection{Strength limit states}
-The strength limit states are considered to ensure that the design of the structure guarantees enough strength and stability for the highest expected loads in its life cycle. The load combinations considered in this investigation are related to the main actions of vehicular use (Strength-I), wind exposure (Strength-III) and a load combination for heavy bridges (Strength-IV). The load factors used for each strength limit state are presented in \cref{tab:uls_combination}. For the permanent loads DC and DW, two factors are given out of which the one impeding to the verification is taken. For the locked-in erection stresses no variability is taken into account.
+\section{Design verifications} \label{sec:met_ver}
+To ensure a safe and reliable structure, the limit states for strength, extreme events and fatigue are considered \cite{AASHTO}. They are introduced along with the corresponding verifications in \cref{sec:strength}, \cref{sec:extreme} and \cref{sec:fatigue}. The resulting demand over capacity ratios (D/C) are used in \cref{sec:met_cost} for an estimation of the cost function.
+
+\subsection{Strength limit states}\label{sec:strength}
+The strength limit states are considered to ensure that the design of the structure guarantees enough strength and stability for the highest expected loads in its life cycle. The load combinations considered in this investigation are related to the main actions of vehicular use (Strength-I, S1), wind exposure (Strength-III, S3) and a load combination for heavy bridges (Strength-IV, S4). The load factors used for each strength limit state are presented in \cref{tab:uls_combination}. For the permanent loads DC and DW, two factors are given out of which the one impeding to the verification is taken. For the locked-in erection stresses no uncertainty is taken into account.
 
 \input{overleaf/Tables/Load combinations ULS}
 
-The arch and the tie are verified according to \cref{eq:design_verification}, neglecting the secondary force effects. For the hangers, enough resistance is proved if the highest stresses are below 65\% of the nominal capacity. 
+The arch and the tie are verified according to \cref{eq:design_verification}, neglecting the secondary force effects. 
 
 \begin{equation}
     \frac{N_{Ed}}{N_{Rd}} + \frac{8.0}{9.0}\, \left(\frac{M_{y,Ed}}{M_{y,Rd}}+\frac{M_{z,Ed}}{M_{z,Rd}} \right) \leq 1.0
     \label{eq:design_verification}
 \end{equation}
 
-For simplicity, the value given by the left side of this condition is also referred to as the demand over capacity ratio for the arch and the tie.
-%For the Blennerhassett Island Bridge, the DOC is evaluated according to this simplified verification. The obtained values are presented in Table [], along with the ratios taken from the design drawings in parenthesis. 
+For simplicity, the value given by the left side of this condition is also referred to as the demand over capacity ratio for the arch rib and the tie girder. For the hangers, enough resistance is proved if the normal force is below 65\% of their nominal capacity. 
 
-\subsection{Extreme event limit states}
-Extreme events are unique circumstances whose return periods can be significantly greater than the life expectancy of the structure. In these events, the requirement for the bridge is its structural survival. In this investigation the extreme events of cable loss, cable replacement and tie fracture are examined. The load factors for each event is taken from the design drawings and presented in \cref{tab:extreme_combination}. For the events of cable loss and cable replacement, specific live loading arrangements (LL*) apply.
+\subsection{Extreme event limit states}\label{sec:extreme}
+Extreme events are unique circumstances whose return periods can be significantly greater than the life expectancy of the structure. In these events, the requirement for the bridge is its structural survival. In this investigation the extreme events of cable loss, cable replacement and tie fracture are examined. The load factors for each event are presented in \cref{tab:extreme_combination}. They are taken from the design drawings in \cref{app:general_notes}. As described in \cref{sec:met_loads_live}, specific live loading arrangements (LL*) apply for the extreme events of cable loss and cable replacement. Further, a dynamic amplification factor (DAF) of 1.75 is assumed to estimate the dynamic effects for the event of cable loss.
 
 \input{overleaf/Tables/Load combinations - Extreme events}
 
-For both hanger-related extreme events, each hanger is investigated individually according to the PTI (static) approach [cite PTI]. In a first step, the longitudinal live load arrangement, which maximises the respective hanger force, is determined. Therefor, The concentrated live load is always applied at the cross-girder closest to the considered hanger. The forces from the distributed live load are also arranged on a certain amount of neighbouring cross-girders, as illustrated in \cref{fig:Cable_Loss_1}. The assumed hanger force before its replacement or loss is thereby determined. In a second step, the structural system is modified by removing the considered hanger. The hanger force is applied in opposite direction on the modified system, as shown in \cref{fig:Cable_Loss_2}. The resulting effects are multiplied by a dynamic amplification factor (DAF) and superimposed on the effects from the state of maximised hanger force. The DAF for the event of cable loss is assumed to be 1.75.
+For both hanger-related extreme events, each hanger is investigated individually according to the (quasi-static) PTI approach \cite{PTI}. In a first step, the longitudinal live load arrangement maximising the respective hanger force is determined. Therefore, the concentrated live load is always applied at the cross-girder closest to the considered hanger. The forces from the distributed live load are arranged on a certain amount of neighbouring cross-girders, resulting in a loading as illustrated in \cref{fig:Cable_Loss_1}. The hanger force before its replacement or loss is thereby determined. In a second step, the structural system is modified by removing the considered hanger. The hanger force is applied in opposite direction on the modified system, as shown in \cref{fig:Cable_Loss_2}. The resulting effects are multiplied by the DAF and superimposed on the effects from the intact system.
 
 \begin{figure}[H]
 \centering
@@ -466,13 +466,13 @@ For both hanger-related extreme events, each hanger is investigated individually
 \label{fig:Cable_Loss}
 \end{figure}
 
-[Tie fracture]
+For the extreme event of tie fracture, the original structural model is used as an idealised local fracture does not affect the structures stiffnesses. A common verification for this extreme event considers the strains in the fractured cross section assuming elastic perfectly-plastic material behaviour. These strains are limited to 1\% for the verification. However, a simplified verification is conducted in this Thesis considering the elastic stresses in the fractured cross section. These stresses are limited to the ultimate strength for verifying the considered extreme event. A comparison of the interaction diagrams considering the two described approaches is given in [] for the cross section of the tie girder. It is concluded that the simplified verification gives conservative results. Ultimately, the conducted investigation in this Thesis is a comparative study. The comparison of the maximum elastic stresses of the fractured tie cross section appears adequate therefor.
 
-\subsection{Fatigue limit state}
+\subsection{Fatigue limit state}\label{sec:fatigue}
+The fatigue limit state is considered for the hangers according to the Recommendations for Stay Cable Design by the PTI \cite{PTI}. Therefore, only a single design truck is considered which traverses the bridge. The corresponding load is specified in \cref{sec:met_loads_live}. Thereby, the hanger forces undergo elastic tensile and compressive stresses, as presented in [] for the [] hanger. 
 
-\input{overleaf/Tables/Resistances}
+To verify the fatigue limit state the obtained maximum and minimum stress is considered for each hanger. In a simplified verification, this stress range is limited to \SI{55}{MPa} to exclude the risk of fatigue fracture.
 
-\newpage
 \section{Cost estimation} \label{sec:met_cost}
 The estimation of the costs associated with particular designs allows their overall comparison despite the various relevant aspects. Therefor, the individual demand over capacity ratios, which are determined according to the previous chapter, are related to a global objective. In other investigations the objective was set to minimise the total structural weight, which favors the arrangement of strong hangers. In order to obtain a more realistic objective a further step is taken by accounting for the different unit costs of the respective components. The individual costs are ultimately summed up to give a single comparable value, which allows putting changes in the structural behaviour into perspective. \medskip
 

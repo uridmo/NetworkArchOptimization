@@ -218,7 +218,7 @@ In an n-times statically indeterminate structure, there are n supernumerary forc
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={1cm 16cm 4cm 6.5cm},clip, width=0.65\textwidth]{overleaf/Pictures/Supernumerary forces.png}
+    \includegraphics[trim={1cm 16cm 4cm 6.5cm},clip, width=0.57\textwidth]{overleaf/Pictures/Supernumerary forces.png}
     \caption{Set of supernumerary forces in the structural model}
     \label{fig:super_forces}
 \end{figure}
@@ -238,17 +238,17 @@ The zero-displacement method gives a first estimation of the hanger forces and i
     \label{fig:zero_disp}
 \end{figure}
 
-In a second step, the hanger forces and the constraint moment at the knuckle are applied to the arch to determine its permanent state. Thereby the arch is affected by a significant moment distribution with the peak at the crown of $M_{p,crown}$. The permanent tie tension force, which has a decisive influence on the arch, can be chosen freely at this point as it was neglected in the investigation of the tie girder. As a simplistic approach, the permanent tie tension force $N_{p,Tie}$ can be calculated to cause a disappearing moment at the crown of the arch according to \cref{eq:M_0}. Otherwise, the more elaborate methods in the followings Sections can be used to determine this last supernumerary force.
+In a second step, the hanger forces and the constraint moment at the knuckle are applied to the arch to determine its permanent state. Thereby, the arch is affected by a significant moment distribution with the peak at the crown of $M_{p,crown}$. However, the permanent tie tension force, which has a decisive influence on the arch, can be chosen freely as it was neglected in the tie girder's investigation. As a simplistic approach, the permanent tie tension force $N_{p,Tie}$ can be calculated to cause a disappearing moment at the crown of the arch according to \cref{eq:M_0}. Otherwise, the more elaborate methods of the followings sections can determine the last supernumerary force.
 
 \begin{equation}
     N_{p,Tie} = \frac{M_{p,crown}}{r}
     \label{eq:M_0}
 \end{equation}
 
-This approach is fast and simple to calculate. For a standard hanger arrangement and an adapted arch shape, these simple approaches yield adequate permanent moment distributions. However, for a radial hanger arrangement, in which the hanger connections do not coincide with the floor beams, or for a specific arch shape that does not resemble the respective thrust line, the zero-displacement method does not yield a useful self-equilibrium stress state.
+This fast and simple approach yields adequate permanent moment distributions for a standard hanger arrangement and an adapted arch shape. However, for a radial hanger arrangement, in which the hanger connections do not coincide with the floor beams, or for a specific arch shape that does not resemble the respective thrust line, the zero-displacement method does not give a useful self-equilibrium stress state.
 
 \subsection{Moment minimisation}
-It is the goal of an efficient initial configuration to simplify the design verifications by counteracting the effects expected in the various load cases. For the moment minimisation method, this is achieved by minimising the permanent moment distribution in the tie and potentially the arch as well. The permanent moment distribution at m points along the considered component $M \in \mathbb{R}^m$ can be described by Equation \eqref{eq:perm_mom}. 
+It is the goal of an efficient initial configuration to simplify the design verifications by counteracting the effects expected in the various load cases. It can be achieved by minimising the permanent moment distribution in the tie and potentially the arch. Therefor, the permanent moment distribution at m points along the considered component $M \in \mathbb{R}^m$ are described by \cref{eq:perm_mom}. 
 \begin{equation}
     {\bf M} = {\bf M_0} + \sum_{i=1}^{n} {\bf M_i} \cdot X_i = {\bf M_0} + {\bf M_{sn}} \cdot {\bf X}
     \label{eq:perm_mom}
@@ -259,28 +259,29 @@ where ${\bf M_0} \in \mathbb{R}^m$ is the moment distribution of the permanent l
 \centering
 \begin{subfigure}{0.5\textwidth}
     \centering
-    \includegraphics[trim={0 0cm 0 0},clip, width=0.9\textwidth]{overleaf/Appendix/Pictures/min_1.PNG}
+    \vspace*{0.37cm}
+    \includegraphics[trim={4cm 3cm 3cm 5.2cm},clip, width=0.88\textwidth]{illustrations/optimisation methods/overall optimisation single force.png}
+    \vspace*{0.37cm}
     \caption{Basic system and supernumerary force}
     \label{fig:Minimisation_1}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
     \centering
-    \includegraphics[trim={0 0cm 0 0},clip, width=0.9\textwidth]{overleaf/Appendix/Pictures/min_2.PNG}
+    \includegraphics[trim={10cm 1cm 10cm 1cm},clip, width=0.88\textwidth]{illustrations/optimisation methods/overall optimisation single force moment.png}
     \caption{Moments under supernumerary force}
     \label{fig:Minimisation_2}
 \end{subfigure}
-\caption{Moment distribution of supernumerary force}
+\caption{Moment distribution of a supernumerary force}
 \label{fig:Minimisation}
 \end{figure}
 
-\newpage
-The problem of minimising the absolute maximum moments can be formulated according to Equation \eqref{eq:minimisation}, where the absolute maximum moment is expressed also as the infinity norm.
+The problem of minimising the absolute maximum moments can be formulated according to \cref{eq:minimisation}, where the absolute maximum moment is also expressed as the infinity norm.
 \begin{align}
     \underset{{\bf X}}{\text{Minimize}} \quad & f({\bf X}) = \max({\bf M}, -{\bf M}) = \|{\bf M_0} + {\bf M_{sn}} \cdot {\bf X}\|_{\infty} 
     \label{eq:minimisation}
 \end{align}
-With the helper variable $t$, the previously stated problem can be formulated as a linear programming problem, as shown in Equation \eqref{eq:minimisation_2}.
-The variable $t$ describes the moment magnitude which is larger than the all absolute moments in ${\bf M}$ according to the inequality conditions.
+With the helper variable $t$, the previously stated problem can be formulated as a linear programming problem, as shown in \cref{eq:minimisation_2}.
+Satisfying the inequality conditions, the variable $t$ describes the moment magnitude which is larger than the all absolute moments in ${\bf M}$.
 \begin{align}
     \underset{t, {\bf X}}{\text{Minimize}} \quad & f(t) = t \label{eq:minimisation_2} \\
     \text{s.t.} \quad & {\bf M_0} + {\bf M_{sn}} \cdot {\bf X} - t {\bf 1} \leq  0 \nonumber \\
@@ -289,72 +290,44 @@ The variable $t$ describes the moment magnitude which is larger than the all abs
 Additionally, bounds for the permanent hanger forces can be specified as further inequality conditions. It should be noted that under the consideration of symmetry the amount of variables in the linear problem can be reduced. If only the moment distribution in the tie is optimised, it makes sense to only consider vertical forces at each hanger node to obtain an unambiguous problem. In a second step, the optimised vertical forces are assigned to the two hangers at the node. The obtained problem is efficiently and reliably solvable as it is formulated as a linear programming problem. It can even be solved by Microsoft Excel without the need of additional software.
 
 \subsection{Least squares of moments} \label{sec:least_squares}
-As an alternative approach, the supernumerary forces can be determined using the method of least squares. The objective of this method is to find supernumerary forces which counteract a certain moment distribution, for example the moment distribution on the basic system. Using the variables which were introduced in the previous section, the objective is described by Equation \eqref{eq:lsq_1}.
+As an alternative approach, the supernumerary forces can be determined using the method of least squares. This method aims to find supernumerary forces that counteract a particular moment distribution, for example, the moment distribution on the basic system. The objective is described by \cref{eq:lsq_1}, using the variables introduced in the previous section.
 \begin{equation}
     {\bf M_{sn}} \cdot {\bf X} = -{\bf M_0}
     \label{eq:lsq_1}
 \end{equation}
-As this yields an overdetermined system, the equations cannot be solved simultaneously. Using the method of least squares, the sum of the squared deviations can be minimised by solving the determined system in Equation \eqref{eq:lsq_2}.
+As this yields an overdetermined system, the equations cannot be solved simultaneously. Using the method of least squares, the sum of the squared deviations can be minimised by solving the determined system in \cref{eq:lsq_2}.
 \begin{equation}
     ({\bf M_{sn}}^T\,{\bf M_{sn}}) \cdot {\bf X} = -{\bf M_{sn}}^T\,{\bf M_0}
     \label{eq:lsq_2}
 \end{equation}
-The drawback of this method is that no bounds for the hanger forces can be specified. However, this method is particularly useful, if the hanger forces have been optimised by minimising the moments on the tie girder. At this point, the permanent tension force in the tie girder is still undefined, as it does not affect the moment distribution. It can then be calculated by considering the moment distribution in the arch rib, minimising the squares of its moment distribution. In this case, the approach is fast and can even be solved without using linear algebra as there is only one variable.
+The drawback of this method is that no bounds for the hanger forces can be specified. However, this method is advantageous if the hanger forces have been optimised by minimising the tie girder's moments. At this point, the tie girder's permanent tension force is still undefined, as it does not affect the moment distribution. It can then be calculated by considering the moment distribution in the arch rib, minimising the squares of its moment distribution. In this case, the approach is fast and can even be solved without linear algebra, as there is only one variable.
 
 
 \newpage
 \section{Arch shape} \label{sec:met_arch}
-The optimisation methods which were introduced in the previous chapter allow finding an efficient self-equilibrium stress state for a given arch shape. This corresponds to finding hanger forces with a resulting thrust line close to the predefined arch shape. However, a more elegant solution would be an adaptation of the arch shape to the thrust line under permanent loads. There are two thrust line derivations relevant for this Thesis. In \cref{app:continuous}, the thrust line is derived for the hypothetical case of an infinitely dense hanger arrangement. For a discrete hanger arrangement the thrust line can be derived according to the method described in \cref{app:discrete}. Both methods take the weight of the arch into account.
+The optimisation methods introduced in the previous chapter allow finding an efficient self-equilibrium stress state for a given arch shape. It corresponds to finding hanger forces with a resulting thrust line close to the predefined arch shape. However, a more elegant and efficient solution would be an adaptation of the arch shape to the thrust line under permanent loads. 
+For a discrete hanger arrangement, the thrust line can be derived according to the method described in \cref{app:discrete}. 
+An alternative method is the derivation of the thrust line for the hypothetical case of an infinitely dense hanger arrangement, which is shown in \cref{sec:continuous}.
+Both methods take the weight of the arch into account which compels an iterative derivation.
+Ultimately, a polynomial approximation of discrete arrangements is introduced in \cref{sec:polynomial_approximation}
 
-\subsection{Thrust line of continuous hanger arrangement}\label{app:continuous}
-In a first step, the hanger force densities of each hanger set are determined without the consideration of the arch. There are multiple possibilities to do so. For example, they could be calculated to be in equilibrium with the permanent vertical force $q$, depending on their angles of inclination $\alpha$ and $\beta$. However, horizontal equilibrium is an unnecessary condition, as the tie is affected by significant tension forces anyway. Therefore, it is proposed to assign force densities of identical magnitude to hangers on each infinitesimal element, as illustrated in Fig. \cref{fig:continuous_1}. Also the resultant forces $F_L$ and $F_R$ are shown.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.8\textwidth]{overleaf/Appendix/Pictures/continuous_thrust_line_1.PNG}
-    \caption{Hanger force densities on an infinitesimal element}
-    \label{fig:continuous_1}
-\end{figure}
+\subsection{Thrust line of discrete hanger arrangement} \label{app:discrete}
 
-The corresponding hanger force densities $f_l$ and $f_r$ can be calculated according to Eq. \eqref{eq:continuous_1}.
-\begin{equation}
-    f_l=f_r=\frac{q}{\sin{\alpha}+ \sin{\beta}}
-    \label{eq:continuous_1}
-\end{equation}
-
-While the thrust line can be described analytically by a differential equation, it is impossible to get an analytical solution for general hanger arrangement patterns. Therefore, the thrust line of the infinitesimal hanger arrangement is calculated in fixed horizontal steps of $dx$ starting from the crown, where a normal force $N_{crown}$ is assumed. If the step $dx$ is small, it can be assumed, that the inclination of the thrust line undergoes small changes in every step. At the beginning of each step the normal force $N_1$ is known, which also corresponds to the inclination of the thrust line. In each step, the change of height of the thrust line $dy$ is determined iteratively. It underlies the condition that the new inclination coincides with the inclination of the new normal force, which can be described by Eq. \cref{eq:continuous_2}.
-\begin{equation}
-    dy = \frac{dx}{2} \cdot \left(\frac{N_{1,y}}{N_{1,x}} + \frac{N_{2,y}}{N_{2,x}} \right)
-    \label{eq:continuous_2}
-\end{equation}
-
-The new normal force $N_2$ is determined from force equilibrium considering the hanger forces and the self weight, both of which depend on $dy$. The self weight is determined from the length of the segment multiplied by the weight per meter. For the hanger forces, the lengths of the two hanger sets on the tie $dl_1$ and $dl_2$ affecting the considered arch segment are determined over geometrical considerations. Using the previously determined hanger force densities the resulting hanger force is determined. The calculation of a single step is illustrated in Fig. \cref{fig:continuous_2}.
-\begin{figure}[H]
-    \centering
-    \includegraphics[width=0.6\textwidth]{overleaf/Appendix/Pictures/continuous_thrust_line.PNG}
-    \caption{Derivation of the arch thrust line for a continuous hanger arrangement}
-    \label{fig:continuous_2}
-\end{figure}
-
-Ultimately, the normal force in the crown $N_{crown}$ is determined iteratively for the thrust line to intersect the knuckle point. However, this normal force in the crown could also be determined from static considerations involving global longitudinal moment and the hanger force densities without the need of an iteration.
-
-
-\subsection{Thrust line of discrete hanger arrangement}\label{app:discrete}
-
-Calculating the thrust line of a discrete hanger arrangement is a particular challenge as it is not known in which order the hangers intersect the thrust line beforehand. Therefore it is also calculated in steps. Similar to the continuous calculation, it is started from the crown with an estimated normal force $N_{crown}$ and the inclination at the beginning of every step corresponds to the ratio of the normal force components. Further, the arch's weight per horizontal meter is estimated from Eq. \cref{eq:g_arch}.
+Calculating the thrust line of a discrete hanger arrangement is a particular challenge as it is not known in which order the hangers intersect the thrust line beforehand. Therefore it is calculated in steps. It is started from the crown with an estimated normal force $N_{crown}$. The inclination at the beginning of every step corresponds to the ratio of the normal force components $N_x$ and $N_y$. Further, the arch's weight per horizontal meter is estimated from \cref{eq:g_arch}.
 
 \begin{equation}
     g_{arch,x} = g_{arch} \cdot \sqrt{1+y'^2} = g_{arch} \cdot \sqrt{1+\left( \frac{N_{y}}{N_{x}} \right)^2}
     \label{eq:g_arch}
 \end{equation}
 
-Using this weight per horizontal meter, the parabolic thrust line can be estimated according to Eq. \cref{eq:discrete}. The height at the beginning of the current step is given by $y_1$ The second term gives the inclination of the normal force, which would continue the thrust line under no additional loading. The weight of the arch causes a slight curvature according to the third quadratic term.
+The parabolic thrust line can be estimated according to \cref{eq:discrete} using the weight per horizontal meter. The height at the beginning of the current step is given by $y_1$. The second term gives the normal force's inclination, which would continue the thrust line under no additional loading. The weight of the arch causes a slight curvature according to the third quadratic term.
 
 \begin{equation}
     y(x) = y_1 - \frac{N_y}{N_x} \cdot x - \frac{g_{arch,x}}{2\cdot N_x}\cdot x^2
     \label{eq:discrete}
 \end{equation}
 
-Unless a hanger intersects the thrust line within the current step, the thrust line is continued by the step length $dx$. An illustration is given in Fig. \cref{fig:discrete_1}.
+Unless a hanger intersects the thrust line within the current step, the thrust line is continued by the step length $dx$. Considering a linearly discretised arch, the points derived from \cref{eq:discrete} give the exact thrust line. A slight deviation occurs through the inaccurately assumed arch weight if a continuously curved arch is fitted through the obtained points. This deviation can be controlled by a sufficiently small step length $dx$. The obtained point serves as a starting point for the next step for which the vertical component of the normal force is adapted by the arch's weight of the performed step. An illustration is given in \cref{fig:discrete_1}.
 
 \begin{figure}[H]
     \centering
@@ -363,18 +336,91 @@ Unless a hanger intersects the thrust line within the current step, the thrust l
     \label{fig:discrete_1}
 \end{figure}
 
-However, if a hanger intersects the thrust line within the current step, this intersection point is added to the thrust line and used as a starting point for the next step. This step is illustrated in Fig. \cref{fig:discrete_2}.
+However, if a hanger intersects the thrust line within the current step, this intersection point is added to the thrust line and used as a starting point for the next step. Therefore, the normal force is adapted by the weight of the arch and the hanger force. This step is illustrated in \cref{fig:discrete_2}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{overleaf/Appendix/Pictures/discrete_thrust_line_2.PNG}
+    \includegraphics[width=0.65\textwidth]{overleaf/Appendix/Pictures/discrete_thrust_line_2.PNG}
     \caption{Thrust line derivation step connecting to the next hanger}
     \label{fig:discrete_2}
 \end{figure}
 
-Again, the normal force in the crown $N_{crown}$ is determined iteratively for the thrust line to intersect the knuckle point. Numerically, it would be much easier to calculate it from static considerations.
+The normal force in the crown $N_{crown}$ is determined iteratively as the arch weight's distribution is not known beforehand. In each iteration, the crown's normal force can be estimated by the expression in \cref{eq:accurate_n_crown} where $H^*$ is the set of hangers intersecting the axis of symmetry. $F_h$, $\alpha_h$ and $y_h$ give the force, the inclination and the height at midspan of hanger $h$. $M_{mid,glob}$ describes the global moment at midspan and can be derived from \cref{eq:accurate_m_crown}.
 
-\subsection{Polynomial approximation}
+\begin{equation}
+    N_{crown} = \frac{{M_{mid,glob}+\sum\limits_{h\in H^*}^{}F_h\,\cos(\alpha_h)\,y_h}}{r}
+    \label{eq:accurate_n_crown}
+\end{equation}
+\begin{equation}
+    M_{mid,glob} = \frac{(g_{tie}+g_{deck}+g_{util})\,s^2}{8} + M_{mid,arch}
+    \label{eq:accurate_m_crown}
+\end{equation}
+
+In the first iteration, the expression in \cref{eq:moment_arch_simplified} can be used to estimate the global moment due to the weight of the arch $M_{mid,arch}$. It is derived from the simplified weight distribution of a parabolic arch.
+\begin{equation}
+    M_{mid,arch}=-g_{arch}\cdot\frac{s\cdot(2r+3s)}{24}
+    \label{eq:moment_arch_simplified}
+\end{equation}
+
+For the next iterations, the global moment due to the distributed arch weight is determined from the integration given in \cref{eq:moment_arch_exact}.
+\begin{equation}
+    M_{mid,arch}= 2\,g_{arch}\,\int_{0}^{s/2} \frac{x}{2}\,\sqrt{1+y'(x)^2} \,dx
+    \label{eq:moment_arch_exact}
+\end{equation}
+
+Alternatively, the correct $N_{crown}$ can be determined numerically as the value for which the thrust line intersects the knuckle point. Therefore, it is advantageous if the knuckle's constraint moment is transformed into a statically equal permanent force in the web plates. While it does not represent a realistic flow of forces, it facilitates the derivation of an adequate arch shape.
+
+
+\subsection{Thrust line of continuous hanger arrangement} \label{sec:continuous}
+For the continuous arrangement, the hanger forces are replaced by hanger force densities $f_l$ and $f_r$ of the two hanger sets, which are determined in a first step. This is done without the consideration of the arch, and there are multiple possibilities to do so. For example, they could be calculated to be in equilibrium with the permanent vertical force $q$. However, horizontal equilibrium is an unnecessary condition, as the tie girder is affected by significant tension forces in any case. Therefore, it is proposed to assign force densities of identical magnitude to the hangers on each infinitesimal element. An illustration with the resultant forces $F_L$ and $F_R$ and the inclination of the hanger sets $\alpha$ and $\beta$ is shown in \cref{fig:continuous_1}.
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={0 0.5cm 0 1.8cm},clip, width=0.6\textwidth]{overleaf/Appendix/Pictures/continuous_thrust_line_1.PNG}
+    \caption{Hanger force densities on an infinitesimal element}
+    \label{fig:continuous_1}
+\end{figure}
+
+The force densities of equal magnitudes resulting in vertical equilibrium are calculated by \cref{eq:continuous_1}.
+\begin{equation}
+    f_l=f_r=\frac{q}{\sin{\alpha}+ \sin{\beta}}
+    \label{eq:continuous_1}
+\end{equation}
+
+A differential equation can be derived to describe the arch's thrust line. However, it is impossible to get an analytical solution for general hanger arrangement patterns. Therefore, the continuous hanger arrangement's thrust line is also calculated in fixed horizontal steps of $dx$ starting from the crown, where a horizontal normal force $N_{crown}$ is assumed. At the beginning of each step, the normal force $N_1$ is known, and its inclination corresponds to the thrust line's inclination. 
+If the step $dx$ is small, it can be assumed that the thrust line's inclination undergoes small changes in every step. In this case, the arch's weight and the applicable hanger forces can be determined from the initial inclination. 
+The lengths on the tie girder that affect the considered arch segment $dl_1$ and $dl_2$ are determined from geometrical considerations in order to calculate the hanger forces. With the initially defined hanger force densities, the resultant hanger forces are determined as well as the new normal force $N_2$. A single step is illustrated in \cref{fig:continuous_2}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.58\textwidth]{overleaf/Appendix/Pictures/continuous_thrust_line.PNG}
+    \caption{Derivation of the arch thrust line for a continuous hanger arrangement}
+    \label{fig:continuous_2}
+\end{figure}
+
+Each step solves for the change of height of the thrust line $dy$. It underlies the condition that the new inclination coincides with the inclination of the new normal force $N_2$, which is described by \cref{eq:continuous_2}.
+\begin{equation}
+    dy = \frac{dx}{2} \cdot \left(\frac{N_{1,y}}{N_{1,x}} + \frac{N_{2,y}}{N_{2,x}} \right)
+    \label{eq:continuous_2}
+\end{equation}
+
+
+Unless the arch's weight is neglected, the normal force in the crown $N_{crown}$ is determined iteratively for the thrust line to intersect the knuckle point. Another possibility is its determination from static considerations similar to the ones in the previous section.
+
+\subsection{Polynomial approximation} \label{sec:polynomial_approximation}
+While the previously derived discrete hanger arrangement thrust line is certainly efficient it lacks constructability. The kinks resulting from the hanger forces do not comply with the cutting and welding methods used for building the cross section. Further, a kinked arch would look particularly unaesthetic. Therefore, the arch shape specified by the discrete arch nodes is approximated by a function with a continuous curvature. The parabola and the circular arc lack a parameter to fit the curve to the obtained nodes. As the cubic polynomial is not symmetric and therefore unsuitable, the quartic polynomial is the apparent choice. It is expressed by \cref{eq:polynomial_shape} with the origin at midspan in the tie girder.
+\begin{equation}
+    y(x)=r \cdot \left(1 - b \cdot \left(\frac{2\,x}{s}\right)^2 - (1-b) \left(\frac{2\,x}{s}\right)^4 \right)
+    \label{eq:polynomial_shape}
+\end{equation}
+
+It fulfills the conditions $y(0)=r$ and $y(s/2)=y(-s/2)=0$. The shape parameter $b$ determines the shape between these points. A value of $b=1$ yields a parabola whereas a value of $b=0$ yields a purely quartic shape function. A comparison of the shapes for the case of the Blennerhassett Island Bridge is given in 
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={1cm 0 3cm 0},clip, width=0.76\textwidth]{calculations/arch shape/arch_shapes_13.png}
+    \caption{Deviation of the polynomial approximations to the parabola}
+    \label{fig:arch_shapes_13}
+\end{figure}
 
 \newpage
 \section{Design verifications} \label{sec:met_ver}
@@ -385,7 +431,7 @@ The strength limit states are considered to ensure that the design of the struct
 
 \input{overleaf/Tables/Load combinations ULS}
 
-The arch and the tie are verified according to Equation \eqref{eq:design_verification}, neglecting the secondary force effects. For the hangers, enough resistance is proved if the highest stresses are below 65\% of the nominal capacity. 
+The arch and the tie are verified according to \cref{eq:design_verification}, neglecting the secondary force effects. For the hangers, enough resistance is proved if the highest stresses are below 65\% of the nominal capacity. 
 
 \begin{equation}
     \frac{N_{Ed}}{N_{Rd}} + \frac{8.0}{9.0}\, \left(\frac{M_{y,Ed}}{M_{y,Rd}}+\frac{M_{z,Ed}}{M_{z,Rd}} \right) \leq 1.0

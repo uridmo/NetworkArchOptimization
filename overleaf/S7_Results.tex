@@ -56,11 +56,8 @@ Traditionally, mainly the circle and the parabola have been used as arch shapes.
 Multiple approaches to determine the arch shape have been introduced in Section \ref{sec:met_arch}. All of them are linked to the thrust line, which is approximately the most efficient shape. The following four arch shapes are compared in this investigation.
 \begin{enumerate}
     \item Thrust line: This shape is obtained numerically as the thrust line for the hanger forces, which are obtained from a tie moment optimisation. The respective hanger forces are uniform at $N_p=\SI{1.8}{MN}$ which corresponds to 28\% of their characteristic resistance.
-    \item Polynomial thrust line approximation: The above thrust line is approximated by a quartic function. The quartic function is described by Eq. \eqref{eq:polynomial_shape} using the shape parameter $b$. This parameter is obtained by a least squares approximation. It fulfills the conditions $y(0)=r$ and $y(s/2)=0$
-    \begin{equation}
-        y(x)=r \cdot \left(1 - b \cdot \left(\frac{2\,x}{s}\right)^2 - (1-b) \left(\frac{2\,x}{s}\right)^4 \right)
-        \label{eq:polynomial_shape}
-    \end{equation}
+    \item Polynomial thrust line approximation: The above thrust line is approximated by a quartic function. The quartic function is described by Eq. \eqref{eq:polynomial_shape} using the shape parameter $b$. This parameter is obtained by a least squares approximation. 
+
     \item Spline thrust line approximation: As a second approximation of the thrust line a cubic spline defined by the respective arch-hanger connection nodes is used. These nodes are therefore represented at their exact location.
     \item Thrust line of continuous hanger arrangement: This shape is the thrust line of the hypothetical continuous hanger arrangement, which was introduced in Section [].
 \end{enumerate}

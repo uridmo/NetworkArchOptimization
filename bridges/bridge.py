@@ -7,8 +7,9 @@ from self_equilibrium.optimisation import optimize_self_stresses, optimize_self_
 from structure_elements.arch.circular_arch import CircularArch
 from structure_elements.arch.continuous_arch import ContinuousArch
 from structure_elements.arch.parabolic_arch import ParabolicArch
-from structure_elements.arch.polynomial_arch import PolynomialArch
-from structure_elements.arch.spline_arch import SplineArch
+from structure_elements.arch.polynomial_arch import QuarticArch
+from structure_elements.arch.polynomial_arch_fit import PolynomialArch
+from structure_elements.arch.spline_arch_fit import SplineArch
 from structure_elements.arch.thrust_line_arch import ThrustLineArch
 from structure_elements.hangers.constant_change_hangers import ConstantChangeHangerSet
 from structure_elements.hangers.hangers import Hangers
@@ -63,6 +64,8 @@ class Bridge:
             arch = ParabolicArch(nodes, span, rise)
         elif arch_shape == 'Circular':
             arch = CircularArch(nodes, span, rise)
+        elif arch_shape.startswith('Polynomial'):
+            arch = QuarticArch(nodes, span, rise, float(arch_shape[11:]))
         elif arch_shape == 'Continuous optimisation':
             g_arch = cs_arch[1].weight
             g_tie = g_deck + g_utilities + cs_tie[1].weight

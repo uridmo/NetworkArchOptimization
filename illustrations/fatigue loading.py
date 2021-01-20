@@ -30,8 +30,9 @@ axs[0].plot(x, f_2, label='2. Hanger', c=colors[0], lw=1)
 axs[0].plot(x, f_6, label='6. Hanger', c=colors[1], lw=1)
 axs[0].plot(x, f_10, label='10. Hanger', c=colors[2], lw=1)
 
-axs[0].set_title('Fatigue limit state')
+# axs[0].set_title('Fatigue limit state')
 axs[0].set_ylabel('Hanger force [kN]')
+axs[0].set_xlabel('Design truck position [m]')
 adjust_plot(axs[0], step=100, min_0=True)
 
 axs[1].remove()

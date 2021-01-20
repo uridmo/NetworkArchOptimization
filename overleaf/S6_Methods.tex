@@ -306,12 +306,12 @@ The drawback of this method is that no bounds for the hanger forces can be speci
 \newpage
 \section{Arch shape} \label{sec:met_arch}
 The optimisation methods introduced in the previous chapter allow finding an efficient self-equilibrium stress state for a given arch shape. It corresponds to finding hanger forces with a resulting thrust line close to the predefined arch shape. However, a more elegant and efficient solution would be an adaptation of the arch shape to the thrust line under permanent loads. 
-For a discrete hanger arrangement, the thrust line can be derived according to the method described in \cref{app:discrete}. 
+For a discrete hanger arrangement, the thrust line can be derived according to the method described in \cref{sec:discrete}. 
 An alternative method is the derivation of the thrust line for the hypothetical case of an infinitely dense hanger arrangement, which is shown in \cref{sec:continuous}.
 Both methods take the weight of the arch into account which compels an iterative derivation.
 Ultimately, a polynomial approximation of discrete arrangements is introduced in \cref{sec:polynomial_approximation}
 
-\subsection{Thrust line of discrete hanger arrangement} \label{app:discrete}
+\subsection{Thrust line of discrete hanger arrangement} \label{sec:discrete}
 
 Calculating the thrust line of a discrete hanger arrangement is a particular challenge as it is not known in which order the hangers intersect the thrust line beforehand. Therefore it is calculated in steps. It is started from the crown with an estimated normal force $N_{crown}$. The inclination at the beginning of every step corresponds to the ratio of the normal force components $N_x$ and $N_y$. Further, the arch's weight per horizontal meter is estimated from \cref{eq:g_arch}.
 
@@ -417,7 +417,7 @@ It fulfills the conditions $y(0)=r$ and $y(s/2)=y(-s/2)=0$. The shape parameter 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={1cm 0 3cm 0},clip, width=0.70\textwidth]{illustrations/polynomial shapes.png}
+    \includegraphics[trim={1cm 0 3cm 0},clip, width=0.70\textwidth]{illustrations/figures/polynomial shapes.png}
     \caption{Deviation of the polynomial approximations to the parabola}
     \label{fig:polynomial_shapes}
 \end{figure}
@@ -439,14 +439,14 @@ The arch and the tie are verified according to \cref{eq:design_verification}, ne
     \label{eq:design_verification}
 \end{equation}
 
-For simplicity, the value given by the left side of this condition is also referred to as the demand over capacity ratio for the arch rib and the tie girder. For the hangers, enough resistance is proved if the normal force is below 65\% of their nominal capacity. 
+For simplicity, the value given by the left side of this condition is referred to as the demand over capacity ratio for the arch rib and the tie girder. For the hangers, enough resistance is proved if the normal force is below 65\% of their nominal capacity. 
 
 \subsection{Extreme event limit states}\label{sec:extreme}
-Extreme events are unique circumstances whose return periods can be significantly greater than the life expectancy of the structure. In these events, the requirement for the bridge is its structural survival. In this investigation the extreme events of cable loss, cable replacement and tie fracture are examined. The load factors for each event are presented in \cref{tab:extreme_combination}. They are taken from the design drawings in \cref{app:general_notes}. As described in \cref{sec:met_loads_live}, specific live loading arrangements (LL*) apply for the extreme events of cable loss and cable replacement. Further, a dynamic amplification factor (DAF) of 1.75 is assumed to estimate the dynamic effects for the event of cable loss.
+Extreme events are unique circumstances whose return periods can be significantly greater than the structure's life expectancy. In these events, the requirement for the bridge is its structural survival. In this investigation, the extreme events of cable loss, cable replacement and tie fracture are examined. The load factors for each event are presented in \cref{tab:extreme_combination}. They are taken from the design drawings in \cref{app:general_notes}. As described in \cref{sec:met_loads_live}, specific live loading arrangements (LL*) apply for the extreme events of cable loss and cable replacement. Further, a dynamic amplification factor (DAF) of 1.75 is assumed to estimate the dynamic effects for the event of cable loss.
 
 \input{overleaf/Tables/Load combinations - Extreme events}
 
-For both hanger-related extreme events, each hanger is investigated individually according to the (quasi-static) PTI approach \cite{PTI}. In a first step, the longitudinal live load arrangement maximising the respective hanger force is determined. Therefore, the concentrated live load is always applied at the cross-girder closest to the considered hanger. The forces from the distributed live load are arranged on a certain amount of neighbouring cross-girders, resulting in a loading as illustrated in \cref{fig:Cable_Loss_1}. The hanger force before its replacement or loss is thereby determined. In a second step, the structural system is modified by removing the considered hanger. The hanger force is applied in opposite direction on the modified system, as shown in \cref{fig:Cable_Loss_2}. The resulting effects are multiplied by the DAF and superimposed on the effects from the intact system.
+For both hanger-related extreme events, each hanger is investigated individually according to the (quasi-static) PTI approach \cite{PTI}. In a first step, the longitudinal live load arrangement maximising the respective hanger force is determined. Therefore, the concentrated live load is always applied at the cross-girder closest to the considered hanger. The forces from the distributed live load are arranged on a certain amount of neighbouring cross-girders, resulting in a loading as illustrated in \cref{fig:Cable_Loss_1}. The hanger force before its replacement or loss is thereby determined. In a second step, the structural system is modified by removing the considered hanger. The hanger force is applied in the opposite direction on the modified system, as shown in \cref{fig:Cable_Loss_2}. The resulting effects are multiplied by the DAF and superimposed on the effects of the intact system.
 
 \begin{figure}[H]
 \centering
@@ -466,17 +466,24 @@ For both hanger-related extreme events, each hanger is investigated individually
 \label{fig:Cable_Loss}
 \end{figure}
 
-For the extreme event of tie fracture, the original structural model is used as an idealised local fracture does not affect the structures stiffnesses. A common verification for this extreme event considers the strains in the fractured cross section assuming elastic perfectly-plastic material behaviour. These strains are limited to 1\% for the verification. However, a simplified verification is conducted in this Thesis considering the elastic stresses in the fractured cross section. These stresses are limited to the ultimate strength for verifying the considered extreme event. A comparison of the interaction diagrams considering the two described approaches is given in [] for the cross section of the tie girder. It is concluded that the simplified verification gives conservative results. Ultimately, the conducted investigation in this Thesis is a comparative study. The comparison of the maximum elastic stresses of the fractured tie cross section appears adequate therefor.
+For the extreme event of tie fracture, the original structural model is used as an idealised local fracture does not affect the structures stiffnesses. A typical verification for this extreme event considers the strains in the fractured cross section assuming elastic perfectly-plastic material behaviour. These strains are limited to 1\% for the verification. However, a simplified verification is conducted in this Thesis, considering the elastic stresses in the fractured cross section. These stresses are limited to the ultimate strength for verifying the considered extreme event. A comparison of the interaction diagrams considering the two described approaches is given in [] for the tie girder's cross section. It is concluded that the simplified verification gives conservative results. Ultimately, the conducted investigation in this Thesis is a comparative study. The comparison of the maximum elastic stresses of the fractured tie cross section appears adequate therefor.
 
 \subsection{Fatigue limit state}\label{sec:fatigue}
-The fatigue limit state is considered for the hangers according to the Recommendations for Stay Cable Design by the PTI \cite{PTI}. Therefore, only a single design truck is considered which traverses the bridge. The corresponding load is specified in \cref{sec:met_loads_live}. Thereby, the hanger forces undergo elastic tensile and compressive stresses, as presented in [] for the [] hanger. 
+The fatigue limit state is considered for the hangers according to the Recommendations for Stay Cable Design by the PTI \cite{PTI}. Therefore, only a single design truck is considered which traverses the bridge on the lane resulting in the highest effects. The corresponding load is specified in \cref{sec:met_loads_live}. Thereby, the hanger forces undergo elastic tension and compression, as presented in \cref{fig:fatigue_forces} for a few hangers. 
 
-To verify the fatigue limit state the obtained maximum and minimum stress is considered for each hanger. In a simplified verification, this stress range is limited to \SI{55}{MPa} to exclude the risk of fatigue fracture.
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={0 0 5.5cm 0},clip, width=0.7\textwidth]{illustrations/figures/fatigue.png}
+    \caption{Hanger forces in the fatigue limit state}
+    \label{fig:fatigue_forces}
+\end{figure}
+
+To verify the fatigue limit state, the obtained maximum and minimum stresses are considered for each hanger. In a simplified verification, this stress range is limited to \SI{55}{MPa} to exclude the risk of fatigue fracture. However, a more detailed investigation would yield a higher resistance.
 
 \section{Cost estimation} \label{sec:met_cost}
-The estimation of the costs associated with particular designs allows their overall comparison despite the various relevant aspects. Therefor, the individual demand over capacity ratios, which are determined according to the previous chapter, are related to a global objective. In other investigations the objective was set to minimise the total structural weight, which favors the arrangement of strong hangers. In order to obtain a more realistic objective a further step is taken by accounting for the different unit costs of the respective components. The individual costs are ultimately summed up to give a single comparable value, which allows putting changes in the structural behaviour into perspective. \medskip
+The estimation of the costs associated with particular designs allows their overall comparison despite the various relevant aspects. Therefore, the individual D/C ratios, which are determined according to the previous chapter, are related to a global objective. In other investigations, the objective was set to minimise the total structural weight, favouring the arrangement of strong hangers. In order to obtain a more realistic objective, a further step is taken by accounting for the different unit costs of the respective components. The individual costs are ultimately summed up to give a single comparable value, which allows putting changes in the structural behaviour into perspective. \medskip
 
-In this Thesis only the arch rib, the tie girder and the hangers are considered in depth. Therefore, only the respective costs are taken into account for the objective cost function. However, it is still impossible to consider all the costs associated with a particular design as it requires the consideration of many details, such as the respective manufacturing and construction process. To facilitate the comparison only the costs which can be well determined are considered. For the arch rib and the tie girder these costs involve the material costs, the cutting and the welding. The respective unit costs are estimated to \SI{4.0}{\$/kg} and \SI{3.5}{\$/kg}. For the hangers, the estimation is trickier. Based on a more detailed cost analysis involving also the installation, the hanger unit costs are estimated to \SI{16.9}{\$/kg} in \cref{app:cost}. Additionally, the anchorages are priced at \SI{9}{\$/kg} plus a lump sum of \SI{50000}{\$} for testing incurs. The costs for the final design of the Blennerhassett Island Bridge are estimated in \cref{tab:cost_example} based on the weights found in the summary of estimated bridge quantities in \cref{app:weight}.
+In this Thesis, only the arch rib, the tie girder and the hangers are considered in depth. Therefore, only the respective costs are taken into account for the objective cost function. However, it is still impossible to consider all the costs associated with a particular design as it requires the consideration of many details, such as the respective manufacturing and construction process. To facilitate the comparison, only the costs which can be well determined are considered. For the arch rib and the tie girder, these costs involve the material costs, the cutting and the welding. The respective unit costs are estimated to \SI{4.0}{\$/kg} and \SI{3.5}{\$/kg}. For the hangers, the estimation is more cumbersome. Based on a detailed cost analysis also involving their anchorages and the installation, the hanger unit costs are estimated to \SI{16.9}{\$/kg} in \cref{app:cost} for the final design of the Blennerhassett Island Bridge. Additionally, the anchorages are priced at \SI{9}{\$/kg} plus a lump sum of \SI{50000}{\$} for testing incurs. The costs for the Blennerhassett Island Bridge's final design are estimated in \cref{tab:cost_example} based on the weights found in the summary of estimated bridge quantities in \cref{app:weight}.
 
 \begin{table}[H]
     \centering
@@ -491,6 +498,30 @@ In this Thesis only the arch rib, the tie girder and the hangers are considered 
     \end{tabular}
 \end{table}
 
-The summed costs mount up to \SI{11.34}{\$\,Mio.}, of which almost half can be accounted to the arch rib. For a comparison, the entire costs of the Blennerhassett Island Bridge including the approach spans amounted up to \SI{120}{\$\,Mio}. In the investigation of different designs, the cross sections of the arch and the tie are left unmodified. Only if the amount of hangers changes, the respective cross section is modified to yield an identical total resistance of all hangers. Also the weight of each anchorage is assumed to diminish proportionally to the increase of hangers. Only at a minimum of 12 strands per cable the weight of the anchorages are not further reduced. Considering all components, the costs of a modified design cannot be estimated directly from the cross sections. Therefor, the change in the maximum demand over capacity ratio of each segment is analysed. It is estimated that the reduction of the costs correlates proportionally to the respective maximum ratio. This approach is exemplified by the estimation of the costs for a random modified design in Table []. The reference demand over capacity ratio are determined from a model reflecting the final design which is shown in \ref{sec:base_case}
+The summed costs mount up to \SI{11.34}{\$\,Mio.}, of which almost half can be accounted to the arch rib. For comparison, the entire costs of the Blennerhassett Island Bridge, including the approach spans amounted up to \SI{120}{\$\,Mio}. Hence, the costs considered in this investigation are only a small fraction of the total costs. Further, the cross sections of the arch and the tie are left unmodified for the analysed designs. Only if the number of hangers changes, the respective cross section is modified to yield an equivalent total resistance of all hangers. Also, each anchorage's weight is assumed to diminish proportionally to the increase of hangers down to a minimum corresponding to 12 strands per cable. Considering all components, a modified design's costs cannot be estimated directly from the cross sections. Therefore, the change in the maximum D/C ratio of each segment is analysed. It is estimated that the reduction of the costs correlates proportionally to the respective maximum ratio. This approach is exemplified by the estimation of the costs for the modified design featuring an optimised arch in \ref{tab:met_cost_estimation}. The reference D/C ratios are determined from a model reflecting the bridge's final design which is shown in \ref{sec:base_case}
+
+\begin{table}[H]
+    \centering
+    \caption{Cost estimation for an optimised arch design}
+    \label{tab:met_cost_estimation}
+    \begin{tabular}{lcccccc}
+    \toprule
+    Segment & Length & Weight & Unit cost & D/C$_{max}$ & D/C$_{ref}$ & Cost \\
+     & [m] & [kg/m] & [\$/kg] & [-] & [-] & [\$ Mio.] \\ \hline
+    Arch 1 & 62 & 2467 & 4.0 & 0.83 & 0.86 & 1.17 \\
+    Arch 2 & 122 & 2311 & 4.0 & 1.14 & 1.09 & 2.33 \\
+    Arch 3 & 101 & 2311 & 4.0 & 1.10 & 1.08 & 1.90 \\
+    Tie 1 & 57 & 2334 & 3.5 & 0.79 & 0.81 & 0.91 \\
+    Tie 2 & 115 & 2009 & 3.5 & 0.94 & 0.99 & 1.54 \\
+    Tie 3 & 84 & 2009 & 3.5 & 0.91 & 0.96 & 1.12 \\
+    Hangers & 1115 & 32 & 16.9 & 0.94 & 1.06 & 1.07 \\
+    \arrayrulecolor[gray]{0.4} \midrule
+    - Anchorages & 26 ea & 2323 kg/ea & 9.0 \$/kg & 0.94 & 1.06 & 0.48 \\
+    - Testing & - & - & 50000 \$ & - & - & 0.05 \\ \arrayrulecolor[rgb]{0,0,0} \bottomrule
+    & & & & & & 10.57 \\ \hhline{~~~~~~ =}
+    \end{tabular}
+    \end{table}
+
 \newpage
 \section{Summary}
+In this chapter, the foundation for investigating a network tied-arch bridge has been laid. As a reference for the investigation, the Blennerhassett Island Bridge is introduced. However, other bridges are also given for comparative purposes. The floating deck system allows for a separation of the deck from the remaining structure, simplifying the model for the structural analysis. Further, it is restricted to a single arch plane. Hence, also the floor beams and the tie bracing is only represented by the corresponding permanent force. The remaining components are the arch rib, the tie girder and the hangers which are analysed in a linear elastic framework. The respective cross sections are adapted from the design drawings and remain unchanged in this investigation. The load cases and the limit states are adapted from the Blennerhassett Island Bridge, which was designed after the AASHTO Bridge Design Specifications (1998). The hangers are further verified according to the Recommendation for Stay Cable Design by the PTI. In particular, the extreme events of cable loss and tie fracture impose high demands on the structure. Both verifications are carried out in a simplified manner. However, considering the comparative purpose of this Thesis, simplified verifications are justified. Instead, particular emphasis is given to the determination of the self-equilibrium stress state and the arch shape. New approaches to determine the self-equilibrium stress state using numerical optimisation methods are introduced. In particular, it is analysed for the permanent state considering all supernumerary forces allowing for its fast and comprehensible design. New methods have also been developed for the investigation of the optimal arch shape. A derivation for thrust lines based on hypothetical continuous hanger arrangements is introduced. To conclude each component's verification into a single objective, the respective identifiable costs are estimated. They are assumed proportional to the change in the D/C ratio compared to the base case, which is the Blennerhassett Island Bridge's final design.

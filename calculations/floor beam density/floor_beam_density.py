@@ -25,7 +25,7 @@ crop_plots('live loading', (3, 1), [3, 4, 2], (2, 2), (1000, 500))
 crop_plots('strength-I', (3, 1), [3, 4, 2], (2, 2), (1000, 500))
 
 
-cost_table = False
+cost_table = True
 if cost_table:
     hangers = []
     cost_label = ['Total cost', 'Tie cost', 'Hanger cost', 'Arch cost']
@@ -49,7 +49,7 @@ if cost_table:
     ax.set_ylim([0, 16])
     ax.set_xlim([0, 50])
     ax.set_yticks([0, 4, 8, 12, 16])
-    ax.set_xlabel('Number of hangers per set [-]')
+    ax.set_xlabel('Number of floor beams [-]')
 
     ax.legend(frameon=False, loc='upper right', ncol=2)
     pyplot.tight_layout()

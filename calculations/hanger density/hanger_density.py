@@ -18,8 +18,8 @@ make_plots(bridges_dict, load_groups, marker='', all_labels=True, big_plots=True
 small_cost_overview_table('cost_comparison', bridges_dict)
 dc_overview_table('dc_comparison', bridges_dict)
 
-crop_plots('permanent', (3, 1), [3, 4, 2], (1, 4), (2920, 140))
-crop_plots('dead loading', (3, 1), [3, 4, 2], (1, 4), (2920, 140))
+crop_plots('permanent', (3, 1), [3, 4, 2], (2, 2), (1000, 500))
+crop_plots('dead loading', (3, 1), [3, 4, 2], (2, 2), (1000, 500))
 crop_plots('tie fracture', (1, 1), [4], (1, 4), (1000, 140))
 
 

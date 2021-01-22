@@ -1,7 +1,7 @@
 import numpy as np
 
 from bridges.Blennerhassett import BlennerhassettBridge
-from plotting.plots import make_plots, arch_or_tie_plots, crop_plots
+from plotting.plots import make_plots, crop_plots
 from plotting.tables import dc_overview_table, small_cost_overview_table
 
 params = (np.radians(25),)
@@ -15,15 +15,12 @@ fig.savefig('structure_26_radial.png')
 
 bridges_dict = {'13 Parallel hangers': bridge_13_n, '13 Radial hangers': bridge_13,
                 '20 Radial hangers': bridge_20, '26 Radial hangers': bridge_26}
-load_groups = {'permanent': 'Permanent', 'dead load': 'DL', 'live loading': 'LL'}
-make_plots(bridges_dict, load_groups, marker='', big_plots=True, all_labels=True)
+load_groups = {'permanent': 'Permanent'}
+make_plots(bridges_dict, load_groups, marker='')
 
-load_groups = {'permanent2': 'Permanent', 'tie fracture': 'Tie Fracture'}
-arch_or_tie_plots(bridges_dict, load_groups, arch=False)
-
-crop_plots('permanent', (3, 1), [3, 4, 2], (1, 4), (2920, 140))
-crop_plots('live loading', (3, 1), [3, 4, 2], (1, 4), (2920, 140))
-crop_plots('dead load', (3, 1), [3, 4, 2], (1, 4), (2920, 140))
+# crop_plots('permanent', (3, 1), [3, 4, 2], (2, 2), (1000, 500))
+# crop_plots('live loading', (3, 1), [3, 4, 2], (2, 2), (1000, 500))
+# crop_plots('dead load', (3, 1), [3, 4, 2], (2, 2), (1000, 500))
 
 small_cost_overview_table('cost_comparison', bridges_dict)
 dc_overview_table('dc_comparison', bridges_dict)

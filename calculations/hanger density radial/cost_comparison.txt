@@ -1,0 +1,10 @@
+\begin{tabular}{lcccc}
+\hline
+Model & Arch cost & Tie cost & Hanger cost & Total cost \\
+ & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline
+13 Parallel hangers & 5.33 & 3.55 & 1.59 & 10.48 \\ 
+13 Radial hangers & 5.55 & 4.09 & 2.01 & 11.65 \\ 
+20 Radial hangers & 4.66 & 4.00 & 1.98 & 10.64 \\ 
+26 Radial hangers & 4.22 & 4.00 & 1.97 & 10.19 \\ 
+\hline
+\end{tabular}

@@ -1,0 +1,10 @@
+\begin{tabular}{lcccc}
+\hline
+Model & Arch cost & Tie cost & Hanger cost & Total cost \\
+ & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline
+13 Hangers per set & 5.38 & 3.58 & 1.59 & 10.55 \\ 
+20 Hangers per set & 4.54 & 4.27 & 1.66 & 10.46 \\ 
+26 Hangers per set & 4.23 & 4.15 & 1.63 & 10.01 \\ 
+27 Hangers per set & 4.31 & 4.01 & 1.75 & 10.06 \\ 
+\hline
+\end{tabular}

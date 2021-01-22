@@ -1,0 +1,10 @@
+\begin{tabular}{lccccccc}
+\hline
+Model & \multicolumn{7}{c}{Demand / Capacity} \\
+ & Arch 1 & Arch 2 & Arch 3 & Tie 1 & Tie 2 & Tie 3 & Hangers \\ \hline
+13 Hangers per set & 0.88 (S3) & 1.12 (CL) & 1.06 (CL) & 0.80 (TF) & 0.95 (TF) & 0.91 (TF) & 0.94 (S1) \\ 
+20 Hangers per set & 0.88 (S3) & 0.90 (CL) & 0.83 (CL) & 0.90 (TF) & 1.14 (TF) & 1.12 (TF) & 0.99 (S1) \\ 
+26 Hangers per set & 0.83 (S3) & 0.83 (S1) & 0.78 (CL) & 0.87 (TF) & 1.12 (TF) & 1.08 (TF) & 0.94 (S1) \\ 
+27 Hangers per set & 0.86 (S3) & 0.86 (S1) & 0.78 (CL) & 0.84 (TF) & 1.08 (TF) & 1.04 (TF) & 1.05 (S1) \\ 
+\hline
+\end{tabular}

@@ -26,9 +26,9 @@ for i, a_mid in enumerate([85, 75, 65, 55, 45]):
 np.savetxt("b_values.csv", b_table, delimiter=', ', fmt='%2.3f', newline=' \\\\\n')
 np.savetxt("dif_values.csv", dif_table, delimiter=', ', fmt='%2.3f', newline=' \\\\\n')
 
-b_2_table = np.zeros((1, 7))
-dif_2_table = np.zeros((1, 7))
-for i, b in enumerate([5, 10, 15, 20, 25, 30, 35]):
+b_2_table = np.zeros((1, 8))
+dif_2_table = np.zeros((1, 8))
+for i, b in enumerate([5, 10, 15, 20, 25, 30, 35, 40]):
     bridge = BlennerhassettBridge(arch_optimisation=False, arch_shape=arch_shape, cable_loss=cable_loss,
                                   hanger_arrangement='Radial', hanger_params=(np.radians(b),),
                                   curve_fitting='Polynomial')

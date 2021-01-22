@@ -1,0 +1,10 @@
+\begin{tabular}{lccccccc}
+\hline
+Model & \multicolumn{7}{c}{Demand / Capacity} \\
+ & Arch 1 & Arch 2 & Arch 3 & Tie 1 & Tie 2 & Tie 3 & Hangers \\ \hline
+13 Parallel hangers & 0.89 (S3) & 1.10 (CL) & 1.05 (CL) & 0.78 (TF) & 0.94 (TF) & 0.91 (TF) & 0.94 (S1) \\ 
+13 Radial hangers & 0.87 (CL) & 1.18 (CL) & 1.08 (CL) & 0.77 (CL) & 1.11 (TF) & 1.12 (TF) & 1.15 (CR) \\ 
+20 Radial hangers & 0.80 (S3) & 0.95 (CL) & 0.90 (CL) & 0.78 (TF) & 1.07 (TF) & 1.10 (TF) & 1.14 (S1) \\ 
+26 Radial hangers & 0.80 (S3) & 0.81 (CL) & 0.82 (CL) & 0.77 (TF) & 1.08 (TF) & 1.09 (TF) & 1.14 (S1) \\ 
+\hline
+\end{tabular}

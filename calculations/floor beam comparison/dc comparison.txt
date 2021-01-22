@@ -5,6 +5,6 @@ Model & \multicolumn{7}{c}{Demand / Capacity} \\
 10 Floor beams & 0.89 (CL) & 1.39 (CL) & 1.27 (CL) & 0.80 (CL) & 1.03 (CL) & 0.98 (CL) & 0.94 (CR) \\ 
 13 Floor beams & 0.88 (S3) & 1.12 (CL) & 1.06 (CL) & 0.80 (TF) & 0.95 (TF) & 0.91 (TF) & 0.94 (S1) \\ 
 20 Floor beams & 0.84 (S3) & 0.90 (CL) & 0.84 (CL) & 0.80 (TF) & 0.97 (TF) & 0.93 (TF) & 0.96 (S1) \\ 
-27 Floor beams & 0.84 (S3) & 0.83 (S1) & 0.73 (S1) & 0.80 (TF) & 0.99 (TF) & 0.95 (TF) & 0.99 (S1) \\ 
+27 Floor beams & 0.84 (S3) & 0.83 (S1) & 0.74 (S1) & 0.80 (TF) & 0.99 (TF) & 0.95 (TF) & 0.99 (S1) \\ 
 \hline
 \end{tabular}

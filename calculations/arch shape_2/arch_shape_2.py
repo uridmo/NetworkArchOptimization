@@ -24,20 +24,20 @@ bridge_85_45 = BlennerhassettBridge(arch_optimisation=False, arch_shape=arch_sha
 bridge_r35 = BlennerhassettBridge(arch_optimisation=False, arch_shape=arch_shape, cable_loss=cable_loss,
                                   hanger_arrangement='Radial', hanger_params=(np.radians(35), ))
 
-bridge_r25 = BlennerhassettBridge(arch_optimisation=False, arch_shape=arch_shape, cable_loss=cable_loss,
-                                  hanger_arrangement='Radial', hanger_params=(np.radians(25), ))
+bridge_r20 = BlennerhassettBridge(arch_optimisation=False, arch_shape=arch_shape, cable_loss=cable_loss,
+                                  hanger_arrangement='Radial', hanger_params=(np.radians(20), ))
 
-bridges_dict = {'85° Arrangement': bridge_85,
-                '65° Arrangement': bridge_65,
-                '45° Arrangement': bridge_45,
-                '85° - 45° Arrangement': bridge_85_45,
-                '35° Radial Arrangement': bridge_r35,
-                '25° Radial Arrangement': bridge_r25
+bridges_dict = {'85° Parallel arrangement': bridge_85,
+                '65° Parallel arrangement': bridge_65,
+                '45° Parallel arrangement': bridge_45,
+                '85° - 45° arrangement': bridge_85_45,
+                '35° Radial arrangement': bridge_r35,
+                '20° Radial arrangement': bridge_r20
                 }
 
 span = 267.8
 rise = 53.5
-fig, axs = pyplot.subplots(1, 2, figsize=(8, 2), dpi=240)
+fig, axs = pyplot.subplots(1, 2, figsize=(15, 3), dpi=360)
 for i, key in enumerate(bridges_dict):
     bridge = bridges_dict[key]
     nodes = bridge.network_arch.arch.nodes
@@ -46,10 +46,6 @@ for i, key in enumerate(bridges_dict):
     y_ref = [rise * (1 - ((x_i - span / 2) / (span / 2)) ** 2) for x_i in x]
     axs[0].plot(x, y-y_ref, label=key, c=colors[i], lw=0.7)
 
-# y = np.array([rise - radius * (1 - (1 - ((x_i - span / 2) / radius) ** 2) ** 0.5) for x_i in x])
-# axs[0].plot(x, y-y_ref, label='Circular arch', c=colors[i+1], lw=0.7)
-
-axs[0].set_title('Arch shape')
 axs[0].set_ylabel('Deviation [m]')
 adjust_plot(axs[0], step=0.2, min_0=True)
 

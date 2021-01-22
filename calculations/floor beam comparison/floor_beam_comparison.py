@@ -45,7 +45,7 @@ if cost_table:
     ax.set_ylim([0, 16])
     ax.set_xlim([0, 50])
     ax.set_yticks([0, 4, 8, 12, 16])
-    ax.set_xlabel('Amount of hangers per set [-]')
+    ax.set_xlabel('Number of hangers per set [-]')
 
     ax.legend(frameon=False, loc='upper right', ncol=2)
     pyplot.tight_layout()

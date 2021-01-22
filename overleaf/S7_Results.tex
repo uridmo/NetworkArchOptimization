@@ -236,58 +236,54 @@ The moment distribution shows the reduction of the shape deviation moment by the
 
 
 \section{Floor beam density} \label{sec:floor_beam_density}
-It was seen in the previous chapter, that it is impossible to obtain an optimised design with more hangers per set than floor beams. To facilitate the design verifications in the extreme event of cable loss, a denser hanger arrangement has to be paired with a higher floor beam density. It seems a particularly reasonable step, as the Blennerhassett Island Bridge holds the record for hanger spacing on the tie girder at \SI{20}{m}. This was only feasible as the extreme event of floor beam loss was not considered in the design. However, there are other causes to investigate the floor beam and hanger density. Besides the previously mentioned improved behaviour under cable loss and smaller deviations of the arch from the thrust line, a general more continuous transfer of loads might be beneficial. \medskip
+It was seen in the previous chapter, that it is impossible to obtain an optimised design with more hangers per set than floor beams. To facilitate the design verifications in the extreme event of cable loss, a denser hanger arrangement has to be paired with a higher floor beam density. It seems a particularly reasonable step, as the Blennerhassett Island Bridge holds the record for hanger spacing on the tie girder at \SI{20}{m}. This was only feasible as the extreme event of floor beam loss was not considered in the design. However, there are other causes to investigate the floor beam and hanger density. Besides the previously mentioned improved behaviour under cable loss and smaller deviations of the arch from the thrust line, a general more continuous transfer of loads might benefit. \medskip
 
-Theoretically, an adapted floor beam spacing changes the entire deck system and its weight. However, the deck is not subject to this investigation and it is therefore assumed, that the total weight of the deck system and the floor beams is constant and independent of the floor beam spacing. Four models with different floor beam and hanger densities are investigated in this section. Besides the final design with 13 floor beams, models with 10, 20 and 27 floor beams are investigated. As an advantage for the sparse model with 10 floor beams, the actual thrust line is assumed as the arch shape (indicated by *). For the other models, the thrust line is approximated by the quartic polynomial. The permanent effects, shown in \cref{fig:fb_permanent}, are obtained by the tie moment optimisation. However also the zero-displacement method yields very similar results in this case.
+Theoretically, an adapted floor beam spacing changes the entire deck system and its weight. However, the deck is not subject to this investigation, and it is therefore assumed, that the weight of the deck system and the floor beams are constant and independent of the floor beam spacing. Four models with different floor beam and hanger densities are investigated in this section. Besides the final design with 13 floor beams, models with 10, 20 and 27 floor beams are investigated. As an advantage for the sparse model with 10 floor beams, the actual thrust line is assumed as the arch shape (indicated by *). For the other models, the thrust line is approximated by the quartic polynomial with $b=0.962$ as recommended in \cref{sec:arch_shape}. The permanent effects, shown in \cref{fig:fb_permanent}, are obtained by the tie moment optimisation. However, the zero-displacement method also yields very similar results in this case.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0 1cm 0},clip, width=\textwidth]{calculations/hanger density/dead loading_plot.png}
+    \includegraphics[trim={0 0 1cm 0},clip, width=\textwidth]{calculations/floor beam density/permanent_plot.png}
     \caption{Optimised permanent effects for different floor beam densities}
     \label{fig:fb_permanent}
 \end{figure}
 
 
-All models retain the characteristic permanent effects resulting from the tie optimisation, which are the uniform hanger forces and a uniform tie moment distribution with peaks at $M=\pm\,g_{Tie} \cdot s^2 / 16$. It can be seen, that the hanger forces slightly increase, as less weight of the deck is directly carried by the floor beam at the knuckle.
-
-Compared to the other models, the permanent arch moments for 13 floor beams seem to be significant. However, it is known from the investigation of the arch shape, that the moments only lower the demand over capacity ratio by about 0.05.
-Further the elastic response under characteristic live loading is shown in \cref{fig:fb_live}. 
+All models retain the characteristic permanent effects resulting from the tie optimisation, which are the uniform hanger forces and a uniform tie moment distribution with peaks at $M=\pm\,g_{Tie} \cdot l^2 / 16$. It can be seen that the hanger forces slightly increase, as less weight of the deck is directly carried by the floor beam at the knuckle.
+The permanent arch moments for 13 floor beams seem significant in comparison. However, it is known from the arch shape investigation that the moments only lower the D/C ratio by about 0.05. Therefore, none of the models is particularly disadvantageous. Further, the elastic response under characteristic live loading is shown in \cref{fig:fb_live}. 
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0 1cm 0},clip, width=\textwidth]{calculations/hanger density/dead loading_plot.png}
+    \includegraphics[trim={0 0 1cm 0},clip, width=\textwidth]{calculations/floor beam density/live loading_plot.png}
     \caption{Elastic effects under live loading for different floor beam densities}
     \label{fig:fb_live}
 \end{figure}
 
-For the hangers, the response is practically unchanged. Only the hangers very close to the knuckle undergo a lower normal force, as the tie girder at the knuckle carries the corresponding load directly to the knuckle. For the tie girder, the moment effects increase with the floor beam density and constitutes a slightly impairing impact on the design verifications. The stronger moments are due to the weaker coupling of the tie and the arch at the floor beams. While the force at the floor beams for the distributed lane load decreases, the force of the design trucks remain the same. They are responsible for the slightly increased hanger forces and bending moments in the tie girder. The moment distribution on the arch rib shows a different tendency. Overall the effects of the models resemble a similar shape. However, for fewer floor beams, certain moment peaks due to the stronger hanger forces become apparent. To put these differences into the context of the design verifications, the resulting demand over capacity ratios are shown in Tab. \ref{tab:fb_dc}.
-
-
+For the hangers, the response is practically unchanged. Only the hangers very close to the knuckle undergo a lower normal force, as the tie girder at the knuckle carries the corresponding load directly. For the tie girder, the moment effects increase with the floor beam density and constitute a slightly impairing impact on the design verifications. The stronger moments are due to the weaker coupling of the tie and the arch at the floor beams. While the force at the floor beams for the distributed lane load decreases, the force due to the design trucks remains the same. The hanger forces and the bending moments in the tie girder slightly increase due to the equal concentrated force, which is opposed by fewer hangers. The moment distribution on the arch rib shows a different tendency. Overall the effects of the models resemble a similar shape. However, for fewer floor beams, certain moment peaks due to the stronger hanger forces become apparent. To put these differences into the context of the design verifications, the resulting demand over capacity ratios are shown in \cref{tab:fb_dc}.
 
 \begin{table}[H]
     \centering
-    \resizebox{\columnwidth}{!}{%
-    \input{calculations/floor beam comparison/dc comparison.txt}
+    \resizebox{0.9\columnwidth}{!}{%
+    \input{calculations/floor beam density/dc comparison.txt}
     }
     \caption{Design verifications for different floor beam densities}
     \label{tab:fb_dc}
 \end{table}
 
-The extreme event of cable loss is well controlled by a denser hanger arrangement, as was already observed in the previous chapter. The impacts on the other design verification are comparably small. Both the hangers and the tie girder undergo a decrease of about 0.05 in the demand over capacity ratio. The effect ranges for the strength-I limit state are shown in \cref{fig:fb_strength} for further details. Considering the arch, 10 floor beams with an optimised shape or 27 floor beams show a well balanced moment distribution. However, also the moments in the other models do not have a decisive influence on the design.
+The extreme event of cable loss is well controlled by a denser hanger arrangement, as observed in the previous chapter. The impacts on the other design verification are comparably small. Both the hangers and the tie girder are affected by a slight increase of about 0.05 in the D/C ratio due to the higher effects under live loading. The effect ranges for the strength-I limit state are shown in \cref{fig:fb_strength} for further details. Considering the arch, 10 floor beams with an optimised shape or 27 floor beams show a well balanced moment distribution. Hence, if it was not for the governing cable loss extreme event, also fewer floor beams do not have a drastic impact on the verifications if the arch shape is adapted to the permanent thrust line.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0 1cm 0},clip, width=\textwidth]{calculations/hanger density/dead loading_plot.png}
-    \caption{Strength-I effects for different floor beam densities}
+    \includegraphics[trim={0 0 1cm 0},clip, width=\textwidth]{calculations/floor beam density/strength-I_plot.png}
+    \caption{Effect range for Strength-I limit state for different floor beam densities}
     \label{fig:fb_strength}
 \end{figure}
 
 
-[Beschreibung des Kostenverlaufs]
+The estimated costs depending on the number of floor beams are shown in \cref{fig:fb_costs}. It is clearly governed by the demand resulting from cable loss. Whereas for the tie, the extreme event is well controlled with 10 floor beams, it takes about 25 floor beams for the arch to eradicate the respective demands completely. Further, only minor changes in costs are observed. The cost of the hangers and the tie increase slightly due to the slightly unfavourable behaviour under live loading. Ultimately, the purple line can be shifted to the left side by a detailed analysis of the dynamic amplification factors. It also moves the optimum to the left side, which was the case for the Blennerhassett Island Bridge. Therefore, there this no optimisation potential with respect to the aspect of the floor beam density.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.7\textwidth]{calculations/floor beam comparison/cost comparison.png}
+    \includegraphics[width=0.7\textwidth]{calculations/floor beam density/cost comparison.png}
     \caption{Estimated costs for different floor beam densities}
     \label{fig:fb_costs}
 \end{figure}
@@ -295,12 +291,14 @@ The extreme event of cable loss is well controlled by a denser hanger arrangemen
 
 \newpage
 \section{Hanger inclination} \label{sec:inclination}
-The investigation in this section focuses on the parallel hanger arrangement's main parameter, the hanger inclination. In the previous Sections, the inclination has been left at \SI{64}{\degree} as in the final design of the Blennerhassett Island Bridge. This choice is critically assessed by the investigation of models with inclinations from \SI{45}{\degree} to \SI{85}{\degree}. In a first part, it is focused on their elastic response to the characteristic load cases and the internal forces under permanent loads.  In a second part, the implications on the design verification and the estimated costs are examined. To conclude this section, variable hanger inclinations are considered. Therefore, the constant change of inclination arrangement is investigated for further optimisation potential.
+The investigation in this section focuses on the hanger arrangements' main characteristic, the hanger inclination. First, the parallel hanger arrangement is investigated in \cref{sec:parallel}. Further, variable hanger inclinations are also considered. Therefore, the constant change of inclination arrangement is investigated in \cref{sec:constant_change} for further optimisation potential. Ultimately, a numerical optimisation of an unpatterned hanger arrangement is conducted in \cref{sec:unpatterned} as a comparison to the common hanger arrangement patterns.
 
 
-\subsection{Parallel hanger arrangement}
+\subsection{Parallel hanger arrangement}\label{sec:parallel}
+In the previous sections, the inclination has been left at \SI{64}{\degree} as in the final design of the Blennerhassett Island Bridge. This choice is critically assessed by the investigation of models with inclinations from \SI{45}{\degree} to \SI{85}{\degree}. The first part focuses on their elastic response to the characteristic load cases and the internal forces under permanent loads.  In the second part, the implications on the design verification and the estimated costs are examined. 
+ 
 \subsubsection{Characteristic behaviour}
-The investigation of the arch shape in Section \ref{sec:arch_shape}, showed that the spacing of the hanger anchorage nodes on the arch rib has a significant impact on the internal forces for the considered design. By changing the inclination of the hangers the respective spacing changes rather randomly. To exclude these random implications in this investigation of the hanger inclination, the arch shapes are taken as the respective thrust lines of each arrangement. Hence, the permanent moment distributions disappear for all models. Also the permanent moment distribution on the tie girder resulting from the tie moment minimisation is identical for all models at $M_{p,Tie}=\pm \SI{650}{kNm}$. The other permanent internal forces are shown in \cref{fig:inclination_permanent}.
+The investigation of the arch shape in Section \ref{sec:arch_shape}, showed that the spacing of the hanger anchorage nodes on the arch rib has a significant impact on the internal forces for the considered design. By changing the inclination of the hangers the respective spacing changes rather randomly. The arch shapes are taken as the respective thrust lines of each arrangement to exclude these random implications in this investigation of the hanger inclination. Hence, the permanent moment distributions disappear for all models. Also, the permanent moment distribution on the tie girder resulting from the tie moment minimisation is identical for all models at $M_{p,Tie}=\pm \SI{650}{kNm}$. The other permanent internal forces are shown in \cref{fig:inclination_permanent}.
 
 \begin{figure}[H]
     \centering
@@ -309,36 +307,25 @@ The investigation of the arch shape in Section \ref{sec:arch_shape}, showed that
     \label{fig:inclination_permanent}
 \end{figure}
 
-The permanent hanger forces increase for flatter hanger inclinations due to the smaller vertical component of the respective force. For each model they are still uniform and cause no change in the normal force distribution in the tie girder. For the normal forces in the arch, a rather uniform distribution is observed for the \SI{45}{\degree} arrangement. For the respective continuous hanger arrangement, it was seen in \cref{sec:arch_shape}, that its thrust line resembles a circle and the hanger forces on the arch are oriented radially. Therefore, the direction of the resulting normal force changes, the magnitude remains the same however. Apparently, this behaviour also applies to the considered discrete \SI{45}{\degree} arrangement. Its lower normal force at the knuckle can alternatively be explained by the steeper inclination of the circle, which approximates the thrust line of the flat arrangements. As the vertical component of the normal force in the arch is roughly the same for all models, the total normal force is smaller for steep arch shapes at the knuckle. Conversely, the \SI{45}{\degree} arrangement causes a higher normal force in the crown of the arch. This high normal force is due to the horizontal force components in the hangers, which reduces the structure's global lever arm and also the tension in the tie. 
+The permanent hanger forces increase for flatter hanger inclinations due to the smaller vertical component of the respective force. They are still uniform for each model and cause no change in the normal force distribution in the tie girder. For the normal forces in the arch, a relatively uniform distribution is observed for the \SI{45}{\degree} arrangement. For the respective continuous hanger arrangement, it was seen in \cref{sec:arch_shape}, that its thrust line resembles a circle and the hanger forces on the arch are oriented radially. Therefore, the direction of the resulting normal force changes, the magnitude remains the same, however. Its lower normal force at the knuckle can alternatively be explained by the circle's steeper inclination, which approximates the thrust line of the flat arrangements. As the vertical component of the normal force in the arch is roughly the same for all models, the total normal force is smaller for steep arch shapes at the knuckle. Conversely, the \SI{45}{\degree} arrangement causes a higher normal force in the crown of the arch. This high normal force is due to the horizontal force components in the hangers, which reduces the structure's global lever arm and tension in the tie. 
 A similar elastic response is observed for the characteristic dead loading, shown in \cref{fig:inclination_dead}.
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.95\textwidth]{calculations/parallel arrangement comparison/dead load_plot.png}
+    \includegraphics[width=\textwidth]{calculations/parallel arrangement comparison/dead load_plot.png}
     \caption{Elastic responses to dead loading for different hanger inclinations}
     \label{fig:inclination_dead}
 \end{figure}
 
-Most hanger forces are in a similar range as for the optimised permanent state. This is due to the uniform embedding of the tie girder in the field yielding uniform hanger forces. Therefore, also the normal forces of the arch and the tie show a similar shape as was seen for the permanent state. However, in the knuckle area large bending moments are observed for flat inclinations. Their cause is the lack of stiffness between the arch and the tie in this region, leaving them to carry the loads on bending. This lack of stiffness becomes obvious from the respective hanger arrangements presented in \cref{fig:arrangements}.
+Most hanger forces are in a similar range as for the optimised permanent state. This is due to the uniform embedding of the tie girder in the field yielding uniform hanger forces. Therefore, also the normal forces of the arch and the tie show a similar shape as was seen for the permanent state. However, in the knuckle area, large bending moments are observed for flat inclinations. Their cause is the lack of stiffness between the arch and the tie in this region, leaving them to carry the loads on bending. This lack of stiffness becomes evident from the respective hanger arrangements presented in \cref{fig:arrangements}.
 
 \begin{figure}[H]
 \centering
-\begin{subfigure}{0.5\textwidth}
-    \centering
-    \includegraphics[trim={40 25 189 40},clip, width=0.5\textwidth]{calculations/parallel arrangement comparison/arrangement_65.png}
-    \caption{65\degree Arrangement}
-    \label{fig:arrangements_65}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-    \centering
-    \includegraphics[trim={40 25 189 40},clip, width=0.5\textwidth]{calculations/parallel arrangement comparison/arrangement_45.png}
-    \caption{45\degree Arrangement}
-    \label{fig:arrangements_45}
-\end{subfigure}
-\caption{The knuckle region for different hanger inclinations}
+\includegraphics[width=0.5\textwidth]{overleaf/Pictures/snap_knuckle.PNG}
+\caption{Knuckle regions of the $\alpha=65\degree$ and  $\alpha=45\degree$ arrangements}
 \label{fig:arrangements}
 \end{figure}
 
-The \SI{45}{\degree} arrangement features only hangers from one set in the knuckle region, which additionally attach almost perpendicular to the arch. The stiffness of this arrangement is therefore much lower than the one of the \SI{65}{\degree} arrangement, which has more connections and also more suitable hanger inclinations. Further, the elastic response range to live loading is presented in \cref{fig:inclination_live}.
+The \SI{45}{\degree} arrangement features only hangers from one set in the knuckle region, which attach almost perpendicular to the arch. The stiffness of this arrangement is therefore much lower than the one of the \SI{65}{\degree} arrangement, which has more connections and also more suitable hanger inclinations. Further, the elastic response range to live loading is presented in \cref{fig:inclination_live}.
 
 \begin{figure}[H]
     \centering
@@ -347,8 +334,8 @@ The \SI{45}{\degree} arrangement features only hangers from one set in the knuck
     \label{fig:inclination_live}
 \end{figure}
 
-For live loading, it is the steepest arrangement which is affected by the largest internal force effects. Especially its hanger force shows a unique behaviour with the ones in the middle carrying the largest forces. As the hangers are less interconnected with each other the coupling of the arch and the tie is generally lower. Therefore, the \SI{85}{\degree} arrangement is affected by larger bending moments, as the efficient truss action is not formed. Further, this increases the characteristic length of the embedded tie girder, which especially causes the middle hanger to be affected by large forces. There can also be strong compressive forces for the considered hanger, which implicates the danger of hanger unloading. However, it has to be considered that the steep hanger arrangement utilises a shorter total hanger length, which poses an upside opposing the observed disadvantages. Within the other four studied models the differences are much lower. Still, it is indicated by the lower moment distributions for the \SI{55}{\degree} and the \SI{65}{\degree} arrangements, that a stronger truss action is formed in the respective cases. It can be concluded, that neither a steep nor a flat hanger arrangement forms an adequate coupling of the arch rib and the tie girder. 
-Ultimately, the effects for the event of losing the fourth cable are shown in \cref{fig:inclination_cable} to representing the charcteristic behaviour under cable loss.
+For live loading, it is the steepest arrangement which is affected by the largest internal force effects. Especially its hanger force shows a unique behaviour with the ones in the middle carrying the largest forces. As the hangers are less interconnected with each other, the coupling of the arch and the tie is generally lower. Therefore, the \SI{85}{\degree} arrangement is affected by larger bending moments, as the efficient truss action is not formed. Further, this increases the characteristic length of the embedded tie girder, which especially causes the middle hanger to be affected by large forces. There can also be strong compressive forces for the considered hanger, which implicates the danger of hanger unloading. However, it has to be considered that the steep hanger arrangement utilises a shorter total hanger length, which poses an upside opposing the observed disadvantages. Within the other four studied models, the differences are much lower. Still, it is indicated by the lower moment distributions for the \SI{55}{\degree} and the \SI{65}{\degree} arrangements, that a stronger truss action is formed in the respective cases. It can be concluded, that neither a steep nor a flat hanger arrangement forms an adequate coupling of the arch rib and the tie girder. 
+Ultimately, the effects for the event of losing the fourth cable are shown in \cref{fig:inclination_cable} to represent the characteristic behaviour under cable loss.
 
 \begin{figure}[H]
     \centering
@@ -357,33 +344,92 @@ Ultimately, the effects for the event of losing the fourth cable are shown in \c
     \label{fig:inclination_cable}
 \end{figure}
 
-The extreme event of cable loss shows again the opposite tendency. Because of the generally lower permanent hanger forces and the weaker coupling, the steep arrangements result in lower demands compared to the flat inclinations. Further, the similar directions of the two hanger sets allows them to better distribute the forces of the lost cable. 
+The extreme event of cable loss shows the opposite preference. Because of the generally lower permanent hanger forces and the weaker coupling, the steep arrangements result in lower demands compared to the flat inclinations. Further, the similar directions of the two hanger sets allow them to distribute the lost cable forces better. 
 
 \subsubsection{Design verifications and costs}
-To conclude the previous observations, the deciding demand over capacity ratios are shown for each model and reach segment in Table \ref{tab:dc_inclination}.
+To conclude the previous observations, the deciding demand over capacity ratios are shown for each model and each segment in Table \ref{tab:dc_inclination}.
 
 \begin{table}[H]
     \centering
     \caption{Maximum demand over capacity ratios for different hanger inclinations}
     \label{tab:dc_inclination}
-    \resizebox{\columnwidth}{!}{%   
-    \input{calculations/constant change arrangement/dc_comparison.txt}
+    \resizebox{0.9\columnwidth}{!}{%   
+    \begin{tabular}{lccccccc}
+    \hline
+    Model & \multicolumn{7}{c}{Demand / Capacity} \\
+     & Arch 1 & Arch 2 & Arch 3 & Tie 1 & Tie 2 & Tie 3 & Hangers \\ \hline
+    85\degree Arrangement & 0.84 (S3) & 1.04 (CL) & 1.02 (CL) & 0.98 (TF) & 1.28 (TF) & 1.19 (TF) & 1.13 (FA) \\ 
+    75\degree Arrangement & 0.83 (S3) & 1.10 (CL) & 1.06 (CL) & 0.82 (TF) & 1.00 (TF) & 0.95 (TF) & 0.95 (FA) \\ 
+    65\degree Arrangement & 0.83 (S3) & 1.14 (CL) & 1.10 (CL) & 0.79 (TF) & 0.95 (TF) & 0.91 (TF) & 0.94 (S1) \\ 
+    55\degree Arrangement & 0.84 (CL) & 1.15 (CL) & 1.11 (CL) & 0.76 (TF) & 0.94 (TF) & 0.90 (TF) & 0.99 (CL) \\ 
+    45\degree Arrangement & 0.81 (CL) & 1.21 (CL) & 1.19 (CL) & 0.72 (TF) & 0.94 (TF) & 0.90 (TF) & 1.09 (CL) \\ 
+    \hline
+    \end{tabular}
     }
 \end{table}
-In the arch segments, a decrease for the demand in the extreme event of cable loss is observed for steeper arrangements. It is mainly due to the significant horizontal components in the flat arrangements. While the normal force under identical vertical components is approximately 40\% greater for the \SI{45}{\degree} arrangement, the demand is approximately 20\% larger, as not the entire demand results from the lost normal force. On the other hand, the verification slightly improves for the first arch segment, due to the lower normal force in the knuckle region. For the segments on the tie girder the extreme event of tie fracture remains decisive for all models. The large increase in demand for the steepest arrangement is due to its inefficient behaviour under live loading. Between the other models, it is the lower normal force in the tie girder which renders the flat arrangement slightly beneficial. For hangers, neither of the extreme arrangements gives an improvement. The steep hanger arrangement suffers from fatigue due to the weak interconnection between the hangers. For the flat arrangement it is again the cable loss event which causes the highest demands. An optimum demand for the hangers is obtained by the \SI{65}{\degree} and the \SI{75}{\degree} arrangement. Finally, the costs of the investigated models, which are shown in \cref{tab:cost_inclination}, are considered. Correlating to the previous observations, the costs of the arch rib can be reduced by steeper arrangements, whereas the tie girder becomes cheaper for flat inclinations. Significant changes are also observed for costs of the hangers which are optimised for inclinations similar to the final design. Also the overall costs are minimised for these models. However the optimum range is rather broad from \SI{65}{\degree} to \SI{75}{\degree}.
+In the arch segments, a decrease in the demand in the extreme event of cable loss is observed for steeper arrangements. It is mainly due to the significant horizontal components in the flat arrangements. While the normal force under identical vertical components is approximately 40\% greater for the \SI{45}{\degree} arrangement, the demand is approximately 20\% larger, as not the entire demand results from the lost normal force. On the other hand, the verification slightly improves for the first arch segment, due to the lower normal force in the knuckle region. For the tie girder segments, the extreme event of tie fracture remains decisive for all models. The large increase in demand for the steepest arrangement is due to its inefficient behaviour under live loading. Between the other models, it is the lower normal force in the tie girder, which renders the flat arrangement slightly beneficial. For hangers, neither of the extreme arrangements gives an improvement. The steep hanger arrangement suffers from fatigue due to the weak interconnection between the hangers. For the flat arrangement, it is again the cable loss event which causes the highest demands. An optimum demand for the hangers is obtained by the \SI{65}{\degree} and the \SI{75}{\degree} arrangement. Finally, the costs of the investigated models, which are shown in \cref{tab:cost_inclination}, are considered. Correlating to the previous observations, the arch rib's costs can be reduced by steeper arrangements, whereas the tie girder becomes cheaper for flat inclinations. Significant changes are also observed for the hangers' costs, which are optimised for inclinations similar to the final design. Also, the overall costs are minimised for these models. However the optimum range is rather broad from \SI{65}{\degree} to \SI{75}{\degree}.
 
 
 \begin{table}[H]
     \centering
     \caption{Maximum demand over capacity ratios for different hanger inclinations}
     \label{tab:cost_inclination}
-    \input{calculations/constant change arrangement/cost_comparison.txt}
+    \resizebox{0.64\columnwidth}{!}{%
+    \begin{tabular}{lcccc}
+    \hline
+    Model & Arch cost & Tie cost & Hanger cost & Total cost \\
+     & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline
+    85\degree Arrangement & 5.09 & 4.68 & 1.78 & 11.56 \\ 
+    75\degree Arrangement & 5.27 & 3.74 & 1.54 & 10.56 \\ 
+    65\degree Arrangement & 5.40 & 3.57 & 1.59 & 10.56 \\ 
+    55\degree Arrangement & 5.46 & 3.52 & 1.79 & 10.78 \\ 
+    45\degree Arrangement & 5.68 & 3.46 & 2.20 & 11.35 \\ 
+    \hline
+    \end{tabular}
+    }
 \end{table}
 
+\subsection{Constant change of inclination arrangement}\label{sec:constant_change}
+In the previous section, the steep and the flat arrangements both have shown a specific upside. The constant change of inclination arrangement allows a combination of steep inclinations near the knuckle and medium inclinations in the span. Further, multiple studies have claimed optimality of this arrangement. Therefore, its potential for optimisation is assessed in this section, using models with an average inclination angle of $\alpha_{mid} = 65\degree$. The starting inclination $\alpha_1$ is varied up to a value of $105\degree$. Two of these models are shown in \cref{fig:arrangement_85_45} and \cref{fig:arrangement_105_25}.
 
-\subsection{Constant change of inclination arrangement}
+\begin{figure}[H]
+\centering
+\begin{subfigure}{0.5\textwidth}
+    \centering
+    \includegraphics[trim={1.5cm 1cm 1.3cm 1cm},clip, width=0.9\textwidth]{calculations/constant change arrangement/arrangement_85_45.png}
+    \caption{$85\degree$ to $45\degree$ arrangement ($\Delta\alpha=3.3\degree$)}
+    \label{fig:arrangement_85_45}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+    \centering
+    \includegraphics[trim={1.5cm 1cm 1.3cm 1cm},clip, width=0.9\textwidth]{calculations/constant change arrangement/arrangement_105_25.png}
+    \caption{$105\degree$ to $25\degree$ arrangement ($\Delta\alpha=6.7\degree)$}
+    \label{fig:arrangement_105_25}
+\end{subfigure}
+\caption{Constant change of inclination arrangements}
+\label{fig:constant change arrangements}
+\end{figure}
 
-\subsection{Unpatterned arrangement}
+The elastic responses to dead loads indicate the structural behaviour and are presented in \cref{fig:change_live}.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={0 0 0 0},clip, width=\textwidth]{calculations/constant change arrangement/dead load.png}
+    \caption{Elastic effects under live loading for the constant change of inclination arrangements}
+    \label{fig:change_live}
+\end{figure}
+
+The parallel arrangement with a constant inclination of $65\degree$ is characterised by a significant change in the arch's normal force increasing from \SI{36}{MN} in the crown to \SI{42}{MN} at the knuckle. Further, the tie girder's normal distribution is uniform due to the mostly constant hanger forces in the span. Except near the knuckle the hangers are not efficiently used as they do not provide a strong coupling of the arch and the tie. This causes the respective elements to carry the loads on bending moments. The arrangement with a large change in inclination, on the other hand, features almost uniform hanger forces under dead loads. The moment distribution in the knuckle area is therefore minimised. A further benefit of the strong inclination changes is the relatively uniform normal force in the arch rib. It is due to the flat hangers which carry the loads toward the knuckle area resulting in an approximately radial loading and a large inclination of the thrust line at the knuckle. Also the normal force in the tie is reduced due to this effect.
+Between the two extreme arrangements, the internal force effects are almost linearly distributed. For a further comparison, the range of effects under live loading is presented in \cref{}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[trim={0 0 0 0},clip, width=0.75\textwidth]{calculations/hanger density radial/permanent.png}
+    \caption{Optimised permanent effects for different hanger densities}
+    \label{fig:hd_permanent_radial}
+\end{figure}
+
+\subsection{Unpatterned arrangement} \label{sec:unpatterned}
 
 
 

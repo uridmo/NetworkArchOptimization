@@ -159,14 +159,14 @@ For the parallel and the constant change of inclination arrangement, the polynom
 A denser hanger arrangement provides multiple benefits. As seen in the previous chapter, the shape deviation moments are reduced through the corresponding reduction of the distances between the hangers' anchorages. Further, the effects in the extreme event of cable loss are significantly lowered, as the hanger forces are reduced with the increase of hangers. 
 %Also the impaired structural system loses less of its essential stiffness and undergoes additionally lower effects therefore. 
 However, the challenging task is to find an appropriate self-equilibrium stress state for structural systems in which the locations of the floor beams and the hangers do not coincide on the tie girder. 
-In this investigation, this task is approached by the tie moment optimisation method. It allows finding the permanent hanger forces within a certain range, minimising the resulting moment distribution in the tie girder. This range is set between 25\% and 40\% of the hangers' characteristic capacity. First, the optimisation potential is investigated for the parallel hanger arrangement in \cref{sec:density_parallel}. Further, also the optimisation potential for a dense radial arrangement is considered in \cref{sec:density_radial}.
+In this investigation, this task is approached using the tie moment optimisation method. It allows finding the permanent hanger forces minimising the resulting moment distribution in the tie girder. The hanger forces are limited between 25\% and 40\% of the hangers' characteristic capacity. First, the optimisation potential is investigated for the parallel hanger arrangement in \cref{sec:density_parallel}. Further, also the optimisation potential for a dense radial arrangement is considered in \cref{sec:density_radial}.
 
 \subsection{Parallel arrangement} \label{sec:density_parallel}
 Four bridges are analysed featuring 13, 20, 26 or 27 hangers per set and a constant number of 13 floor beams. The arch shapes are defined as the quartic polynomial approximation of the thrust line. The model featuring 26 hangers is shown in \cref{fig:structure_26}. The spacing between the knuckle and the first hanger is slightly increased so there is an equally spaced pair of hangers around every floor beam. While the arrangement appears dense, the hanger spacing on the tie girder is still around \SI{10}{m} representing a high value compared to the other network tied-arch bridges.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 1cm 0 1cm},clip, width=0.65\textwidth]{calculations/hanger amount comparison/structure_26.png}
+    \includegraphics[trim={0 1cm 0 1cm},clip, width=0.65\textwidth]{calculations/hanger density/structure_26.png}
     \caption{Structural model of a dense hanger arrangement with 26 hangers per set}
     \label{fig:structure_26}
 \end{figure}
@@ -175,7 +175,7 @@ The optimised effects under permanent loads are shown in Fig \ref{fig:hd_permane
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.75\textwidth]{calculations/hanger amount comparison/permanent state.png}
+    \includegraphics[trim={0 0 2cm 0},clip, width=\textwidth]{calculations/hanger density/permanent_plot.png}
     \caption{Optimised permanent effects for different hanger densities}
     \label{fig:hd_permanent}
 \end{figure}
@@ -185,7 +185,7 @@ The elastic responses to dead loading are shown in \cref{fig:hd_elastic_response
 
 \begin{figure}[H]
     \centering
-    \includegraphics[width=0.8\textwidth]{calculations/hanger amount comparison/dead load.png}
+    \includegraphics[trim={0 0 2cm 0},clip, width=\textwidth]{calculations/hanger density/dead loading_plot.png}
     \caption{Elastic response to dead loading for different hanger densities}
     \label{fig:hd_elastic_response_dl}
 \end{figure}
@@ -194,7 +194,7 @@ While the effects for characteristic dead loads are already included in the perm
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0 3cm 0},clip, width=0.8\textwidth]{calculations/hanger amount comparison/tie fracture.png}
+    \includegraphics[trim={0 0 3cm 0},clip, width=0.65\textwidth]{calculations/hanger density/tie fracture_plot.png}
     \caption{Range of tie bending moment for tie fracture extreme event}
     \label{fig:hd_tie_fracture}
 \end{figure}
@@ -206,7 +206,7 @@ The initially rather uniform moments became particularly peaky. The correspondin
     \caption{Design verifications for different hanger densities}
     \label{tab:hd_dc}
     \resizebox{0.85\columnwidth}{!}{%
-    \input{calculations/hanger amount comparison/dc_comparison.txt}
+    \input{calculations/hanger density/dc_comparison.txt}
     }
 \end{table}
 

@@ -106,7 +106,7 @@ class Bridge:
             n_0 -= dn
 
         # Optimize the arch shape if specified
-        if arch_optimisation :
+        if arch_optimisation:
             nodes.pop_nodes(arch.nodes[1:-1])
             g_arch = cs_arch[0].weight
             arch = ThrustLineArch(nodes, span, rise, g_arch, hangers)

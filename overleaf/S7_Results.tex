@@ -4,7 +4,7 @@ In this chapter, the previously introduced methods are applied in various combin
 
 \section{Base case} \label{sec:base_case}
 A model representing the Blennerhassett Island Bridge's final design is investigated as a reference for all following calculations. The results obtained by the analysis are then compared to the ones in the design drawings for plausibility. A particular challenge is the determination of the self-equilibrium stress state. The hanger forces given in the drawings were determined by trial and error to reduce the resulting bending moments. However, they are unsuitable for calculating the base case, as the load distribution in the model is simplified. Instead, the hanger forces are obtained as the result of a simultaneous arch and tie moment optimisation. To achieve an optimal similarity, the arch's moment is weighed by a factor of 1.5. Hence, the optimised moments in the arch are 1.5 times the tie girder's maximum moment. 
-Further, the hanger forces are bounded between 25\% and 40\% of their nominal strength. The base case's internal force distributions for the permanent state are shown in \cref{fig:base_case_permanent}. Instead of the normal force in the hangers, the demand over capacity ratio is shown directly. Only the hangers of one set are shown, namely the ones inclined to the right side, and the dots are connected for readability. As a comparison, the extreme values of each component corresponding to the design verifications in Appendix \ref{app:design_verifications}, are also shown.
+Further, the hanger forces are bounded between 25\% and 40\% of their nominal strength. The base case's internal force distributions for the permanent state are shown in \cref{fig:base_case_permanent}. Instead of the normal force in the hangers, the demand over capacity ratio is shown directly. Only the hangers of one set are shown, namely the ones inclined to the right side, and the dots are connected for readability. As a comparison, the extreme values of each component corresponding to the design verifications in \cref{app:design_verifications}, are also shown.
 
 \begin{figure}[H]
     \centering
@@ -24,7 +24,7 @@ The moment distributions in the arch and the tie, as well as the normal forces i
 
 The moment distribution in the arch shows a significant offset to the value given in the design drawings. However, this value cannot represent the maximum moment under live loading, considering the given hanger forces. Therefore, this difference is ignored. The moment distribution in the tie and the hangers' normal forces agree well on the other hand. The live loading is only slightly overestimated in the model, which can be seen particularly well in the hangers' demand over capacity ratios. These differences are accepted, as it is not the goal of this Thesis to reproduce the results from the design drawings. In particular, the arch segment near the knuckle is affected by strong bending moments. On the other hand, the range of effects under live loading is well distributed in the tie girder. Apparently, the influence lines for the tie girder's moments roughly follow the same shape at the different cross-girders. For the hangers, it is the second one from the knuckle connected toward the middle of the arch that undergoes the largest normal force. Towards the other side of the hanger set, the hanger forces decrease. The strongly affected hangers have in common that their inclination is closer to the arch's inclination at their respective connection node. The arch is very stiff on axial loading and comparably weaker on perpendicular forces. Therefore, at the arch nodes, smaller displacements in the hanger's direction are expected for the first hangers of the considered hanger set, explaining their higher normal forces. Only the first hanger does not follow this rule, which is explained by its smaller area of influence due to the nearby knuckle. \medskip
 
-The resulting demand over capacity ratios for all segments and limit states are presented in Table \ref{tab:dc_base_case}. Considering the strength limit states, wind exposure is governing the segment close to the knuckle for both the arch and the tie. For the segment in the span, as well as for the hangers, it is the vehicular load that poses the highest demand. The limit state for high dead-to-live load ratios is not decisive for any segment. However, the verifications of most segments are governed by the extreme events, especially for the tie girder. The arch rib is affected by the highest demands in the event of cable loss. Despite the lower resistance for cable replacement, it never causes the highest demands. Further, it can be concluded that the estimated costs in the following investigations can only be reduced by improving the demands for the extreme events.
+The resulting demand over capacity ratios for all segments and limit states are presented in \cref{tab:dc_base_case}. Considering the strength limit states, wind exposure is governing the segment close to the knuckle for both the arch and the tie. For the segment in the span, as well as for the hangers, it is the vehicular load that poses the highest demand. The limit state for high dead-to-live load ratios is not decisive for any segment. However, the verifications of most segments are governed by the extreme events, especially for the tie girder. The arch rib is affected by the highest demands in the event of cable loss. Despite the lower resistance for cable replacement, it never causes the highest demands. Further, it can be concluded that the estimated costs in the following investigations can only be reduced by improving the demands for the extreme events.
 
 \begin{table}[H]
     \centering
@@ -33,7 +33,7 @@ The resulting demand over capacity ratios for all segments and limit states are 
     \input{calculations/Base case/dc table.txt}
 \end{table}
 
-A comparison to the ratios found in the design drawings, presented in Table \ref{tab:dc_drawings}, shows that the limit state for high dead-to-live load ratios can be the governing strength verification for the arch. The corresponding underestimation in the base case is probably due to a general weight underestimation, which has already been seen for the permanent effects. Nonetheless, the strength limit states agree well with the design drawings' verifications, even though slightly underestimated. On the other hand, for cable loss and replacement, the demands predicted by the considered model are overestimated. Besides the higher dynamic amplification factor of 1.75 for cable loss, this is due to the modelling of a single arch plane, which does not consider the other undamaged arch plane. Nevertheless, the results are within an acceptable range. For the tie fracture extreme event, which is considered in a simplistic manner, demands near 1.00 result. It agrees with the design drawings, in which it is only noted that the tie fracture governed the design of the tie girder. For the comparative investigations in this Thesis, the simplistic verification is adequate, as the tendencies can be modelled sufficiently accurate.
+A comparison to the ratios found in the design drawings, presented in \cref{tab:dc_drawings}, shows that the limit state for high dead-to-live load ratios can be the governing strength verification for the arch. The corresponding underestimation in the base case is probably due to a general weight underestimation, which has already been seen for the permanent effects. Nonetheless, the strength limit states agree well with the design drawings' verifications, even though slightly underestimated. On the other hand, for cable loss and replacement, the demands predicted by the considered model are overestimated. Besides the higher dynamic amplification factor of 1.75 for cable loss, this is due to the modelling of a single arch plane, which does not consider the other undamaged arch plane. Nevertheless, the results are within an acceptable range. For the tie fracture extreme event, which is considered in a simplistic manner, demands near 1.00 result. It agrees with the design drawings, in which it is only noted that the tie fracture governed the design of the tie girder. For the comparative investigations in this Thesis, the simplistic verification is adequate, as the tendencies can be modelled sufficiently accurate.
 
 \begin{table}[H]
     \centering
@@ -65,7 +65,7 @@ The implications are first investigated on the Blennerhassett Island Bridge in \
 
 \subsection{Blennerhassett Island Bridge} \label{sec:arch_shape_BIB}
 The typical solution to the issue of the arch shape's deviation from the thrust line is the assignment of non-uniform permanent hanger forces resulting in a thrust line similar to the arch shape. However, adapting the arch shape to the thrust line can be considered a more elegant solution. 
-Multiple approaches to determine the arch shape have been introduced in Section \ref{sec:met_arch}. All of them are linked to the thrust line, which is the most efficient shape. The following four arch shapes are compared in this investigation.
+Multiple approaches to determine the arch shape have been introduced in \cref{sec:met_arch}. All of them are linked to the thrust line, which is the most efficient shape. The following four arch shapes are compared in this investigation.
 \begin{enumerate}
     \item Thrust line: This shape is obtained numerically, as described in \cref{sec:discrete}, as the thrust line for the uniform hanger forces obtained from a tie moment optimisation. The respective hanger forces are equal to $N_p=\SI{1.8}{MN}$ corresponding to 28\% of their nominal resistance.
     \item Polynomial thrust line approximation: The above thrust line is approximated by a quartic function. The quartic function is obtained according to \cref{sec:polynomial_approximation} using the shape parameter $b$. The parameter is obtained by a least-squares approximation. 
@@ -101,7 +101,7 @@ Despite the apparent match of the arch shapes, significant bending moments resul
 \end{equation}
 
 For the Blennerhassett Island Bridge, these variables roughly correspond to $R=\SI{194}{m}$, $d=\SI{17}{m}$ and $N=\SI{40}{MN}$. \cref{eq:moment_deviation} yields a deviation moment of $\Delta M=\SI{7.5}{MNm}$ providing a good match for the value observed in \cref{fig:arch_permanent_moments_13}. From the analytical form of \cref{eq:moment_deviation} it can further be concluded that a reduction of the hanger node spacing has a more than proportional impact on the deviation moment. From this perspective, an optimum hanger arrangement features one hanger per connection node and a uniform spacing on the arch. Considering the number of hangers and the arch's length, a minimum spacing of $d=\SI{11}{m}$ can be obtained. Thereby, the deviation moment reduces to $\Delta M=\SI{3.1}{MNm}$ corresponding to a reduction of the D/C ratio of 0.03.
-To also put the deviations of the approximated shapes into the context of the design verifications, the demand over capacity ratios resulting in the arch are shown in Table \ref{tab:arch_shape_dc_13} along with the decisive limit state.
+To also put the deviations of the approximated shapes into the context of the design verifications, the demand over capacity ratios resulting in the arch are shown in \cref{tab:arch_shape_dc_13} along with the decisive limit state.
 
 \begin{table}[H]
     \centering
@@ -129,7 +129,7 @@ In this section, the influence of the hanger density on the arch shape is invest
     \label{fig:arch_shapes_26}
 \end{figure}
 
-If the amount of hangers is large enough, all considered approximations yield suitable arch shapes. The impact of the remaining deviation from the thrust line on the design verifications is negligible, as shown in the uniform demand over capacity ratios presented in Table \ref{tab:arch_shape_dc_26}.
+If the amount of hangers is large enough, all considered approximations yield suitable arch shapes. The impact of the remaining deviation from the thrust line on the design verifications is negligible, as shown in the uniform demand over capacity ratios presented in \cref{tab:arch_shape_dc_26}.
 
 \begin{table}[H]
     \centering
@@ -171,7 +171,7 @@ Four bridges are analysed featuring 13, 20, 26 or 27 hangers per set and a const
     \label{fig:structure_26}
 \end{figure}
 
-The optimised effects under permanent loads are shown in Fig \ref{fig:hd_permanent}. As predicted by the arch shape's investigation, the bending moments in the arch are lowered for an increased hanger density. However, in the knuckle region of the arch, the significant bending moments are retained for the dense arrangements. They are due to the tie moment optimisation method assigning significant supernumerary moments to the knuckle. The quartic polynomial approximation is not able to match the corresponding thrust line. Further, the permanent hanger forces are no longer constant for the models with 20 and 27 hangers, as the hangers near the floor beams carry the majority of the forces. At the same time, a strong bending moment distribution in the tie is inevitable. The model featuring 26 hangers seems slightly more suitable as it can retain constant hanger forces and a slightly lower tie moment distribution.
+The optimised effects under permanent loads are shown in \cref{fig:hd_permanent}. As predicted by the arch shape's investigation, the bending moments in the arch are lowered for an increased hanger density. However, in the knuckle region of the arch, the significant bending moments are retained for the dense arrangements. They are due to the tie moment optimisation method assigning significant supernumerary moments to the knuckle. The quartic polynomial approximation is not able to match the corresponding thrust line. Further, the permanent hanger forces are no longer constant for the models with 20 and 27 hangers, as the hangers near the floor beams carry the majority of the forces. At the same time, a strong bending moment distribution in the tie is inevitable. The model featuring 26 hangers seems slightly more suitable as it can retain constant hanger forces and a slightly lower tie moment distribution.
 
 \begin{figure}[H]
     \centering
@@ -298,7 +298,7 @@ The investigation in this section focuses on the hanger arrangements' main chara
 In the previous sections, the inclination has been left at \SI{64}{\degree} as in the final design of the Blennerhassett Island Bridge. This choice is critically assessed by the investigation of models with inclinations from \SI{45}{\degree} to \SI{85}{\degree}. The first part focuses on their elastic response to the characteristic load cases and the internal forces under permanent loads.  In the second part, the implications on the design verification and the estimated costs are examined. 
  
 \subsubsection{Characteristic behaviour}
-The investigation of the arch shape in Section \ref{sec:arch_shape}, showed that the spacing of the hanger anchorage nodes on the arch rib has a significant impact on the internal forces for the considered design. By changing the inclination of the hangers the respective spacing changes rather randomly. The arch shapes are taken as the respective thrust lines of each arrangement to exclude these random implications in this investigation of the hanger inclination. Hence, the permanent moment distributions disappear for all models. Also, the permanent moment distribution on the tie girder resulting from the tie moment minimisation is identical for all models at $M_{p,Tie}=\pm \SI{650}{kNm}$. The other permanent internal forces are shown in \cref{fig:inclination_permanent}.
+The investigation of the arch shape in \cref{sec:arch_shape}, showed that the spacing of the hanger anchorage nodes on the arch rib has a significant impact on the internal forces for the considered design. By changing the inclination of the hangers the respective spacing changes rather randomly. The arch shapes are taken as the respective thrust lines of each arrangement to exclude these random implications in this investigation of the hanger inclination. Hence, the permanent moment distributions disappear for all models. Also, the permanent moment distribution on the tie girder resulting from the tie moment minimisation is identical for all models at $M_{p,Tie}=\pm \SI{650}{kNm}$. The other permanent internal forces are shown in \cref{fig:inclination_permanent}.
 
 \begin{figure}[H]
     \centering
@@ -347,7 +347,7 @@ Ultimately, the effects for the event of losing the fourth cable are shown in \c
 The extreme event of cable loss shows the opposite preference. Because of the generally lower permanent hanger forces and the weaker coupling, the steep arrangements result in lower demands compared to the flat inclinations. Further, the similar directions of the two hanger sets allow them to distribute the lost cable forces better. 
 
 \subsubsection{Design verifications and costs}
-To conclude the previous observations, the deciding demand over capacity ratios are shown for each model and each segment in Table \ref{tab:dc_inclination}.
+To conclude the previous observations, the deciding demand over capacity ratios are shown for each model and each segment in \cref{tab:dc_inclination}.
 
 \begin{table}[H]
     \centering
@@ -415,33 +415,69 @@ The elastic responses to dead loads indicate the structural behaviour and are pr
 \begin{figure}[H]
     \centering
     \includegraphics[trim={0 0 0 0},clip, width=\textwidth]{calculations/constant change arrangement/dead load.png}
-    \caption{Elastic effects under live loading for the constant change of inclination arrangements}
+    \caption{Elastic effects under dead loading for the constant change of inclination arrangements}
     \label{fig:change_live}
 \end{figure}
 
 The parallel arrangement with a constant inclination of $65\degree$ is characterised by a significant change in the arch's normal force increasing from \SI{36}{MN} in the crown to \SI{42}{MN} at the knuckle. Further, the tie girder's normal distribution is uniform due to the mostly constant hanger forces in the span. Except near the knuckle the hangers are not efficiently used as they do not provide a strong coupling of the arch and the tie. This causes the respective elements to carry the loads on bending moments. The arrangement with a large change in inclination, on the other hand, features almost uniform hanger forces under dead loads. The moment distribution in the knuckle area is therefore minimised. A further benefit of the strong inclination changes is the relatively uniform normal force in the arch rib. It is due to the flat hangers which carry the loads toward the knuckle area resulting in an approximately radial loading and a large inclination of the thrust line at the knuckle. Also the normal force in the tie is reduced due to this effect.
-Between the two extreme arrangements, the internal force effects are almost linearly distributed. For a further comparison, the range of effects under live loading is presented in \cref{}
+Between the two extreme arrangements, the internal force effects are almost linearly distributed. For a further comparison, the range of effects under live loading is presented in \cref{fig:c_inclination_live}.
 
 \begin{figure}[H]
     \centering
-    \includegraphics[trim={0 0 0 0},clip, width=0.75\textwidth]{calculations/hanger density radial/permanent.png}
-    \caption{Optimised permanent effects for different hanger densities}
-    \label{fig:hd_permanent_radial}
+    \includegraphics[trim={0 0 0 0},clip, width=0.75\textwidth]{calculations/constant change arrangement/live loading_plot.png}
+    \caption{Range of effects under live loading for changing inclination}
+    \label{fig:c_inclination_live}
 \end{figure}
+
+There are only minor changes in the effects under live loading. On the one hand the peaks in the arch's moment distribution increase for large changes in inclination. On the other hand, also the normal forces in the flat hangers increase. However, the effects under live loading generally only undergo minor changes. Further, the deciding D/C ratios are presented in \cref{tab:dc_constantchange}.
+
+\begin{table}[H]
+    \centering
+    \caption{Maximum demand over capacity ratios for changing inclinations}
+    \label{tab:dc_constantchange}
+    \resizebox{0.9\columnwidth}{!}{%   
+    \begin{tabular}{lccccccc}
+    \hline
+    Model & \multicolumn{7}{c}{Demand / Capacity} \\
+     & Arch 1 & Arch 2 & Arch 3 & Tie 1 & Tie 2 & Tie 3 & Hangers \\ \hline
+    105\degree-25\degree Arrangement & 0.77 (S3) & 1.13 (CL) & 1.08 (CL) & 0.69 (CL) & 0.92 (CL) & 0.93 (TF) & 1.03 (S1) \\ 
+    95\degree-35\degree Arrangement & 0.79 (S3) & 1.12 (CL) & 1.09 (CL) & 0.72 (TF) & 0.91 (TF) & 0.92 (TF) & 0.99 (S1) \\ 
+    85\degree-45\degree Arrangement & 0.80 (S3) & 1.12 (CL) & 1.10 (CL) & 0.74 (TF) & 0.91 (TF) & 0.92 (TF) & 0.96 (S1) \\ 
+    75\degree-55\degree Arrangement & 0.81 (S3) & 1.12 (CL) & 1.10 (CL) & 0.76 (TF) & 0.92 (TF) & 0.91 (TF) & 0.95 (S1) \\ 
+    65\degree Arrangement & 0.83 (S3) & 1.14 (CL) & 1.10 (CL) & 0.79 (TF) & 0.95 (TF) & 0.91 (TF) & 0.94 (S1) \\ 
+    \hline
+    \end{tabular}
+    }
+\end{table}
+
+
+\begin{table}[H]
+    \centering
+    \caption{Maximum demand over capacity ratios for changing inclinations}
+    \label{tab:cost_constant_change}
+    \resizebox{0.64\columnwidth}{!}{%
+    \begin{tabular}{lcccc}
+    \hline
+    Model & Arch cost & Tie cost & Hanger cost & Total cost \\
+     & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] & [\$ Mio.] \\ \hline
+    105\degree-25\degree Arrangement & 5.28 & 3.44 & 1.70 & 10.42 \\ 
+    95\degree-35\degree Arrangement & 5.30 & 3.44 & 1.63 & 10.37 \\ 
+    85\degree-45\degree Arrangement & 5.33 & 3.46 & 1.59 & 10.38 \\ 
+    75\degree-55\degree Arrangement & 5.36 & 3.50 & 1.58 & 10.44 \\ 
+    65\degree Arrangement & 5.40 & 3.57 & 1.58 & 10.56 \\ 
+    \hline
+    \end{tabular}
+    }
+\end{table}
+
 
 \subsection{Unpatterned arrangement} \label{sec:unpatterned}
 
 
-
+\newpage
 \section{Summary} \label{sec:res_summary}
+In this chapter, the previously introduced methods are used in various combinations to investigate the network tied-arch bridge's essential aspects. First, the Blennerhassett Island Bridge's final design is replicated in the simplified single arch plane model. By using the method of a parallel arch and tie moment optimisation, the permanent internal forces are restricted to the same range as in the design drawings. The D/C ratios in the limit state verifications match very well, and the model is considered appropriate. In particular, the extreme event limit state has a crucial influence on the design. In the investigation of the arch shape, multiple approaches for obtaining an efficient arch shape are considered. The thrust line which neither follows a parabolic nor a circular shape can be approximated well by different approaches. However, even small offsets of the arch shape to the thrust line cause considerable bending moments in the arch. The simplest way to reduce these shape deviation moments is by arranging for a uniform hanger spacing on the arch. The corresponding reduction of the demand is of a few per cent. Further, the thrust lines of the hypothetical case of an infinitely dense hanger arrangement predicts the shape of the thrust line particularly well. It is found that the parallel $45\degree$ arrangement results in a circular thrust line. However, contrary to the initial motivation, the radial arrangements can show significant offsets to the circular shape. Ultimately, it is shown that the quartic polynomial fits the thrust line well for the standard arrangements with a constant change of inclination. \medskip
 
+An increased hanger density reduces the shape deviation moments and the effects under cable loss. However, if the hanger spacing on the tie girder does not correspond to the floor beams' location, it is impossible to obtain an efficient self-equilibrium stress state. Besides non-uniform hanger forces, strong bending moments in the tie girder cannot be avoided. It outweighs the mentioned advantages, particularly because the peaky moment distribution significantly increases the demands for the deciding extreme event of the tie fracture. Also, the radial arrangement was seen not to overcome this fundamental issue. Therefore, a denser hanger arrangement has to be paired with an increase in floor beam density. Thereby the benefits of reducing the effects under the extreme events are retained without a significant disadvantage. The structural behaviour of the bridge overall remains almost identical in this investigation. Ultimately, the estimated costs are optimised for the number of floor beams, reducing the demand under cable loss to be smaller than the demand of the strength limit states in the arch. This is also facilitated by conducting a detailed analysis of the dynamic amplification factor. \medskip
 
-
-
-
-
-
-
-
-
-
+Ultimately, the hanger inclination is investigated. For a parallel hanger arrangement, steep hangers reduce the arch's demands as the behaviour under cable loss improves. Further, the stiffness in the knuckle area is increased, thereby reducing the moments under dead loads significantly. The flat $45\degree$ arrangement also provides its benefits. As predicted by the continuous hanger arrangement, there are uniform normal forces in the arch. Especially in the knuckle area, a significant reduction in the normal force is observed, which also reduces the tension in the tie. However, it does not provide enough stiffness in the knuckle area, undergoing significant bending moments. For the parallel arrangements, the range from $65\degree$ to $75\degree$ partially combines the mentioned benefits and gives the most efficient arrangement. The constant change of inclination arrangement achieves a further improvement in the structural behaviour. Especially, arrangements with a large change between the hangers are shown to reduce normal force and the bending moments for dead loads while maintaining relatively uniform hanger forces.

@@ -195,18 +195,20 @@
 \makenomenclature    % \makenomenclature command is required to generate the nomenclature file (*.nlo); commenting it out is a convenient way to switch it off. 
 
 % Group symbols depending on their type 
-\usepackage{ifthen}
-  \renewcommand{\nomgroup}[1]{%
-  \item[\bfseries
-  \ifthenelse{\equal{#1}{A}}{Latin upper-case letters}{%
-  \ifthenelse{\equal{#1}{B}}{Latin lower-case letters}{%
-  \ifthenelse{\equal{#1}{C}}{Greek upper-case letters}{%
-  \ifthenelse{\equal{#1}{D}}{Greek lower-case letters}{}}}}%
-  ]}
+%\usepackage{ifthen}
+%  \renewcommand{\nomgroup}[1]{%
+%  \item[\bfseries
+%  \ifthenelse{\equal{#1}{A}}{Latin upper-case letters}{%
+%  \ifthenelse{\equal{#1}{B}}{Latin lower-case letters}{%
+%  \ifthenelse{\equal{#1}{C}}{Greek upper-case letters}{%
+%  \ifthenelse{\equal{#1}{D}}{Greek lower-case letters}{}}}}%
+%  ]}
 
 % Change title and add preliminary text 
 %\renewcommand{\nomname}{Symbols}    % changes the default title ('Nomenclature'). 
-\renewcommand{\nompreamble}{Unless otherwise specified in the text, the abbreviations and symbols have the meaning indicated below.}    % inserts some text in between the title and the list symbols. 
+%\renewcommand{\nompreamble}{Unless otherwise specified in the text, the abbreviations and symbols have the meaning indicated below.}    % inserts some text in between the title and the list symbols. 
+\input{overleaf/S3_Symbols}
+
 
 % ----------------------------------------------------------
 % Appendices 
@@ -280,6 +282,14 @@ pdftex]
 \usepackage{siunitx}
 \usepackage{colortbl}
 \usepackage{subcaption}
+\usepackage{enumitem}
+
+\setlist[description]{
+labelwidth=150pt,
+labelsep=0pt,
+leftmargin=150pt,
+}
+
 
 %% ---------------------------------------------------------
 %% ---------------------------------------------------------
@@ -319,13 +329,6 @@ pdftex]
 
 
 %% ---------------------------------------------------------
-%% ACKNOWLEDGEMENTS 
-%% ---------------------------------------------------------
-%\input{overleaf/S3_Acknowledgements}
-%\cleardoublepage
-
-
-%% ---------------------------------------------------------
 %% TABLE OF CONTENTS 
 %% ---------------------------------------------------------
 
@@ -343,18 +346,20 @@ pdftex]
 %% TABLE OF FIGURES AND TABLES
 %% ---------------------------------------------------------
 \pagestyle{fancy}
-%\fancypagestyle{plain}{%
-%	\fancyhf{} % clear all header and footer fields
-%}
 \listoffigures
 \cleardoublepage
 
 \pagestyle{fancy}
-%\fancypagestyle{plain}{%
-%	\fancyhf{} % clear all header and footer fields
-%}
 \listoftables
 \cleardoublepage
+
+
+%% ---------------------------------------------------------
+%% Nomenclature 
+%% ---------------------------------------------------------
+\printnomenclature    % \printnomenclature command prints the abbreviation/symbol list at the corresponding position of the document; to control the distance between the symbol or abbreviation and the explaining text use the optional distance argument. 
+\cleardoublepage
+
 
 %% ---------------------------------------------------------
 %% CHAPTERS
@@ -375,6 +380,7 @@ pdftex]
 
 \input{overleaf/S8_Conclusion and Outlook}
 \cleardoublepage
+
 
 %% ---------------------------------------------------------
 %% REFERENCES 

@@ -1,3 +1,4 @@
+import numpy as np
 from matplotlib import pyplot
 
 from plotting.supports import plot_supports_new
@@ -15,6 +16,7 @@ from structure_elements.hangers.constant_change_hangers import ConstantChangeHan
 from structure_elements.hangers.hangers import Hangers
 from structure_elements.hangers.parallel_hangers import ParallelHangerSet
 from structure_elements.hangers.radial_hangers import RadialHangerSet
+from structure_elements.hangers.unpatterned_hangers import UnpatternedHangerSet
 from structure_elements.networkarch import NetworkArch
 from structure_elements.nodes import Nodes
 from structure_elements.tie import Tie
@@ -52,6 +54,9 @@ class Bridge:
             hanger_set = RadialHangerSet(nodes, span, rise, n_hangers, *hanger_params)
         elif hanger_arrangement == 'Constant Change':
             hanger_set = ConstantChangeHangerSet(nodes, span, n_hangers, *hanger_params)
+        elif hanger_arrangement == 'Unpatterned':
+            print(hanger_params)
+            hanger_set = UnpatternedHangerSet(nodes, span, hanger_params)
         else:
             raise Exception('Hanger arrangement type "' + hanger_arrangement + '" is not defined')
 

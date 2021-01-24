@@ -31,7 +31,7 @@ dc_overview_table('dc_comparison', bridges_dict)
 small_cost_overview_table('cost_comparison', bridges_dict)
 big_cost_overview_table('cost_comparison_big', bridges_dict)
 
-crop_plots('live loading', (2, 2), [3, 4, 2], (1, 4), (1000, 500))
+crop_plots('live loading', (2, 2), [3, 4, 2], (1, 5), (1000, 500))
 
 
 # crop_plots('permanent', (3, 1), [0, 1, 2], (3, 2), (800, 500))
